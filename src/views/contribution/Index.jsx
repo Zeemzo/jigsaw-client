@@ -20,7 +20,10 @@ import Download from "views/IndexSections/Download.jsx";
 import ControlledEditor from "views/contribution/ControlledEditor.jsx";
 import UncontrolledEditor from "views/contribution/UncontrolledEditor.jsx";
 
-
+import {
+  Container,
+  Row
+} from "reactstrap";
 class Contribution extends React.Component {
   componentDidMount() {
     document.body.classList.toggle("index-page");
@@ -35,11 +38,15 @@ class Contribution extends React.Component {
       <>
         <IndexNavbar />
         <div className="wrapper">
-          <PageHeader />
-          <div className="main">
-          {/* <ControlledEditor /> */}
-          <UncontrolledEditor />
+          <br /><br /><br /> <Container>
+              <Row className="justify-content-center">
+                <UncontrolledEditor />
+              </Row>
+            </Container>
 
+          <div className="main">
+            {/* <ControlledEditor /> */}
+           
             {/* <Basics /> 
             <Navbars /> 
             <Tabs />

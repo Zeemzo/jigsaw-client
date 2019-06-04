@@ -17,7 +17,7 @@ import Notifications from "views/IndexSections/Notifications.jsx";
 import Typography from "views/IndexSections/Typography.jsx";
 import JavaScript from "views/IndexSections/JavaScript.jsx";
 import NucleoIcons from "views/IndexSections/NucleoIcons.jsx";
-import Signup from "views/IndexSections/Signup.jsx";
+import Signup from "views/register/Index.jsx";
 import Examples from "views/IndexSections/Examples.jsx";
 import Download from "views/IndexSections/Download.jsx";
 
@@ -33,7 +33,7 @@ class Contribution extends React.Component {
       <>
         <IndexNavbar />
         <div className="wrapper">
-          <PageHeader />
+          {/* <PageHeader /> */}
           <div className="main">
             {/* <Editor
               editorState={true}
@@ -49,9 +49,9 @@ class Contribution extends React.Component {
             <Notifications />
             <Typography />
             <JavaScript />
-            <NucleoIcons />
+            <NucleoIcons /> */}
             <Signup />
-            <Examples />
+            {/* <Examples />
             <Download /> */}
           </div>
           <Footer />

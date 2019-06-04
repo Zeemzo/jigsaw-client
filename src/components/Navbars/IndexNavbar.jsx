@@ -109,7 +109,7 @@ class ComponentsNavbar extends React.Component {
               <Row>
                 <Col className="collapse-brand" xs="6">
                   <a href="#pablo" onClick={e => e.preventDefault()}>
-                  JIGSAW
+                    JIGSAW
                   </a>
                 </Col>
                 <Col className="collapse-close text-right" xs="6">
@@ -128,9 +128,9 @@ class ComponentsNavbar extends React.Component {
                 <NavLink
                   data-placement="bottom"
                   href="/"
-                  // rel="noopener noreferrer"
-                  // target="_blank"
-                  // title="Follow us on Twitter"
+                // rel="noopener noreferrer"
+                // target="_blank"
+                // title="Follow us on Twitter"
                 >
                   <i className="fab fa-twitter" />
                   <p className="d-lg-none d-xl-none">Feed</p>

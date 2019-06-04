@@ -26,15 +26,17 @@ function uploadImageCallBack(file) {
 
 const EditorImage = () => (
   <Editor
+  spellCheck
     wrapperClassName="demo-wrapper"
     editorClassName="demo-editor"
     toolbar={{
+      image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
       inline: { inDropdown: true },
       list: { inDropdown: true },
       textAlign: { inDropdown: true },
       link: { inDropdown: true },
       history: { inDropdown: true },
-      image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
+      
     }}
   />
 );

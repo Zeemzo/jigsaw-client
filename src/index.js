@@ -11,6 +11,8 @@ import "assets/demo/demo.css";
 import Index from "views/Index.jsx";
 import Contribution from "views/contribution/Index.jsx";
 import Feed from "views/feed/Index.jsx";
+import Register from "views/register/Index.jsx";
+
 
 import LandingPage from "views/examples/LandingPage.jsx";
 import RegisterPage from "views/examples/RegisterPage.jsx";
@@ -39,6 +41,10 @@ ReactDOM.render(
       <Route
         path="/"
         render={props => <Feed {...props} />}
+      />
+      <Route
+        path="/register"
+        render={props => <Register {...props} />}
       />
       {/* <Redirect from="/" to="/components" /> */}
     </Switch>

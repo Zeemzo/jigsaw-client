@@ -124,89 +124,35 @@ class ComponentsNavbar extends React.Component {
               </Row>
             </div>
             <Nav navbar>
-              <NavItem className="p-0">
-                <NavLink
-                  data-placement="bottom"
-                  href="/"
-                // rel="noopener noreferrer"
-                // target="_blank"
-                // title="Follow us on Twitter"
-                >
-                  <i className="fab fa-twitter" />
-                  <p className="d-lg-none d-xl-none">Feed</p>
-                </NavLink>
-              </NavItem>
-              <NavItem className="p-0">
-                <NavLink
-                  data-placement="bottom"
-                  href="https://www.facebook.com/CreativeTim"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title="Like us on Facebook"
-                >
-                  <i className="fab fa-facebook-square" />
-                  <p className="d-lg-none d-xl-none">Facebook</p>
-                </NavLink>
-              </NavItem>
-              <NavItem className="p-0">
-                <NavLink
-                  data-placement="bottom"
-                  href="https://www.instagram.com/CreativeTimOfficial"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title="Follow us on Instagram"
-                >
-                  <i className="fab fa-instagram" />
-                  <p className="d-lg-none d-xl-none">Instagram</p>
-                </NavLink>
-              </NavItem>
-              <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  data-toggle="dropdown"
-                  href="#pablo"
-                  nav
-                  onClick={e => e.preventDefault()}
-                >
-                  <i className="fa fa-cogs" />
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-with-icons">
-                  {/* <DropdownItem href="https://demos.creative-tim.com/blk-design-system-react/#/documentation/tutorial">
-                    <i className="tim-icons icon-paper" />
-                    Documentation
-                  </DropdownItem> */}
-                  <DropdownItem tag={Link} to="/register-page">
-                    <i className="tim-icons icon-bullet-list-67" />
-                    Register Page
-                  </DropdownItem>
-                  <DropdownItem tag={Link} to="/landing-page">
-                    <i className="tim-icons icon-image-02" />
-                    Landing Page
-                  </DropdownItem>
-                  <DropdownItem tag={Link} to="/profile-page">
-                    <i className="tim-icons icon-single-02" />
-                    Profile Page
-                  </DropdownItem>
-                  <DropdownItem tag={Link} to="/contribution-page">
-                    <i className="tim-icons icon-single-02" />
-                    Contribution Page
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              <NavItem>
-                <Button
-                  className="nav-link d-none d-lg-block"
-                  color="default"
-                  onClick={this.scrollToDownload}
-                >
-                  <i className="tim-icons icon-cloud-download-93" /> Download
-                </Button>
-              </NavItem>
+            <NavItem>
+              <NavLink to="/" tag={Link}>
+                Home
+                  </NavLink>
+                </NavItem>
+            <NavItem>
+              <NavLink to="/landing-page" tag={Link}>
+                Landing
+                  </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to="/register" tag={Link}>
+                Register
+                  </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to="/profile-page" tag={Link}>
+                Profile
+                  </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to="/contribution-page" tag={Link}>
+                Contribution
+                  </NavLink>
+            </NavItem>
             </Nav>
           </Collapse>
         </Container>
-      </Navbar>
+      </Navbar >
     );
   }
 }

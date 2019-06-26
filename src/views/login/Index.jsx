@@ -20,10 +20,7 @@ import {
   InputGroup,
   Container,
   Row,
-  Col,
-  NavItem,
-  NavLink,
-  Nav,
+  Col
 } from "reactstrap";
 
 // core components
@@ -31,16 +28,14 @@ import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 
-class Register extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       squares1to6: "",
       squares7and8: "",
       txtEmail:"",
-      txtPassword:"",
-      txtFullName:"",
-      txtConfirmPassword:""
+      txtPassword:""
     }
   }
   componentDidMount() {
@@ -84,51 +79,20 @@ class Register extends React.Component {
             <div className="content">
               <Container>
                 <Row>
-                  <Col className="offset-lg-0 offset-md-3" lg="5" md="6">
-                    <div
-                      className="square square-7"
-                      id="square7"
-                      style={{ transform: this.state.squares7and8 }}
-                    />
-                    <div
-                      className="square square-8"
-                      id="square8"
-                      style={{ transform: this.state.squares7and8 }}
-                    />
+                  <Col className="offset-lg-0 offset-md-3" lg="5" md="6" sm="12">
                     <Card className="card-register">
                       <CardHeader>
                         <CardImg
                           alt="..."
-                          src={require("assets/img/square-purple-1.png")}
+                          src={require("assets/img/square1.png")}
                         />
-                        <CardTitle tag="h4">Register</CardTitle>
+                        <CardTitle tag="h4">Login</CardTitle>
                       </CardHeader>
                       <CardBody>
                         <Form className="form">
                           <InputGroup
                             className={classnames({
-                              "input-group-focus": this.state.fullNameFocus
-                            })}
-                          >
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="tim-icons icon-single-02" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="Full Name"
-                              type="text"
-                              onFocus={e =>
-                                this.setState({ fullNameFocus: true })
-                              }
-                              onBlur={e =>
-                                this.setState({ fullNameFocus: false })
-                              }
-                            />
-                          </InputGroup>
-                          <InputGroup
-                            className={classnames({
-                              "input-group-focus": this.state.emailFocus
+                              "input-group-focus": this.state.emailFocusLogin
                             })}
                           >
                             <InputGroupAddon addonType="prepend">
@@ -139,13 +103,13 @@ class Register extends React.Component {
                             <Input
                               placeholder="Email"
                               type="text"
-                              onFocus={e => this.setState({ emailFocus: true })}
-                              onBlur={e => this.setState({ emailFocus: false })}
+                              onFocus={e => this.setState({ emailFocusLogin: true })}
+                              onBlur={e => this.setState({ emailFocusLogin: false })}
                             />
                           </InputGroup>
                           <InputGroup
                             className={classnames({
-                              "input-group-focus": this.state.passwordFocus
+                              "input-group-focus": this.state.passwordFocusLogin
                             })}
                           >
                             <InputGroupAddon addonType="prepend">
@@ -155,63 +119,18 @@ class Register extends React.Component {
                             </InputGroupAddon>
                             <Input
                               placeholder="Password"
-                              type="password"
-                              onFocus={e =>
-                                this.setState({ passwordFocus: true })
-                              }
-                              onBlur={e =>
-                                this.setState({ passwordFocus: false })
-                              }
+                              type="text"
+                              onFocus={e => this.setState({ passwordFocusLogin: true })}
+                              onBlur={e => this.setState({ passwordFocusLogin: false })}
                             />
                           </InputGroup>
-
-                          <InputGroup
-                            className={classnames({
-                              "input-group-focus": this.state.confirmPasswordFocus
-                            })}
-                          >
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="tim-icons icon-lock-circle" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="Confirm Password"
-                              type="password"
-                              onFocus={e =>
-                                this.setState({ confirmPasswordFocus: true })
-                              }
-                              onBlur={e =>
-                                this.setState({ confirmPasswordFocus: false })
-                              }
-                            />
-                          </InputGroup>
-                          <FormGroup check className="text-left">
-                            <Label check>
-                              <Input type="checkbox" />
-                              <span className="form-check-sign" />I agree to the{" "}
-                              <a
-                                href="#pablo"
-                                onClick={e => e.preventDefault()}
-                              >
-                                terms and conditions
-                              </a>
-                              .
-                            </Label>
-                           
-                          </FormGroup>
                         </Form>
-
-
-
-
                       </CardBody>
                       <CardFooter>
-                        <Button className="btn-round" color="primary" size="lg">
-                          Get Started
-                        </Button>{" "}
-                        <Label check> Already a user? <Link to="/login" tag={Link}>
-                              Login
+                        <Button className="btn-round" color="info" size="lg">
+                          Login
+                  </Button>{" "}<Label check> Not a Member? <Link to="/register" tag={Link}>
+                              Register
                   </Link></Label>
                       </CardFooter>
                     </Card>
@@ -258,4 +177,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default Login;

@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch
-  // , Redirect 
+import {
+  BrowserRouter, Route, Switch
+  , Redirect
 } from "react-router-dom";
 
 import "assets/css/nucleo-icons.css";
@@ -12,6 +13,8 @@ import Index from "views/Index.jsx";
 import Contribution from "views/contribution/Index.jsx";
 import Feed from "views/feed/Index.jsx";
 import Register from "views/register/Index.jsx";
+import Login from "views/login/Index.jsx";
+
 
 
 import LandingPage from "views/examples/LandingPage.jsx";
@@ -22,30 +25,13 @@ ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <Route path="/components" render={props => <Index {...props} />} />
-      <Route
-        path="/landing-page"
-        render={props => <LandingPage {...props} />}
-      />
-      <Route
-        path="/register-page"
-        render={props => <RegisterPage {...props} />}
-      />
-      <Route
-        path="/profile-page"
-        render={props => <ProfilePage {...props} />}
-      />
-      <Route
-        path="/contribution-page"
-        render={props => <Contribution {...props} />}
-      />
-      <Route
-        path="/"
-        render={props => <Feed {...props} />}
-      />
-      <Route
-        path="/register"
-        render={props => <Register {...props} />}
-      />
+      <Route path="/landing-page" render={props => <LandingPage {...props} />} />
+      <Route path="/register-page" render={props => <RegisterPage {...props} />} />
+      <Route path="/profile-page" render={props => <ProfilePage {...props} />} />
+      <Route path="/contribution-page" render={props => <Contribution {...props} />} />
+      <Route path="/register" render={props => <Register {...props} />} />
+      <Route path="/login" render={props => <Login {...props} />} />
+      <Route path="/" render={props => <Feed {...props} />} />
       {/* <Redirect from="/" to="/components" /> */}
     </Switch>
   </BrowserRouter>,

@@ -4,6 +4,8 @@ import React from "react";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import PageHeader from "components/PageHeader/PageHeader.jsx";
 import Footer from "components/Footer/Footer.jsx";
+import withAuthorization from "components/Authentication/Index.jsx";
+
 
 // sections for this page/view
 import Basics from "views/IndexSections/Basics.jsx";
@@ -39,25 +41,13 @@ class Contribution extends React.Component {
         <IndexNavbar />
         <div className="wrapper">
           <br /><br /><br /> <Container>
-              <Row className="justify-content-center">
-                <UncontrolledEditor />
-              </Row>
-            </Container>
+            <Row className="justify-content-center">
+              <UncontrolledEditor />
+            </Row>
+          </Container>
 
           <div className="main">
             {/* <ControlledEditor /> */}
-           
-            {/* <Basics /> 
-            <Navbars /> 
-            <Tabs />
-            <Pagination />
-            <Notifications />
-            <Typography />
-            <JavaScript />
-            <NucleoIcons />
-            <Signup />
-            <Examples />
-            <Download /> */}
           </div>
           <Footer />
         </div>
@@ -67,4 +57,8 @@ class Contribution extends React.Component {
   }
 }
 
-export default Contribution;
+///dont mistake the displayName, it has the user role data in it.
+const authCondition = (authUser) => !!authUser && authUser.access=="user";
+
+export default withAuthorization(authCondition)(Contribution);
+// export default Contribution;

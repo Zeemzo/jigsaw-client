@@ -21,7 +21,7 @@ import Signup from "views/register/Index.jsx";
 import Examples from "views/IndexSections/Examples.jsx";
 import Download from "views/IndexSections/Download.jsx";
 
-class Contribution extends React.Component {
+class Feed extends React.Component {
   componentDidMount() {
     document.body.classList.toggle("index-page");
   }
@@ -33,7 +33,7 @@ class Contribution extends React.Component {
       <>
         <IndexNavbar />
         <div className="wrapper">
-          {/* <PageHeader /> */}
+          <PageHeader />
           <div className="main">
             {/* <Editor
               editorState={true}
@@ -44,15 +44,15 @@ class Contribution extends React.Component {
             /> */}
             {/* <Basics /> */}
             {/* <Navbars /> */}
-            {/* <Tabs />
-            <Pagination />
-            <Notifications />
+            {/* {/* <Tabs /> */}
+            {/* <Pagination /> */}
+            {/* <Notifications /> */}
             <Typography />
-            <JavaScript />
-            <NucleoIcons /> */}
-            <Signup />
-            {/* <Examples />
-            <Download /> */}
+            {/* <JavaScript />
+            <NucleoIcons />  */}
+            {/* <Signup /> */}
+            {/* <Examples /> */}
+            {/* <Download />  */}
           </div>
           <Footer />
         </div>
@@ -61,4 +61,4 @@ class Contribution extends React.Component {
   }
 }
 
-export default Contribution;
+export default Feed;

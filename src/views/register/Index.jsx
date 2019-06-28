@@ -1,30 +1,15 @@
 import React from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import { register } from "services/UserManagement";
 
 // reactstrap components
 import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardImg,
-  CardTitle,
-  Label,
-  FormGroup,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Container,
-  Row,
-  Col,
-  NavItem,
-  NavLink,
-  Nav,
+  Button, Card, CardHeader, CardBody, CardFooter, CardImg, CardTitle, Label, FormGroup, Form,
+  Input, InputGroupAddon, InputGroupText, InputGroup, Container, Row, Col,  
 } from "reactstrap";
+import { ToastContainer, ToastStore } from 'react-toasts';
 
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
@@ -37,10 +22,10 @@ class Register extends React.Component {
     this.state = {
       squares1to6: "",
       squares7and8: "",
-      txtEmail:"",
-      txtPassword:"",
-      txtFullName:"",
-      txtConfirmPassword:""
+      txtEmail: "",
+      txtPassword: "",
+      txtFullName: "",
+      txtConfirmPassword: ""
     }
   }
   componentDidMount() {
@@ -72,11 +57,15 @@ class Register extends React.Component {
         "deg)"
     });
   };
+
+
+
   render() {
     return (
       <>
         {/* <ExamplesNavbar /> */}
         <IndexNavbar />
+        <ToastContainer position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
 
         <div className="wrapper">
           <div className="page-header">
@@ -116,14 +105,11 @@ class Register extends React.Component {
                               </InputGroupText>
                             </InputGroupAddon>
                             <Input
-                              placeholder="Full Name"
+                              placeholder="Alias"
                               type="text"
-                              onFocus={e =>
-                                this.setState({ fullNameFocus: true })
-                              }
-                              onBlur={e =>
-                                this.setState({ fullNameFocus: false })
-                              }
+                              onFocus={e => this.setState({ fullNameFocus: true })}
+                              onBlur={e => this.setState({ fullNameFocus: false })}
+                              onChange={e => { this.setState({ txtFullName: e.target.value }) }}
                             />
                           </InputGroup>
                           <InputGroup
@@ -141,6 +127,7 @@ class Register extends React.Component {
                               type="text"
                               onFocus={e => this.setState({ emailFocus: true })}
                               onBlur={e => this.setState({ emailFocus: false })}
+                              onChange={e => { this.setState({ txtEmail: e.target.value }) }}
                             />
                           </InputGroup>
                           <InputGroup
@@ -156,12 +143,9 @@ class Register extends React.Component {
                             <Input
                               placeholder="Password"
                               type="password"
-                              onFocus={e =>
-                                this.setState({ passwordFocus: true })
-                              }
-                              onBlur={e =>
-                                this.setState({ passwordFocus: false })
-                              }
+                              onFocus={e => this.setState({ passwordFocus: true })}
+                              onBlur={e => this.setState({ passwordFocus: false })}
+                              onChange={e => { this.setState({ txtPassword: e.target.value }) }}
                             />
                           </InputGroup>
 
@@ -178,41 +162,40 @@ class Register extends React.Component {
                             <Input
                               placeholder="Confirm Password"
                               type="password"
-                              onFocus={e =>
-                                this.setState({ confirmPasswordFocus: true })
-                              }
-                              onBlur={e =>
-                                this.setState({ confirmPasswordFocus: false })
-                              }
+                              onFocus={e => this.setState({ confirmPasswordFocus: true })}
+                              onBlur={e => this.setState({ confirmPasswordFocus: false })}
+                              onChange={e => { this.setState({ txtConfirmPassword: e.target.value }) }}
                             />
                           </InputGroup>
                           <FormGroup check className="text-left">
                             <Label check>
                               <Input type="checkbox" />
                               <span className="form-check-sign" />I agree to the{" "}
-                              <a
-                                href="#pablo"
-                                onClick={e => e.preventDefault()}
-                              >
-                                terms and conditions
-                              </a>
-                              .
+                              <a href="#pablo"
+                                onClick={e => e.preventDefault()}>terms and conditions
+                              </a>.
                             </Label>
-                           
                           </FormGroup>
                         </Form>
-
-
-
-
                       </CardBody>
                       <CardFooter>
-                        <Button className="btn-round" color="primary" size="lg">
+                        <Button onClick={
+                          async () => {
+                            const responseStatus = await register(this.state.txtEmail, this.state.txtPassword, this.state.txtFullName)
+
+                            switch (responseStatus) {
+                              case 200:ToastStore.success("Registration Successful"); break;
+                              case 203:ToastStore.info("Account Already Exists"); break;
+                              case null: ToastStore.error("Registration Failed")
+                            }
+                          }
+                        } className="btn-round" color="primary" size="lg" >
                           Get Started
                         </Button>{" "}
                         <Label check> Already a user? <Link to="/login" tag={Link}>
-                              Login
+                          Login
                   </Link></Label>
+
                       </CardFooter>
                     </Card>
                   </Col>
@@ -248,6 +231,7 @@ class Register extends React.Component {
                   id="square6"
                   style={{ transform: this.state.squares1to6 }}
                 />
+
               </Container>
             </div>
           </div>

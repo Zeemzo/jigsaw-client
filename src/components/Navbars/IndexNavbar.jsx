@@ -2,20 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
 import {
-  Button,
-  Collapse,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  NavbarBrand,
-  Navbar,
-  NavItem,
-  NavLink,
-  Nav,
-  Container,
-  Row,
-  Col
+  Button, Collapse, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown,
+  NavbarBrand, Navbar, NavItem, NavLink, Nav, Container, Row, Col
 } from "reactstrap";
 
 class ComponentsNavbar extends React.Component {
@@ -82,8 +70,7 @@ class ComponentsNavbar extends React.Component {
             <NavbarBrand
               data-placement="bottom"
               to="/"
-              rel="noopener noreferrer"
-              title="Designed and Coded by Creative Tim"
+              title="Blockchain Based Blogging"
               tag={Link}
             >
               <span>JIGSAW</span>
@@ -108,9 +95,9 @@ class ComponentsNavbar extends React.Component {
             <div className="navbar-collapse-header">
               <Row>
                 <Col className="collapse-brand" xs="6">
-                  <a href="#pablo" onClick={e => e.preventDefault()}>
+                  <Link to="/" tag={Link}>
                     JIGSAW
-                  </a>
+                  </Link>
                 </Col>
                 <Col className="collapse-close text-right" xs="6">
                   <button
@@ -124,31 +111,31 @@ class ComponentsNavbar extends React.Component {
               </Row>
             </div>
             <Nav navbar>
-            <NavItem>
-              <NavLink to="/" tag={Link}>
-                Home
+              <NavItem>
+                <NavLink to="/" tag={Link}>
+                  Home
                   </NavLink>
-                </NavItem>
-            <NavItem>
-              <NavLink to="/landing-page" tag={Link}>
-                Landing
+              </NavItem>
+              <NavItem>
+                <NavLink to="/landing-page" tag={Link}>
+                  Landing
                   </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to="/register" tag={Link}>
-                Register
+              </NavItem>
+              <NavItem>
+                <NavLink to="/register" tag={Link}>
+                  Register
                   </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to="/profile-page" tag={Link}>
-                Profile
+              </NavItem>
+              <NavItem>
+                <NavLink to="/profile" tag={Link}>
+                  Profile
                   </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to="/contribution-page" tag={Link}>
-                Contribution
+              </NavItem>
+              <NavItem>
+                <NavLink to="/contribution-page" tag={Link}>
+                  Contribution
                   </NavLink>
-            </NavItem>
+              </NavItem>
             </Nav>
           </Collapse>
         </Container>

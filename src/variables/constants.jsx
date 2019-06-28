@@ -1,1 +1,1 @@
-export var jigsawBackend = "";
+export var jigsawBackend = "http://localhost:7000";

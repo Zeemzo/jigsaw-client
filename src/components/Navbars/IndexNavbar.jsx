@@ -117,25 +117,28 @@ class ComponentsNavbar extends React.Component {
                   </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/landing-page" tag={Link}>
-                  Landing
-                  </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/register" tag={Link}>
-                  Register
-                  </NavLink>
-              </NavItem>
-              <NavItem>
                 <NavLink to="/profile" tag={Link}>
                   Profile
                   </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink to="/contribution-page" tag={Link}>
-                  Contribution
+                  Write
                   </NavLink>
               </NavItem>
+
+              {
+                localStorage.getItem("token") != null ? <NavItem><NavLink to="/" tag={Link}>
+                  <Button onClick={e => {
+                    localStorage.removeItem("token");
+                  }}>Logout</Button>
+                </NavLink></NavItem> : <NavItem><NavLink to="/login" tag={Link}>
+                  <Button onClick={e => {
+                    localStorage.removeItem("token");
+                  }}>Login</Button>
+                </NavLink></NavItem>
+
+              }
             </Nav>
           </Collapse>
         </Container>

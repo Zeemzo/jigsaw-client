@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 // reactstrap components
 import {
-  Button,
+  Button, Spinner,
   Card,
   CardHeader,
   CardBody,
@@ -90,6 +90,7 @@ class RegisterPage extends React.Component {
                           src={require("assets/img/square-purple-1.png")}
                         />
                         <CardTitle tag="h4">Register</CardTitle>
+                        
                       </CardHeader>
                       <CardBody>
                         <Form className="form">

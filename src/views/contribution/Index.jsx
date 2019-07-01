@@ -58,7 +58,7 @@ class Contribution extends React.Component {
 }
 
 ///dont mistake the displayName, it has the user role data in it.
-const authCondition = (authUser) => !!authUser && authUser.access=="user";
+const authCondition = (authUser) => !!authUser;
 
 export default withAuthorization(authCondition)(Contribution);
 // export default Contribution;

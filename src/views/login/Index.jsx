@@ -1,6 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
+import { login } from "services/UserManagement";
 
 // reactstrap components
 import {
@@ -27,6 +28,9 @@ import {
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
+import { ToastContainer, ToastStore } from 'react-toasts';
+import ReactLoading from "react-loading";
+import { withToastManager } from 'react-toast-notifications';
 
 class Login extends React.Component {
   constructor(props) {
@@ -34,8 +38,11 @@ class Login extends React.Component {
     this.state = {
       squares1to6: "",
       squares7and8: "",
-      txtEmail:"",
-      txtPassword:""
+      txtEmail: "",
+      txtPassword: "",
+      invalidEmail: false,
+      showSpinner: false
+
     }
   }
   componentDidMount() {
@@ -68,10 +75,14 @@ class Login extends React.Component {
     });
   };
   render() {
+    const isInvalid =
+      this.state.txtPassword === "" ||
+      this.state.txtEmail === "";
     return (
       <>
         {/* <ExamplesNavbar /> */}
         <IndexNavbar />
+        <ToastContainer position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
 
         <div className="wrapper">
           <div className="page-header">
@@ -104,7 +115,21 @@ class Login extends React.Component {
                               placeholder="Email"
                               type="text"
                               onFocus={e => this.setState({ emailFocusLogin: true })}
-                              onBlur={e => this.setState({ emailFocusLogin: false })}
+                              onBlur={e => {
+                                this.setState({ emailFocusLogin: false })
+                                const regex = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$');
+                                if (this.state.txtEmail.length > 5 && !regex.test(this.state.txtEmail)) {
+                                  this.setState({ invalidEmail: true })
+                                } else {
+                                  this.setState({ invalidEmail: false })
+                                }
+                              }}
+                              onChange={e => {
+                                this.setState({ txtEmail: e.target.value })
+                                if (this.state.txtEmail.length == 0) {
+                                  this.setState({ invalidEmail: false })
+                                }
+                              }}
                             />
                           </InputGroup>
                           <InputGroup
@@ -119,18 +144,47 @@ class Login extends React.Component {
                             </InputGroupAddon>
                             <Input
                               placeholder="Password"
-                              type="text"
+                              type="password"
                               onFocus={e => this.setState({ passwordFocusLogin: true })}
                               onBlur={e => this.setState({ passwordFocusLogin: false })}
+                              onChange={e => {
+                                this.setState({ txtPassword: e.target.value })
+                              }}
                             />
                           </InputGroup>
                         </Form>
                       </CardBody>
                       <CardFooter>
-                        <Button className="btn-round" color="info" size="lg">
+                        <div hidden={!this.state.showSpinner} id="myModal" class="modal">
+                          <ReactLoading class="modal-content" type={"spinningBubbles"} color="#fff" />
+                        </div>
+                        <Button className="btn-round" color="info" size="lg" onClick={
+                          async () => {
+                            this.setState({ showSpinner: true });
+
+                            const responseStatus = await login(this.state.txtEmail, this.state.txtPassword)
+
+
+                            switch (responseStatus) {
+                              case 200:
+                                this.setState({ showSpinner: false });
+                                ToastStore.success("Login Successful");
+                                this.props.history.push('/profile'); break;
+                              case 203:
+                                this.setState({ showSpinner: false });
+                                ToastStore.warning("Account Doesn't Exist"); break;
+                              case 201:
+                                this.setState({ showSpinner: false });
+                                ToastStore.error("Password is incorrect"); break;
+                              case null:
+                                this.setState({ showSpinner: false });
+                                ToastStore.error("Login Failed");
+                            }
+                          }
+                        } type="submit" disabled={isInvalid}>
                           Login
                   </Button>{" "}<Label check> Not a Member? <Link to="/register" tag={Link}>
-                              Register
+                          Register
                   </Link></Label>
                       </CardFooter>
                     </Card>

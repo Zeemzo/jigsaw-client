@@ -4,43 +4,72 @@ import classnames from "classnames";
 import PerfectScrollbar from "perfect-scrollbar";
 // reactstrap components
 import {
-  Button,Card,CardHeader,CardBody,Label,FormGroup,Form,Input,FormText,NavItem,NavLink,
-  Nav,Table,TabContent,TabPane,Container,Row,Col,UncontrolledTooltip,UncontrolledCarousel
+  Button, Card, CardHeader, CardBody, Label, FormGroup, Form, Input, FormText, NavItem, NavLink,
+  Nav, Table, TabContent, TabPane, Container, Row, Col, UncontrolledTooltip, UncontrolledCarousel
 } from "reactstrap";
 
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
+import withAuthorization from "components/Authentication/Index.jsx";
+import { getWalletBalance, getUserSession } from "services/UserManagement";
+import { ToastContainer, ToastStore } from 'react-toasts';
+import ReactLoading from "react-loading";
 
-const carouselItems = [
-  {
-    src: require("assets/img/denys.jpg"),
-    altText: "Slide 1",
-    caption: "Big City Life, United States"
-  },
-  {
-    src: require("assets/img/fabien-bazanegue.jpg"),
-    altText: "Slide 2",
-    caption: "Somewhere Beyond, United States"
-  },
-  {
-    src: require("assets/img/mark-finn.jpg"),
-    altText: "Slide 3",
-    caption: "Stocks, United States"
-  }
-];
 
 let ps = null;
 
+const sample = [{ assetCode: "JIGXU", amount: "10000" }];
 class Profile extends React.Component {
   constructor(props) {
     super(props);
+    const user = getUserSession()
     this.state = {
-      tabs: 1
+      tabs: 1,
+      balance: [],
+      userName: user != null ? user.alias : "",
+      publicKey: user != null ? user.publicKey : "",
+      showSpinner: false
+
     };
+
+    // this.componentDidMount = this.componentDidMount().bind(this);
   }
-  componentDidMount() {
+
+  copyMessage(val) {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+  }
+
+  // async getBalance() {
+
+  // }
+
+  async componentDidMount() {
+    const user = getUserSession()
+    if (user != null) {
+      this.setState({ showSpinner: true })
+      const balance = await getWalletBalance(user.publicKey);
+      if (balance != null) {
+
+        this.setState({ balance: balance });
+        this.setState({ showSpinner: false })
+        console.log(balance);
+      }
+    }
+
+
+    // this.getBalance()
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
       document.documentElement.classList.remove("perfect-scrollbar-off");
@@ -70,6 +99,7 @@ class Profile extends React.Component {
       <>
         {/* <ExamplesNavbar /> */}
         <IndexNavbar />
+        <ToastContainer position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
 
         <div className="wrapper">
           <div className="page-header">
@@ -85,54 +115,6 @@ class Profile extends React.Component {
             />
             <Container className="align-items-center">
               <Row>
-                <Col lg="6" md="6">
-                  <h1 className="profile-title text-left">Mike Scheinder</h1>
-                  <h5 className="text-on-back">01</h5>
-                  <p className="profile-description">
-                    Offices parties lasting outward nothing age few resolve.
-                    Impression to discretion understood to we interested he
-                    excellence. Him remarkably use projection collecting. Going
-                    about eat forty world has round miles.
-                  </p>
-                  <div className="btn-wrapper profile pt-3">
-                    <Button
-                      className="btn-icon btn-round"
-                      color="twitter"
-                      href="https://twitter.com/creativetim"
-                      id="tooltip639225725"
-                      target="_blank"
-                    >
-                      <i className="fab fa-twitter" />
-                    </Button>
-                    <UncontrolledTooltip delay={0} target="tooltip639225725">
-                      Follow us
-                    </UncontrolledTooltip>
-                    <Button
-                      className="btn-icon btn-round"
-                      color="facebook"
-                      href="https://www.facebook.com/creativetim"
-                      id="tooltip982846143"
-                      target="_blank"
-                    >
-                      <i className="fab fa-facebook-square" />
-                    </Button>
-                    <UncontrolledTooltip delay={0} target="tooltip982846143">
-                      Like us
-                    </UncontrolledTooltip>
-                    <Button
-                      className="btn-icon btn-round"
-                      color="dribbble"
-                      href="https://dribbble.com/creativetim"
-                      id="tooltip951161185"
-                      target="_blank"
-                    >
-                      <i className="fab fa-dribbble" />
-                    </Button>
-                    <UncontrolledTooltip delay={0} target="tooltip951161185">
-                      Follow us
-                    </UncontrolledTooltip>
-                  </div>
-                </Col>
                 <Col className="ml-auto mr-auto" lg="4" md="6">
                   <Card className="card-coin card-plain">
                     <CardHeader>
@@ -141,7 +123,13 @@ class Profile extends React.Component {
                         className="img-center img-fluid rounded-circle"
                         src={require("assets/img/mike.jpg")}
                       />
-                      <h4 className="title">Transactions</h4>
+                      <h4 className="title">{this.state.userName}</h4>
+                      <Button onClick={e => {
+                        this.copyMessage(this.state.publicKey)
+                        ToastStore.success("Public Key Copied to Clipboard");
+
+                      }} id="bottom">{this.state.publicKey.substring(0, 15)}...</Button>
+                      <UncontrolledTooltip placement="bottom" target="bottom" delay={0}>Click to Copy PublicKey</UncontrolledTooltip>
                     </CardHeader>
                     <CardBody>
                       <Nav
@@ -192,25 +180,17 @@ class Profile extends React.Component {
                               <tr>
                                 <th className="header">COIN</th>
                                 <th className="header">AMOUNT</th>
-                                <th className="header">VALUE</th>
                               </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>BTC</td>
-                                <td>7.342</td>
-                                <td>48,870.75 USD</td>
-                              </tr>
-                              <tr>
-                                <td>ETH</td>
-                                <td>30.737</td>
-                                <td>64,53.30 USD</td>
-                              </tr>
-                              <tr>
-                                <td>XRP</td>
-                                <td>19.242</td>
-                                <td>18,354.96 USD</td>
-                              </tr>
+                            </thead><tbody>
+                              <div hidden={!this.state.showSpinner} id="myModal" class="modal">
+                                <ReactLoading class="modal-content" type={"cubes"} color="#fff" />
+                              </div>
+                              {this.state.balance.map((item, i) => (
+                                <tr key={i + "g"}>
+                                  <td>{item.assetCode != null ? item.assetCode : "XLM"}</td>
+                                  <td>{item.balance}</td>
+                                </tr>
+                              ))}
                             </tbody>
                           </Table>
                         </TabPane>
@@ -272,147 +252,7 @@ class Profile extends React.Component {
               </Row>
             </Container>
           </div>
-          <div className="section">
-            <Container>
-              <Row className="justify-content-between">
-                <Col md="6">
-                  <Row className="justify-content-between align-items-center">
-                    <UncontrolledCarousel items={carouselItems} />
-                  </Row>
-                </Col>
-                <Col md="5">
-                  <h1 className="profile-title text-left">Projects</h1>
-                  <h5 className="text-on-back">02</h5>
-                  <p className="profile-description text-left">
-                    An artist of considerable range, Ryan — the name taken by
-                    Melbourne-raised, Brooklyn-based Nick Murphy — writes,
-                    performs and records all of his own music, giving it a warm,
-                    intimate feel with a solid groove structure. An artist of
-                    considerable range.
-                  </p>
-                  <div className="btn-wrapper pt-3">
-                    <Button
-                      className="btn-simple"
-                      color="primary"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      <i className="tim-icons icon-book-bookmark" /> Bookmark
-                    </Button>
-                    <Button
-                      className="btn-simple"
-                      color="info"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      <i className="tim-icons icon-bulb-63" /> Check it!
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-            </Container>
-          </div>
-          <section className="section">
-            <Container>
-              <Row>
-                <Col md="6">
-                  <Card className="card-plain">
-                    <CardHeader>
-                      <h1 className="profile-title text-left">Contact</h1>
-                      <h5 className="text-on-back">03</h5>
-                    </CardHeader>
-                    <CardBody>
-                      <Form>
-                        <Row>
-                          <Col md="6">
-                            <FormGroup>
-                              <label>Your Name</label>
-                              <Input defaultValue="Mike" type="text" />
-                            </FormGroup>
-                          </Col>
-                          <Col md="6">
-                            <FormGroup>
-                              <label>Email address</label>
-                              <Input
-                                placeholder="mike@email.com"
-                                type="email"
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col md="6">
-                            <FormGroup>
-                              <label>Phone</label>
-                              <Input defaultValue="001-12321345" type="text" />
-                            </FormGroup>
-                          </Col>
-                          <Col md="6">
-                            <FormGroup>
-                              <label>Company</label>
-                              <Input defaultValue="CreativeTim" type="text" />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col md="12">
-                            <FormGroup>
-                              <label>Message</label>
-                              <Input placeholder="Hello there!" type="text" />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Button
-                          className="btn-round float-right"
-                          color="primary"
-                          data-placement="right"
-                          id="tooltip341148792"
-                          type="button"
-                        >
-                          Send text
-                        </Button>
-                        <UncontrolledTooltip
-                          delay={0}
-                          placement="right"
-                          target="tooltip341148792"
-                        >
-                          Can't wait for your message
-                        </UncontrolledTooltip>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                </Col>
-                <Col className="ml-auto" md="4">
-                  <div className="info info-horizontal">
-                    <div className="icon icon-primary">
-                      <i className="tim-icons icon-square-pin" />
-                    </div>
-                    <div className="description">
-                      <h4 className="info-title">Find us at the office</h4>
-                      <p>
-                        Bld Mihail Kogalniceanu, nr. 8, <br />
-                        7652 Bucharest, <br />
-                        Romania
-                      </p>
-                    </div>
-                  </div>
-                  <div className="info info-horizontal">
-                    <div className="icon icon-primary">
-                      <i className="tim-icons icon-mobile" />
-                    </div>
-                    <div className="description">
-                      <h4 className="info-title">Give us a ring</h4>
-                      <p>
-                        Michael Jordan <br />
-                        +40 762 321 762 <br />
-                        Mon - Fri, 8:00-22:00
-                      </p>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </Container>
-          </section>
+
           <Footer />
         </div>
       </>
@@ -420,4 +260,6 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile;
+const authCondition = (authUser) => !!authUser;
+
+export default withAuthorization(authCondition)(Profile);

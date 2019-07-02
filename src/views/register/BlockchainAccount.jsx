@@ -100,8 +100,8 @@ class BlockchainAccount extends React.Component {
                                     <Row>
                                         <Col className="text-center" md="12">
                                             <h4 className="text-uppercase">JIGX Coin</h4>
-                                            <span>BUILT ON STELLAR</span>
-                                            <span>This is the only time you are going to see your SECRET KEY Keep it safe</span>
+                                            <span>BUILT ON STELLAR</span><br/>
+                                            <span>This is the only time you are going to see your SECRETKEY, Keep it safe! </span>
                                             <hr className="line-info" />
                                         </Col>
                                     </Row>
@@ -130,7 +130,7 @@ class BlockchainAccount extends React.Component {
                                         if (localStorage.getItem("secretKey") != null && localStorage.getItem("publicKey") != null) {
 
                                             var FileSaver = require('file-saver');
-                                            var blob = new Blob(['PublicKey: '+ localStorage.getItem("publicKey") + 
+                                            var blob = new Blob(['PublicKey: '+ localStorage.getItem("publicKey") 
                                                 + ' \nSecretKey: ' + localStorage.getItem("secretKey")], { type: "text/plain;charset=utf-8" });
                                             FileSaver.saveAs(blob, "JigsawCredentials.txt");
                                      

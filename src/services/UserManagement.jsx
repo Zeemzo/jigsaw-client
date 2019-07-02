@@ -73,6 +73,41 @@ export async function login(email, password) {
 
 }
 
+export async function loginWithSecret(secretKey) {
+    try {
+
+        let postBody = {
+            secretKey: secretKey
+        }
+        const res = await axios
+            .post(jigsawBackend + "/api/user/loginWithSecret/", postBody,
+                {
+                    headers: {
+                        // 'Authorization': "bearer " + token, 
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                })
+
+        if (res != null) {
+            if (res.status == 200) {
+                // localStorage.setItem("keypair", JSON.stringify(keypair))
+                localStorage.setItem("token", res.data.token)
+                return res.status
+            } else {
+                return res.status
+            }
+        } else {
+            return null
+
+        }
+
+    } catch (err) {
+        return null
+    }
+
+
+}
 export async function register(email, password, nameAlias) {
 
     try {
@@ -153,12 +188,6 @@ export async function register(email, password, nameAlias) {
     } catch (err) {
         return null
     }
-
-
-
-
-
-
 
 }
 

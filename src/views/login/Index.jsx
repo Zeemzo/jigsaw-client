@@ -2,6 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { login } from "services/UserManagement";
+import Switch from "react-bootstrap-switch";
 
 // reactstrap components
 import {
@@ -31,6 +32,7 @@ import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import { ToastContainer, ToastStore } from 'react-toasts';
 import ReactLoading from "react-loading";
 import { withToastManager } from 'react-toast-notifications';
+import { loginWithSecret } from "../../services/UserManagement";
 
 class Login extends React.Component {
   constructor(props) {
@@ -41,7 +43,8 @@ class Login extends React.Component {
       txtEmail: "",
       txtPassword: "",
       invalidEmail: false,
-      showSpinner: false
+      showSpinner: false,
+      privateLogin: false
 
     }
   }
@@ -55,6 +58,8 @@ class Login extends React.Component {
       "mousemove",
       this.followCursor
     );
+
+
   }
   followCursor = event => {
     let posX = event.clientX - window.innerWidth / 2;
@@ -75,9 +80,9 @@ class Login extends React.Component {
     });
   };
   render() {
-    const isInvalid =
-      this.state.txtPassword === "" ||
-      this.state.txtEmail === "";
+    const isInvalid = this.state.privateLogin ?
+      this.state.txtPassword === "" : 
+      this.state.invalidEmail ||this.state.txtPassword === "" ||this.state.txtEmail === "";
     return (
       <>
         {/* <ExamplesNavbar /> */}
@@ -101,37 +106,50 @@ class Login extends React.Component {
                       </CardHeader>
                       <CardBody>
                         <Form className="form">
-                          <InputGroup
-                            className={classnames({
-                              "input-group-focus": this.state.emailFocusLogin
-                            })}
+                          <Col lg="6" sm="6">
+                            <p className="category">Secret Key Login</p>
+                            {/* <Switch offColor="" offText="" onColor="" onText="" /> */}
+                            {/* <br /> */}
+                            <Switch onChange={e => {
+                              this.setState({ privateLogin: e.state.value });
+                            }} defaultValue={false} offColor="" onColor="blue" />
+                          </Col>
+                          <FormGroup className={this.state.invalidEmail ? "has-danger" : null}
                           >
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="tim-icons icon-email-85" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="Email"
-                              type="text"
-                              onFocus={e => this.setState({ emailFocusLogin: true })}
-                              onBlur={e => {
-                                this.setState({ emailFocusLogin: false })
-                                const regex = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$');
-                                if (this.state.txtEmail.length > 5 && !regex.test(this.state.txtEmail)) {
-                                  this.setState({ invalidEmail: true })
-                                } else {
-                                  this.setState({ invalidEmail: false })
-                                }
-                              }}
-                              onChange={e => {
-                                this.setState({ txtEmail: e.target.value })
-                                if (this.state.txtEmail.length == 0) {
-                                  this.setState({ invalidEmail: false })
-                                }
-                              }}
-                            />
-                          </InputGroup>
+                            <InputGroup
+                              className={this.state.invalidEmail ? "has-danger" : classnames({
+                                "input-group-focus": this.state.emailFocusLogin
+                              })}
+
+                            >
+                              <InputGroupAddon addonType="prepend">
+                                <InputGroupText>
+                                  <i className="tim-icons icon-email-85" />
+                                </InputGroupText>
+                              </InputGroupAddon>
+                              <Input
+                                placeholder="Email"
+                                type="text"
+                                disabled={this.state.privateLogin}
+                                onFocus={e => this.setState({ emailFocusLogin: true })}
+                                onBlur={e => {
+                                  this.setState({ emailFocusLogin: false })
+                                  const regex = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$');
+                                  if ( !regex.test(this.state.txtEmail)) {
+                                    this.setState({ invalidEmail: true })
+                                  } else {
+                                    this.setState({ invalidEmail: false })
+                                  }
+                                }}
+                                onChange={e => {
+                                  this.setState({ txtEmail: e.target.value })
+                                  if (this.state.txtEmail.length == 0) {
+                                    this.setState({ invalidEmail: false })
+                                  }
+                                }}
+                              />
+                            </InputGroup></FormGroup>
+
                           <InputGroup
                             className={classnames({
                               "input-group-focus": this.state.passwordFocusLogin
@@ -143,7 +161,7 @@ class Login extends React.Component {
                               </InputGroupText>
                             </InputGroupAddon>
                             <Input
-                              placeholder="Password"
+                              placeholder={!this.state.privateLogin ? "Password" : "Secret Key"}
                               type="password"
                               onFocus={e => this.setState({ passwordFocusLogin: true })}
                               onBlur={e => this.setState({ passwordFocusLogin: false })}
@@ -155,31 +173,53 @@ class Login extends React.Component {
                         </Form>
                       </CardBody>
                       <CardFooter>
-                        <div hidden={!this.state.showSpinner} id="myModal" class="modal">
-                          <ReactLoading class="modal-content" type={"spinningBubbles"} color="#fff" />
+                        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
+                          <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
                         </div>
                         <Button className="btn-round" color="info" size="lg" onClick={
                           async () => {
-                            this.setState({ showSpinner: true });
+                            if (!this.state.privateLogin) {
+                              this.setState({ showSpinner: true });
 
-                            const responseStatus = await login(this.state.txtEmail, this.state.txtPassword)
+                              const responseStatus = await login(this.state.txtEmail, this.state.txtPassword)
 
+                              switch (responseStatus) {
+                                case 200:
+                                  this.setState({ showSpinner: false });
+                                  ToastStore.success("Login Successful");
+                                  this.props.history.push('/profile'); break;
+                                case 203:
+                                  this.setState({ showSpinner: false });
+                                  ToastStore.warning("Account Doesn't Exist"); break;
+                                case 201:
+                                  this.setState({ showSpinner: false });
+                                  ToastStore.error("Password is incorrect"); break;
+                                case null:
+                                  this.setState({ showSpinner: false });
+                                  ToastStore.error("Login Failed");
+                              }
+                            } else {
+                              this.setState({ showSpinner: true });
 
-                            switch (responseStatus) {
-                              case 200:
-                                this.setState({ showSpinner: false });
-                                ToastStore.success("Login Successful");
-                                this.props.history.push('/profile'); break;
-                              case 203:
-                                this.setState({ showSpinner: false });
-                                ToastStore.warning("Account Doesn't Exist"); break;
-                              case 201:
-                                this.setState({ showSpinner: false });
-                                ToastStore.error("Password is incorrect"); break;
-                              case null:
-                                this.setState({ showSpinner: false });
-                                ToastStore.error("Login Failed");
+                              const responseStatus = await loginWithSecret(this.state.txtPassword)
+
+                              switch (responseStatus) {
+                                case 200:
+                                  this.setState({ showSpinner: false });
+                                  ToastStore.success("Login Successful");
+                                  this.props.history.push('/profile'); break;
+                                case 203:
+                                  this.setState({ showSpinner: false });
+                                  ToastStore.warning("Account Doesn't Exist"); break;
+                                case 201:
+                                  this.setState({ showSpinner: false });
+                                  ToastStore.error("Private Key is incorrect"); break;
+                                case null:
+                                  this.setState({ showSpinner: false });
+                                  ToastStore.error("Login Failed");
+                              }
                             }
+
                           }
                         } type="submit" disabled={isInvalid}>
                           Login

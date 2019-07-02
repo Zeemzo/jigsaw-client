@@ -7,8 +7,8 @@ import ReactLoading from "react-loading";
 
 // reactstrap components
 import {
-  Button, Card, CardHeader, CardBody, CardFooter, CardImg, CardTitle, Label, FormGroup, Form,
-  Input, InputGroupAddon, InputGroupText, InputGroup, Container, Row, Col, Alert, Spinner
+  Button, Card, CardHeader, CardBody, CardFooter, CardImg, CardTitle, Label, FormGroup, Form, Modal,
+  Input, InputGroupAddon, InputGroupText, InputGroup, Container, Row, Col, Alert, UncontrolledTooltip
 } from "reactstrap";
 import { ToastContainer, ToastStore } from 'react-toasts';
 
@@ -40,6 +40,9 @@ class Register extends React.Component {
       passwordMatched: true,
       invalidEmail: false,
       showSpinner: false,
+      iAgree: false,
+      demoModal: false
+
     }
   }
   componentDidMount() {
@@ -73,6 +76,11 @@ class Register extends React.Component {
     });
   };
 
+  toggleModal = modalState => {
+    this.setState({
+      [modalState]: !this.state[modalState]
+    });
+  };
   checkStrength() {
     const hsimp = setup({
       calculation: {
@@ -97,11 +105,11 @@ class Register extends React.Component {
 
 
   render() {
-    const isInvalid =
+    const isInvalid = this.state.invalidEmail ||
       this.state.txtPassword !== this.state.txtConfirmPassword ||
       this.state.txtPassword === "" ||
       this.state.txtEmail === "" ||
-      this.state.txtFullName === "";
+      this.state.txtFullName === "" || !this.state.iAgree;
     return (
       <>
         {/* <ExamplesNavbar /> */}
@@ -113,6 +121,7 @@ class Register extends React.Component {
             <div className="page-header-image" />
             <div className="content">
               <Container>
+
                 <Row>
                   <Col className="offset-lg-0 offset-md-3" lg="5" md="6">
                     <div
@@ -126,18 +135,54 @@ class Register extends React.Component {
                       style={{ transform: this.state.squares7and8 }}
                     />
                     <Card className="card-register">
+
                       <CardHeader>
+                        <Modal
+                          id="termsModal" modalClassName="modal-black"
+                          isOpen={this.state.demoModal}
+                          toggle={() => this.toggleModal("demoModal")}
+                        >
+                          <div className="modal-header justify-content-center">
+                            <button
+                              className="close"
+                              onClick={() => this.toggleModal("demoModal")}
+                            >
+                              <i className="tim-icons icon-simple-remove" />
+                            </button>
+                            <h4 className="title title-up">Modal title</h4>
+                          </div>
+                          <div className="modal-body">
+                            <p>
+                              Far far away, behind the word mountains, far from the
+                              countries Vokalia and Consonantia, there live the blind texts.
+                              Separated they live in Bookmarksgrove right at the coast of
+                              the Semantics, a large language ocean. A small river named
+                              Duden flows by their place and supplies it with the necessary
+                              regelialia. It is a paradisematic country, in which roasted
+                              parts of sentences fly into your mouth.
+                </p>
+                          </div>
+                          <div className="modal-footer">
+                            <Button color="default" type="button">
+                              Nice Button
+                </Button>
+                            <Button
+                              color="danger"
+                              type="button"
+                              onClick={() => this.toggleModal("demoModal")}
+                            >
+                              Close
+                </Button>
+                          </div>
+                        </Modal>
                         <CardImg
                           alt="..."
                           src={require("assets/img/square-purple-1.png")}
                         />
                         <CardTitle tag="h4">Register</CardTitle>
-
-
                       </CardHeader>
                       <CardBody>
                         <Form className="form">
-
                           <InputGroup
                             className={classnames({
                               "input-group-focus": this.state.fullNameFocus
@@ -156,40 +201,48 @@ class Register extends React.Component {
                               onChange={e => { this.setState({ txtFullName: e.target.value }) }}
                             />
                           </InputGroup>
-                          <InputGroup
-                            className={classnames({
-                              "input-group-focus": this.state.emailFocus
-                            })}
-                          >
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="tim-icons icon-email-85" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="Email"
-                              type="text"
-                              onFocus={e => this.setState({ emailFocus: true })}
-                              onBlur={e => {
-                                this.setState({ emailFocus: false })
-                                const regex = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$');
-                                if (this.state.txtEmail.length > 5 && !regex.test(this.state.txtEmail)) {
-                                  this.setState({ invalidEmail: true })
-                                } else {
-                                  this.setState({ invalidEmail: false })
-                                }
-                              }}
-                              onChange={e => {
-                                this.setState({ txtEmail: e.target.value })
 
-                                if (this.state.txtEmail.length == 0) {
-                                  this.setState({ invalidEmail: false })
-                                }
-                              }}
-                            />
-                          </InputGroup>
-                          {this.state.invalidEmail ? <Alert color="danger">
-                            Email Address is Invalid!!!</Alert> : null}
+                          <FormGroup className={this.state.invalidEmail ? "has-danger" : null}>
+                            <InputGroup
+                              className={this.state.invalidEmail ? "has-danger" : classnames({
+                                "input-group-focus": this.state.emailFocus
+                              })}
+                            >
+                              <InputGroupAddon addonType="prepend">
+                                <InputGroupText>
+                                  <i className="tim-icons icon-email-85" />
+                                </InputGroupText>
+                              </InputGroupAddon>
+
+                              <Input
+                                className="form-control-danger"
+
+                                placeholder="Email"
+                                type="text"
+                                onFocus={e => this.setState({ emailFocus: true })}
+                                onBlur={e => {
+                                  this.setState({ emailFocus: false })
+                                  const regex = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$');
+                                  if (this.state.txtEmail.length > 5 && !regex.test(this.state.txtEmail)) {
+                                    this.setState({ invalidEmail: true })
+                                  } else {
+                                    this.setState({ invalidEmail: false })
+                                  }
+                                }}
+                                onChange={e => {
+                                  this.setState({ txtEmail: e.target.value })
+
+                                  if (this.state.txtEmail.length == 0) {
+                                    this.setState({ invalidEmail: false })
+                                  }
+                                }}
+                              />
+                            </InputGroup>
+                          </FormGroup>
+                          {/* {this.state.passwordFocus ? <Alert color="danger">
+                            THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</Alert> : null} */}
+                          <UncontrolledTooltip placement="top" target="txtPassword" delay={0}>THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</UncontrolledTooltip>
+
                           <InputGroup
                             className={classnames({
                               "input-group-focus": this.state.passwordFocus
@@ -201,6 +254,7 @@ class Register extends React.Component {
                               </InputGroupText>
                             </InputGroupAddon>
                             <Input
+                              id="txtPassword"
                               placeholder="Password"
                               type="password"
                               onFocus={e => this.setState({ passwordFocus: true })}
@@ -215,71 +269,63 @@ class Register extends React.Component {
                                 }
                               }}
                             />
-
-
                           </InputGroup>
-                          {this.state.passwordFocus ? <Alert color="danger">
-                            THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</Alert> : null}
+                          <FormGroup className={!this.state.passwordMatched ? "has-danger" : null}>
 
-                          <InputGroup
-                            className={classnames({
-                              "input-group-focus": this.state.confirmPasswordFocus
-                            })}
-                          >
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="tim-icons icon-lock-circle" />
-                              </InputGroupText>
-                            </InputGroupAddon>
+                            <InputGroup
+                              className={this.state.passwordMatched ? classnames({
+                                "input-group-focus": this.state.confirmPasswordFocus
+                              }) : "has-danger"}
+                            >
+                              <InputGroupAddon addonType="prepend">
+                                <InputGroupText>
+                                  <i className="tim-icons icon-lock-circle" />
+                                </InputGroupText>
+                              </InputGroupAddon>
 
-                            <Input className={!this.state.passwordMatched ?
-                              "has-danger"
-                              : "has-success"}
-
-                              placeholder="Confirm Password"
-                              type="password"
-                              onFocus={e => this.setState({ confirmPasswordFocus: true })}
-                              onBlur={e => this.setState({ confirmPasswordFocus: false })}
-                              onChange={e => {
-                                this.setState({ txtConfirmPassword: e.target.value })
-                                if (e.target.value.length >= this.state.txtPassword.length && e.target.value != this.state.txtPassword) {
-                                  this.setState({ passwordMatched: false })
-                                } else {
-                                  this.setState({ passwordMatched: true })
-                                  this.setState({ showPasswordMeter: false })
-                                }
-                              }}
-                            />
+                              <Input
+                                placeholder="Confirm Password"
+                                type="password"
+                                onFocus={e => this.setState({ confirmPasswordFocus: true })}
+                                onBlur={e => this.setState({ confirmPasswordFocus: false })}
+                                onChange={e => {
+                                  this.setState({ txtConfirmPassword: e.target.value })
+                                  if (e.target.value.length >= this.state.txtPassword.length && e.target.value != this.state.txtPassword) {
+                                    this.setState({ passwordMatched: false })
+                                  } else {
+                                    this.setState({ passwordMatched: true })
+                                    this.setState({ showPasswordMeter: false })
+                                  }
+                                }}
+                              />
 
 
-                          </InputGroup>
+                            </InputGroup></FormGroup>
+
+                          {this.state.showPasswordMeter ?
+                            <Alert color="warning">
+                              It takes {this.state.passwordStrength} to crack your password!</Alert>
+                            : null}
+                          {/* 
+                          {!this.state.passwordMatched ? <Alert color="danger">
+                            Your password confirmation doesn't match  </Alert> : null} */}
                           <FormGroup check className="text-left">
                             <Label check>
-                              <Input type="checkbox" />
+                              <Input type="checkbox" onClick={e => {
+                                this.setState({ iAgree: !this.state.iAgree })
+                              }} />
                               <span className="form-check-sign" />I agree to the{" "}
                               <a href="#pablo"
-                                onClick={e => e.preventDefault()}>terms and conditions
+                                onClick={() => this.toggleModal("demoModal")}
+                              >terms and conditions
                               </a>.
                               <span />
-
                             </Label>
                           </FormGroup>
                         </Form>
                       </CardBody>
 
                       <CardFooter>
-
-                        {this.state.showPasswordMeter ?
-                          <Alert color="warning">
-                            It takes {this.state.passwordStrength} to crack your password!</Alert>
-                          : null}
-
-                        {!this.state.passwordMatched ? <Alert color="danger">
-                          Your password confirmation doesn't match</Alert> : null}
-                        {/* <ReactLoading type={"cubes"} color="#fff" /> */}
-                        <div hidden={!this.state.showSpinner} id="myModal" class="modal">
-                          <ReactLoading class="modal-content" type={"spinningBubbles"} color="#fff" />
-                        </div>
                         <Button onClick={
                           async () => {
                             this.setState({ showSpinner: true })
@@ -288,7 +334,6 @@ class Register extends React.Component {
 
                             if (responseStatus != null) {
                               console.log(responseStatus)
-
                             }
 
                             switch (responseStatus) {
@@ -296,7 +341,7 @@ class Register extends React.Component {
                                 console.log("Registration Successful")
                                 this.setState({ showSpinner: false });
                                 ToastStore.success("Registration Successful");
-                                this.props.history.push('/blockchainAccount'); 
+                                this.props.history.push('/blockchainAccount');
                                 break;
                               case 203:
                                 console.log("Account Already Exists")
@@ -307,11 +352,6 @@ class Register extends React.Component {
                                 ToastStore.error("Registration Failed");
                             }
 
-
-
-
-
-
                           }
                         } type="submit" disabled={isInvalid}
                           className="btn-round" color="primary" size="lg" >
@@ -320,11 +360,15 @@ class Register extends React.Component {
                         <Label check> Already a user? <Link to="/login" tag={Link}>
                           Login
                   </Link></Label>
+                        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
+                          <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                        </div>
 
                       </CardFooter>
                     </Card>
                   </Col>
                 </Row>
+
                 <div className="register-bg" />
                 <div
                   className="square square-1"

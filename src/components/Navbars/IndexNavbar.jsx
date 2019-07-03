@@ -1,5 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link ,withRouter} from "react-router-dom";
+import { Route } from 'react-router';
+
 // reactstrap components
 import {
   Button, Collapse, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown,
@@ -7,12 +9,14 @@ import {
 } from "reactstrap";
 
 class ComponentsNavbar extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       collapseOpen: false,
       color: "navbar-transparent"
     };
+    console.log(this.props.location.pathname)
   }
   componentDidMount() {
     window.addEventListener("scroll", this.changeColor);
@@ -112,9 +116,11 @@ class ComponentsNavbar extends React.Component {
             </div>
             <Nav navbar>
               <NavItem>
-                <NavLink to="/" tag={Link}>
-                  Home
-                  </NavLink>
+              {this.props.location.pathname=="/" ?<a href="#Home"><NavLink>Home
+                   </NavLink> </a>: <NavLink
+                to="/#Home" tag={Link}
+              >Home
+              </NavLink> }
               </NavItem>
               <NavItem>
                 <NavLink to="/profile" tag={Link}>
@@ -126,7 +132,12 @@ class ComponentsNavbar extends React.Component {
                   Write
                   </NavLink>
               </NavItem>
-
+              <NavItem>{this.props.location.pathname=="/" ?<a href="#findKnowledge"><NavLink>Find Knowledge
+                   </NavLink> </a>: <NavLink
+                to="/#findKnowledge" tag={Link}
+              >Find Knowledge
+              </NavLink> }
+              </NavItem>
               {
                 localStorage.getItem("token") != null ? <NavItem><NavLink to="/" tag={Link}>
                   <Button onClick={e => {
@@ -147,4 +158,4 @@ class ComponentsNavbar extends React.Component {
   }
 }
 
-export default ComponentsNavbar;
+export default withRouter(ComponentsNavbar);

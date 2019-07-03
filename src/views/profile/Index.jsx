@@ -16,7 +16,9 @@ import withAuthorization from "components/Authentication/Index.jsx";
 import { getWalletBalance, getUserSession } from "services/UserManagement";
 import { ToastContainer, ToastStore } from 'react-toasts';
 import ReactLoading from "react-loading";
+import ScrollableAnchor ,{ goToTop } from 'react-scrollable-anchor'
 
+import {withRouter} from 'react-router-dom';
 
 let ps = null;
 
@@ -56,6 +58,7 @@ class Profile extends React.Component {
   // }
 
   async componentDidMount() {
+    goToTop()
     const user = getUserSession()
     if (user != null) {
       this.setState({ showSpinner: true })
@@ -262,4 +265,4 @@ class Profile extends React.Component {
 
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Profile);
+export default withAuthorization(authCondition)(withRouter(Profile));

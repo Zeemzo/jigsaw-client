@@ -1,8 +1,10 @@
 import React from "react";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { login } from "services/UserManagement";
 import Switch from "react-bootstrap-switch";
+import styled from "tachyons-components";
+import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
 
 // reactstrap components
 import {
@@ -49,6 +51,7 @@ class Login extends React.Component {
     }
   }
   componentDidMount() {
+    goToTop()
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
   }
@@ -81,8 +84,8 @@ class Login extends React.Component {
   };
   render() {
     const isInvalid = this.state.privateLogin ?
-      this.state.txtPassword === "" : 
-      this.state.invalidEmail ||this.state.txtPassword === "" ||this.state.txtEmail === "";
+      this.state.txtPassword === "" :
+      this.state.invalidEmail || this.state.txtPassword === "" || this.state.txtEmail === "";
     return (
       <>
         {/* <ExamplesNavbar /> */}
@@ -114,7 +117,8 @@ class Login extends React.Component {
                               this.setState({ privateLogin: e.state.value });
                             }} defaultValue={false} offColor="" onColor="blue" />
                           </Col>
-                          <FormGroup className={this.state.invalidEmail ? "has-danger" : null}
+                          <FormGroup hidden={this.state.privateLogin}
+                            className={this.state.invalidEmail ? "has-danger" : null}
                           >
                             <InputGroup
                               className={this.state.invalidEmail ? "has-danger" : classnames({
@@ -130,12 +134,11 @@ class Login extends React.Component {
                               <Input
                                 placeholder="Email"
                                 type="text"
-                                disabled={this.state.privateLogin}
                                 onFocus={e => this.setState({ emailFocusLogin: true })}
                                 onBlur={e => {
                                   this.setState({ emailFocusLogin: false })
                                   const regex = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$');
-                                  if ( !regex.test(this.state.txtEmail)) {
+                                  if (!regex.test(this.state.txtEmail)) {
                                     this.setState({ invalidEmail: true })
                                   } else {
                                     this.setState({ invalidEmail: false })
@@ -174,7 +177,10 @@ class Login extends React.Component {
                       </CardBody>
                       <CardFooter>
                         <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
-                          <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                          <div class="modalLoad-content" >
+                            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                          </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
+
                         </div>
                         <Button className="btn-round" color="info" size="lg" onClick={
                           async () => {
@@ -271,4 +277,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);

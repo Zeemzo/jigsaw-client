@@ -1,6 +1,6 @@
 import React from "react";
 import ReactLoading from "react-loading";
-import { Link } from "react-router-dom";
+import { Link ,withRouter} from "react-router-dom";
 
 // reactstrap components
 import {
@@ -101,12 +101,13 @@ class BlockchainAccount extends React.Component {
                                         <Col className="text-center" md="12">
                                             <h4 className="text-uppercase">JIGX Coin</h4>
                                             <span>BUILT ON STELLAR</span><br/>
-                                            <span>This is the only time you are going to see your SECRETKEY, Keep it safe! </span>
+                                            <h3>This is the only time you are going to see your SECRETKEY, Keep it safe! </h3>
                                             <hr className="line-info" />
                                         </Col>
                                     </Row>
                                     <Row>
                                         <ListGroup>
+                                        
                                             {localStorage.getItem("publicKey") != null ?
                                                 <ListGroupItem>Public Key: <Button onClick={e => {
                                                     this.copyMessage(localStorage.getItem("publicKey"))
@@ -158,4 +159,4 @@ class BlockchainAccount extends React.Component {
     }
 }
 
-export default BlockchainAccount;
+export default withRouter(BlockchainAccount);

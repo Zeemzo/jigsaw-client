@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import { register } from "services/UserManagement";
 import ReactLoading from "react-loading";
+import ScrollableAnchor ,{ goToTop } from 'react-scrollable-anchor'
+import {withRouter} from 'react-router-dom';
 
 // reactstrap components
 import {
@@ -46,6 +48,7 @@ class Register extends React.Component {
     }
   }
   componentDidMount() {
+    goToTop()
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
 
@@ -149,7 +152,7 @@ class Register extends React.Component {
                             >
                               <i className="tim-icons icon-simple-remove" />
                             </button>
-                            <h4 className="title title-up">Modal title</h4>
+                            <h4 className="title title-up">Terms and Conditions</h4>
                           </div>
                           <div className="modal-body">
                             <p>
@@ -163,8 +166,11 @@ class Register extends React.Component {
                 </p>
                           </div>
                           <div className="modal-footer">
-                            <Button color="default" type="button">
-                              Nice Button
+                            <Button color="default" type="button" onClick={e => {
+                                this.setState({ iAgree: true })
+                                this.toggleModal("demoModal")
+                              }} >
+                              I Agree
                 </Button>
                             <Button
                               color="danger"
@@ -239,9 +245,13 @@ class Register extends React.Component {
                               />
                             </InputGroup>
                           </FormGroup>
-                          {/* {this.state.passwordFocus ? <Alert color="danger">
-                            THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</Alert> : null} */}
-                          <UncontrolledTooltip placement="top" target="txtPassword" delay={0}>THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</UncontrolledTooltip>
+                          {this.state.showPasswordMeter && this.state.passwordFocus?
+                            <Alert color="warning">
+                              It takes {this.state.passwordStrength} to crack your password!</Alert>
+                            : null}
+                          {this.state.passwordFocus&&!this.state.showPasswordMeter ? <Alert color="danger">
+                            THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</Alert> : null}
+                          {/* <UncontrolledTooltip placement="top" target="txtPassword" delay={0}>THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</UncontrolledTooltip> */}
 
                           <InputGroup
                             className={classnames({
@@ -302,10 +312,7 @@ class Register extends React.Component {
 
                             </InputGroup></FormGroup>
 
-                          {this.state.showPasswordMeter ?
-                            <Alert color="warning">
-                              It takes {this.state.passwordStrength} to crack your password!</Alert>
-                            : null}
+                          
                           {/* 
                           {!this.state.passwordMatched ? <Alert color="danger">
                             Your password confirmation doesn't match  </Alert> : null} */}
@@ -313,7 +320,7 @@ class Register extends React.Component {
                             <Label check>
                               <Input type="checkbox" onClick={e => {
                                 this.setState({ iAgree: !this.state.iAgree })
-                              }} />
+                              }} checked={this.state.iAgree}/>
                               <span className="form-check-sign" />I agree to the{" "}
                               <a href="#pablo"
                                 onClick={() => this.toggleModal("demoModal")}
@@ -360,8 +367,11 @@ class Register extends React.Component {
                         <Label check> Already a user? <Link to="/login" tag={Link}>
                           Login
                   </Link></Label>
-                        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
-                          <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                  <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
+                          <div class="modalLoad-content" >
+                            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                          </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
+
                         </div>
 
                       </CardFooter>
@@ -411,4 +421,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default withRouter(Register);

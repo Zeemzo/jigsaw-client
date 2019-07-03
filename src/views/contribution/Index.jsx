@@ -5,6 +5,7 @@ import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import PageHeader from "components/PageHeader/PageHeader.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import withAuthorization from "components/Authentication/Index.jsx";
+import {withRouter} from 'react-router-dom';
 
 
 // sections for this page/view
@@ -40,7 +41,7 @@ class Contribution extends React.Component {
       <>
         <IndexNavbar />
         <div className="wrapper">
-          <br /><br /><br /> <Container>
+          <br /><br /><br /><br /> <Container>
             <Row className="justify-content-center">
               <UncontrolledEditor />
             </Row>
@@ -60,5 +61,5 @@ class Contribution extends React.Component {
 ///dont mistake the displayName, it has the user role data in it.
 const authCondition = (authUser) => !!authUser;
 
-export default withAuthorization(authCondition)(Contribution);
+export default withAuthorization(authCondition)(withRouter(Contribution));
 // export default Contribution;

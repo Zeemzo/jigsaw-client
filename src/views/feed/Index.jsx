@@ -1,5 +1,5 @@
 import React from "react";
-import LandingPage from "views/examples/LandingPage";
+import FilterResults from 'react-filter-search';
 import {
   Button,
   Card,
@@ -10,11 +10,13 @@ import {
   ListGroupItem,
   ListGroup,
   Container,
-  Row,
+  Row, Input, InputGroupAddon, InputGroupText, InputGroup,
   Col
 } from "reactstrap";
 import { Line } from "react-chartjs-2";
 import bigChartData from "variables/charts.jsx";
+import classnames from "classnames";
+import {withRouter} from 'react-router-dom';
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
@@ -22,10 +24,30 @@ import PageHeader from "components/PageHeader/PageHeader.jsx";
 import Footer from "components/Footer/Footer.jsx";
 // import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import ScrollableAnchor ,{ goToTop } from 'react-scrollable-anchor'
 
 
 class Feed extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      value: ''
+    };
+    console.log(this.props.location)
+  }
+
+  componentWillMount() {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(json => this.setState({ data: json }));
+  }
+  handleChange = event => {
+    const { value } = event.target;
+    this.setState({ value });
+  };
   componentDidMount() {
+    goToTop()
     document.body.classList.toggle("index-page");
     // document.body.classList.toggle("landing-page");
 
@@ -40,23 +62,86 @@ class Feed extends React.Component {
       <>
         <IndexNavbar />
         <div className="wrapper">
-          <div className="page-header header-filter">
-            <div className="squares square1" />
-            <div className="squares square2" />
-            <div className="squares square3" />
-            <div className="squares square4" />
-            <div className="squares square5" />
-            <div className="squares square6" />
-            <div className="squares square7" />
-            <Container>
-              <div className="content-center brand">
-                <h1 className="h1-seo">JIGSAW</h1>
-                <h3 className="d-none d-sm-block">
-                  Blockchain Based Knowledge Sharing and Organizing.
-            </h3>
-              </div>
-            </Container>
-          </div>
+          <ScrollableAnchor id={'Home'}>
+
+            <div className="page-header header-filter">
+              <div className="squares square1" />
+              <div className="squares square2" />
+              <div className="squares square3" />
+              <div className="squares square4" />
+              <div className="squares square5" />
+              <div className="squares square6" />
+              <div className="squares square7" />
+              <Container>
+                <div className="content-center brand">
+                  <h1 className="h1-seo">JIGSAW</h1>
+                  <h3 className="d-none d-sm-block">
+                    Blockchain Based Knowledge Sharing and Organizing.</h3>
+
+
+                </div>
+
+
+              </Container>
+            </div></ScrollableAnchor>
+
+          <ScrollableAnchor id={'findKnowledge'}>
+            <section className="section section-lg">
+              <Container><br/><br/><br/>
+                <InputGroup
+                  className={classnames({
+                    "input-group-focus": this.state.fullNameFocus
+                  })}
+                >
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="tim-icons icon-zoom-split" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Find Knowledge"
+                    type="text"
+                    value={this.state.value}
+                    onFocus={e => this.setState({ fullNameFocus: true })}
+                    onBlur={e => this.setState({ fullNameFocus: false })}
+                    onChange={this.handleChange}
+                  />
+                </InputGroup>
+                <Row className="justify-content-center">
+                  <Col lg="12">
+                    {/* <h1 className="text-center">Your best benefit</h1> */}
+                    <FilterResults
+                      value={this.state.value}
+                      data={this.state.data}
+                      renderResults={results => (
+                        <Row className="row-grid justify-content-center">
+
+                          {results.map(el => (
+                            <Col lg="3">
+                              <div className="info">
+                                <div className="icon icon-primary">
+                                  <i className="tim-icons icon-money-coins" />
+                                </div>
+                                <h4 className="info-title">{el.name}</h4>
+                                <hr className="line-primary" />
+                                <p>
+                                  Divide details about your work into parts. Write a few
+                                  lines about each one. A paragraph describing a feature
+                                  will.
+                        </p>
+                              </div>
+                            </Col>
+                          ))}
+                        </Row>
+
+                      )}
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            </section>
+          </ScrollableAnchor>
+
           <div className="main">
             <div className="content-center">
               <Row className="row-grid justify-content-between align-items-center text-left">
@@ -300,7 +385,7 @@ class Feed extends React.Component {
             </Container>
           </section>
           <section className="section section-lg section-safe">
-           
+
             <Container>
               <Row className="row-grid justify-content-between">
                 <Col md="5">
@@ -389,7 +474,7 @@ class Feed extends React.Component {
             </Container>
           </section>
           <section className="section section-lg">
-         
+
             />
             <Col md="12">
               <Card className="card-chart card-plain">
@@ -414,7 +499,7 @@ class Feed extends React.Component {
             </Col>
           </section>
           <section className="section section-lg section-coins">
-     
+
             />
             <Container>
               <Row>
@@ -534,4 +619,4 @@ class Feed extends React.Component {
   }
 }
 
-export default Feed;
+export default withRouter(Feed);

@@ -26,6 +26,7 @@ function uploadImageCallBack(file) {
 
 const EditorImage = () => (
   <Editor
+  handlePastedText
   spellCheck
     wrapperClassName="demo-wrapper"
     editorClassName="demo-editor"

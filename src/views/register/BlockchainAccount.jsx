@@ -1,5 +1,4 @@
 import React from "react";
-import ReactLoading from "react-loading";
 import { Link ,withRouter} from "react-router-dom";
 
 // reactstrap components
@@ -12,7 +11,6 @@ import { ToastContainer, ToastStore } from 'react-toasts';
 // core components
 import Footer from "components/Footer/Footer.jsx";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
-import * as fs from 'fs-web';
 
 class BlockchainAccount extends React.Component {
     constructor(props) {
@@ -72,7 +70,7 @@ class BlockchainAccount extends React.Component {
             <>
                 {/* <ExamplesNavbar /> */}
                 <IndexNavbar />
-                <ToastContainer position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
+                <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
                 <br />
                 <br />
                 <br />

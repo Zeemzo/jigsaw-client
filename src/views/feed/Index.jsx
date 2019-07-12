@@ -16,15 +16,14 @@ import {
 import { Line } from "react-chartjs-2";
 import bigChartData from "variables/charts.jsx";
 import classnames from "classnames";
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
-import PageHeader from "components/PageHeader/PageHeader.jsx";
 import Footer from "components/Footer/Footer.jsx";
-// import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import ScrollableAnchor ,{ goToTop } from 'react-scrollable-anchor'
+import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
+import { findKnowledge } from 'services/KnowledgeManagement';
 
 
 class Feed extends React.Component {
@@ -37,16 +36,26 @@ class Feed extends React.Component {
     console.log(this.props.location)
   }
 
-  componentWillMount() {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(json => this.setState({ data: json }));
-  }
+  // componentWillMount() {
+
+  // }
   handleChange = event => {
     const { value } = event.target;
     this.setState({ value });
   };
-  componentDidMount() {
+
+  async componentDidMount() {
+    const res = await findKnowledge()
+    if (res != null) {
+      console.log(res)
+      this.setState({ data: res.data.knowledge })
+    }
+    // fetch('https://jsonplaceholder.typicode.com/users')
+    // .then(response => response.json())
+    // .then(json => this.setState({ data: json }));
+
+
+
     goToTop()
     document.body.classList.toggle("index-page");
     // document.body.classList.toggle("landing-page");
@@ -87,7 +96,7 @@ class Feed extends React.Component {
 
           <ScrollableAnchor id={'findKnowledge'}>
             <section className="section section-lg">
-              <Container><br/><br/><br/>
+              <Container><br /><br /><br />
                 <InputGroup
                   className={classnames({
                     "input-group-focus": this.state.fullNameFocus
@@ -117,18 +126,15 @@ class Feed extends React.Component {
                         <Row className="row-grid justify-content-center">
 
                           {results.map(el => (
-                            <Col lg="3">
+                            <Col lg="3" key={el.id}>
                               <div className="info">
                                 <div className="icon icon-primary">
                                   <i className="tim-icons icon-money-coins" />
                                 </div>
-                                <h4 className="info-title">{el.name}</h4>
+                                <h4 className="info-title">{el.title}</h4>
                                 <hr className="line-primary" />
-                                <p>
-                                  Divide details about your work into parts. Write a few
-                                  lines about each one. A paragraph describing a feature
-                                  will.
-                        </p>
+                                <p dangerouslySetInnerHTML={{ __html: el.draft }} />
+
                               </div>
                             </Col>
                           ))}

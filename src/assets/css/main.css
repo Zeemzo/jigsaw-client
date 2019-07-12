@@ -23,3 +23,13 @@
   #termsModal{
     z-index: 0;
   }
+
+
+  .selection-area{
+    /* overflow: scroll; */
+    height: 350px;
+  }
+  
+  .toastColor{
+    color: white;
+  }

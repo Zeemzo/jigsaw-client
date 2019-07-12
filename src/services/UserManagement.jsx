@@ -34,7 +34,12 @@ function encyrptSecret(secret, signer) {
     }
 }
 
-
+ /**
+* @desc 
+* @param object 
+* @author Azeem Ashraf azeemashraf@outlook.com
+* @return 
+*/
 export async function login(email, password) {
     try {
         let emailHash = hashEmail(email.toLowerCase());
@@ -73,6 +78,12 @@ export async function login(email, password) {
 
 }
 
+ /**
+* @desc 
+* @param object 
+* @author Azeem Ashraf azeemashraf@outlook.com
+* @return 
+*/
 export async function loginWithSecret(secretKey) {
     try {
 
@@ -108,6 +119,13 @@ export async function loginWithSecret(secretKey) {
 
 
 }
+
+ /**
+* @desc 
+* @param object 
+* @author Azeem Ashraf azeemashraf@outlook.com
+* @return 
+*/
 export async function register(email, password, nameAlias) {
 
     try {
@@ -191,6 +209,12 @@ export async function register(email, password, nameAlias) {
 
 }
 
+ /**
+* @desc 
+* @param object 
+* @author Azeem Ashraf azeemashraf@outlook.com
+* @return 
+*/
 export async function getWalletBalance(publicKey) {
 
     try {
@@ -218,6 +242,12 @@ export async function getWalletBalance(publicKey) {
 
 }
 
+ /**
+* @desc 
+* @param object 
+* @author Azeem Ashraf azeemashraf@outlook.com
+* @return 
+*/
 export function getUserSession() {
     if (localStorage.getItem("token") != null) {
         // jwt.decode(localStorage.getItem("token"))
@@ -225,7 +255,7 @@ export function getUserSession() {
         if (decodedToken == null) {
             return null;
         } else {
-            console.log(decodedToken)
+            // console.log(decodedToken)
             return decodedToken;
         }
 

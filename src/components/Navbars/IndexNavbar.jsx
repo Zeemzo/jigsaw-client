@@ -128,7 +128,7 @@ class ComponentsNavbar extends React.Component {
                   </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/contribution-page" tag={Link}>
+                <NavLink to="/contribution-page/#Editor" tag={Link}>
                   Write
                   </NavLink>
               </NavItem>

@@ -9,14 +9,13 @@ import {
 } from "reactstrap";
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import withAuthorization from "components/Authentication/Index.jsx";
 import { getWalletBalance, getUserSession } from "services/UserManagement";
 import { ToastContainer, ToastStore } from 'react-toasts';
 import ReactLoading from "react-loading";
-import ScrollableAnchor ,{ goToTop } from 'react-scrollable-anchor'
+import{ goToTop } from 'react-scrollable-anchor'
 
 import {withRouter} from 'react-router-dom';
 
@@ -102,7 +101,7 @@ class Profile extends React.Component {
       <>
         {/* <ExamplesNavbar /> */}
         <IndexNavbar />
-        <ToastContainer position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
+        <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
 
         <div className="wrapper">
           <div className="page-header">

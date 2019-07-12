@@ -3,8 +3,9 @@ import classnames from "classnames";
 import { Link, withRouter } from "react-router-dom";
 import { login } from "services/UserManagement";
 import Switch from "react-bootstrap-switch";
-import styled from "tachyons-components";
-import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
+import { goToTop } from 'react-scrollable-anchor'
+import { loadReCaptcha, ReCaptcha } from 'react-recaptcha-v3'
+// import { ReCaptcha } from 'react-recaptcha-v3'
 
 // reactstrap components
 import {
@@ -28,12 +29,10 @@ import {
 } from "reactstrap";
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import { ToastContainer, ToastStore } from 'react-toasts';
 import ReactLoading from "react-loading";
-import { withToastManager } from 'react-toast-notifications';
 import { loginWithSecret } from "../../services/UserManagement";
 
 class Login extends React.Component {
@@ -51,6 +50,8 @@ class Login extends React.Component {
     }
   }
   componentDidMount() {
+    loadReCaptcha("6Lek76sUAAAAAILsTOL7ixa863iywT6tvwSnzvYb");
+
     goToTop()
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
@@ -82,6 +83,13 @@ class Login extends React.Component {
         "deg)"
     });
   };
+
+
+  verifyCallback = (recaptchaToken) => {
+    // Here you will get the final recaptchaToken!!!  
+    console.log(recaptchaToken, "<= your recaptcha token")
+  }
+
   render() {
     const isInvalid = this.state.privateLogin ?
       this.state.txtPassword === "" :
@@ -90,7 +98,8 @@ class Login extends React.Component {
       <>
         {/* <ExamplesNavbar /> */}
         <IndexNavbar />
-        <ToastContainer position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
+        <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
+
 
         <div className="wrapper">
           <div className="page-header">
@@ -108,6 +117,14 @@ class Login extends React.Component {
                         <CardTitle tag="h4">Login</CardTitle>
                       </CardHeader>
                       <CardBody>
+                        <ReCaptcha
+                          size="normal"
+                          data-theme="dark"
+                          render="explicit"
+                          sitekey="6Lek76sUAAAAAILsTOL7ixa863iywT6tvwSnzvYb"
+                          action='homepage'
+                          verifyCallback={this.verifyCallback}
+                        />
                         <Form className="form">
                           <Col lg="6" sm="6">
                             <p className="category">Secret Key Login</p>
@@ -184,46 +201,52 @@ class Login extends React.Component {
                         </div>
                         <Button className="btn-round" color="info" size="lg" onClick={
                           async () => {
-                            if (!this.state.privateLogin) {
-                              this.setState({ showSpinner: true });
+                            if (navigator.onLine) {
+                              if (!this.state.privateLogin) {
+                                this.setState({ showSpinner: true });
 
-                              const responseStatus = await login(this.state.txtEmail, this.state.txtPassword)
+                                const responseStatus = await login(this.state.txtEmail, this.state.txtPassword)
 
-                              switch (responseStatus) {
-                                case 200:
-                                  this.setState({ showSpinner: false });
-                                  ToastStore.success("Login Successful");
-                                  this.props.history.push('/profile'); break;
-                                case 203:
-                                  this.setState({ showSpinner: false });
-                                  ToastStore.warning("Account Doesn't Exist"); break;
-                                case 201:
-                                  this.setState({ showSpinner: false });
-                                  ToastStore.error("Password is incorrect"); break;
-                                case null:
-                                  this.setState({ showSpinner: false });
-                                  ToastStore.error("Login Failed");
+                                switch (responseStatus) {
+                                  case 200:
+                                    this.setState({ showSpinner: false });
+                                    ToastStore.success("Login Successful");
+                                    this.props.history.push('/profile'); break;
+                                  case 203:
+                                    this.setState({ showSpinner: false });
+                                    ToastStore.warning("Account Doesn't Exist"); break;
+                                  case 201:
+                                    this.setState({ showSpinner: false });
+                                    ToastStore.error("Password is incorrect"); break;
+                                  case null:
+                                    this.setState({ showSpinner: false });
+                                    ToastStore.error("Login Failed");
+                                }
+                              } else {
+                                this.setState({ showSpinner: true });
+
+                                const responseStatus = await loginWithSecret(this.state.txtPassword)
+
+                                switch (responseStatus) {
+                                  case 200:
+                                    this.setState({ showSpinner: false });
+                                    ToastStore.success("Login Successful");
+                                    this.props.history.push('/profile'); break;
+                                  case 203:
+                                    this.setState({ showSpinner: false });
+                                    ToastStore.warning("Account Doesn't Exist"); break;
+                                  case 201:
+                                    this.setState({ showSpinner: false });
+                                    ToastStore.error("Private Key is incorrect"); break;
+                                  case null:
+                                    this.setState({ showSpinner: false });
+                                    ToastStore.error("Login Failed");
+                                }
                               }
+
                             } else {
-                              this.setState({ showSpinner: true });
+                              ToastStore.error("You are offline");
 
-                              const responseStatus = await loginWithSecret(this.state.txtPassword)
-
-                              switch (responseStatus) {
-                                case 200:
-                                  this.setState({ showSpinner: false });
-                                  ToastStore.success("Login Successful");
-                                  this.props.history.push('/profile'); break;
-                                case 203:
-                                  this.setState({ showSpinner: false });
-                                  ToastStore.warning("Account Doesn't Exist"); break;
-                                case 201:
-                                  this.setState({ showSpinner: false });
-                                  ToastStore.error("Private Key is incorrect"); break;
-                                case null:
-                                  this.setState({ showSpinner: false });
-                                  ToastStore.error("Login Failed");
-                              }
                             }
 
                           }

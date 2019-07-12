@@ -1,21 +1,19 @@
 import React from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import axios from 'axios';
 import { register } from "services/UserManagement";
 import ReactLoading from "react-loading";
-import ScrollableAnchor ,{ goToTop } from 'react-scrollable-anchor'
+import { goToTop } from 'react-scrollable-anchor'
 import {withRouter} from 'react-router-dom';
 
 // reactstrap components
 import {
   Button, Card, CardHeader, CardBody, CardFooter, CardImg, CardTitle, Label, FormGroup, Form, Modal,
-  Input, InputGroupAddon, InputGroupText, InputGroup, Container, Row, Col, Alert, UncontrolledTooltip
+  Input, InputGroupAddon, InputGroupText, InputGroup, Container, Row, Col, Alert
 } from "reactstrap";
 import { ToastContainer, ToastStore } from 'react-toasts';
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 
@@ -117,7 +115,7 @@ class Register extends React.Component {
       <>
         {/* <ExamplesNavbar /> */}
         <IndexNavbar />
-        <ToastContainer position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
+        <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
 
         <div className="wrapper">
           <div className="page-header">
@@ -167,10 +165,10 @@ class Register extends React.Component {
                           </div>
                           <div className="modal-footer">
                             <Button color="default" type="button" onClick={e => {
-                                this.setState({ iAgree: true })
+                                this.setState({ iAgree: !this.state.iAgree })
                                 this.toggleModal("demoModal")
-                              }} >
-                              I Agree
+                              }} >{this.state.iAgree?"I Disagree":"I Agree"}
+                              
                 </Button>
                             <Button
                               color="danger"

@@ -2,6 +2,7 @@ import React from "react";
 import 'react-quill/dist/quill.snow.css'; // ES6
 import 'react-quill/dist/quill.bubble.css'; // ES6
 import Switch from "react-bootstrap-switch";
+import { goToTop } from 'react-scrollable-anchor'
 
 // reactstrap components
 import {
@@ -29,6 +30,8 @@ class View extends React.Component {
 
     }
     async componentDidMount() {
+        goToTop()
+
         const { id } = this.props.match.params
 
         console.log(id)

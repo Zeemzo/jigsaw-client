@@ -124,7 +124,7 @@ class Profile extends React.Component {
                       <img
                         alt="..."
                         className="img-center img-fluid rounded-circle"
-                        src={require("assets/img/mike.jpg")}
+                        src={require("assets/img/nightking.jpeg")}
                       />
                       <h4 className="title">{this.state.userName}</h4>
                       <Button onClick={e => {

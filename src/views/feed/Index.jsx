@@ -106,7 +106,7 @@ class Feed extends React.Component {
                                 <CardBody>
                                   <h4 className="info-title">{el.title}</h4>
                                   <hr className="line-primary" />
-                                  <img src={el.cover}/>
+                                  <img width="100%" src={el.cover}/>
                                   {/* <p dangerouslySetInnerHTML={{ __html: el.draft }} /> */}
                                 </CardBody>
                                 <div>

@@ -13,7 +13,6 @@ import "assets/demo/demo.css";
 import "assets/css/main.css";
 
 
-import Index from "views/Index.jsx";
 import Contribution from "views/contribution/Index.jsx";
 import Feed from "views/feed/Index.jsx";
 import Register from "views/register/Index.jsx";
@@ -37,7 +36,6 @@ ReactDOM.render(
   </CookieConsent>
     <BrowserRouter>
       <Switch>
-        <Route path="/components" render={props => <Index {...props} />} />
         <Route path="/contribution-page" render={props => <Contribution {...props} />} />
         <Route path="/register" render={props => <Register {...props} />} />
         <Route path="/login" render={props => <Login {...props} />} />

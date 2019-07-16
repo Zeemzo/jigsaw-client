@@ -33,3 +33,20 @@
   .toastColor{
     color: white;
   }
+
+  .articleCard{
+    height: 300px;
+    overflow: hidden;
+    max-height: 300px;
+  }
+
+  .expandButton{
+    width: 100%;
+    top: 257px;
+    position: absolute;
+    background-blend-mode: darken;
+  }
+  
+  .imageUploader p{
+    background-color:transparent;
+  }

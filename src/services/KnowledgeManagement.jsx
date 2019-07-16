@@ -141,17 +141,53 @@ export async function createKnowledge(knowledge, password) {
 export async function findKnowledge() {
     try {
 
-        let token
-        if (localStorage.getItem("token") != null) {
-            token = localStorage.getItem("token")
-        }
+        // let token
+        // if (localStorage.getItem("token") != null) {
+        //     token = localStorage.getItem("token")
+        // }
 
         // return postBody
         const res = await axios
             .get(jigsawBackend + "/api/article/find",
                 {
                     headers: {
-                        'Authorization': "bearer " + token,
+                        // 'Authorization': "bearer " + token,
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                })
+
+        if (res != null) {
+
+            return res
+
+        } else {
+            return null
+
+        }
+
+    } catch (err) {
+        return null
+    }
+
+}
+
+
+export async function getKnowledge(id) {
+    try {
+
+        // let token
+        // if (localStorage.getItem("token") === null) {
+        //     return null
+        // }
+        // token = localStorage.getItem("token")
+
+        // return postBody
+        const res = await axios
+            .get(jigsawBackend + `/api/article/get/${id}`,
+                {
+                    headers: {
+                        // 'Authorization': "bearer " + token,
                         "Content-Type": "application/json",
                         'Access-Control-Allow-Origin': '*',
                     }

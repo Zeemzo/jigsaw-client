@@ -11,8 +11,9 @@ const withAuthorization = (authCondition) => (Component) => {
         componentDidMount() {
             if (localStorage.getItem("token") != null) {
                 // jwt.decode(localStorage.getItem("token"))
-                jwt.decode(localStorage.getItem("token"), (err, decodedToken) => {
+                jwt.verify(localStorage.getItem("token"),'ijk3dp4n',(err, decodedToken) => {
                     if (err || !decodedToken) {
+                        localStorage.removeItem("token");
                         this.props.history.push("/login");
                     } else {
                         if (!authCondition(decodedToken)) {

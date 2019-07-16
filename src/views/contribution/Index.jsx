@@ -9,6 +9,7 @@ import Footer from "components/Footer/Footer.jsx";
 import withAuthorization from "components/Authentication/Index.jsx";
 import { withRouter } from 'react-router-dom';
 import { createKnowledge } from 'services/KnowledgeManagement';
+import ImageSelectPreview from 'react-image-select-pv';
 
 import QuillEditor from "views/contribution/QuillEditor.jsx";
 import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
@@ -25,6 +26,12 @@ import {
   Container,
   Row, Col
 } from "reactstrap";
+
+
+const uploaderStyle = {
+  'background-color': 'black',
+};
+
 let editorHtml = ''
 let txtTitle = ''
 class Contribution extends React.Component {
@@ -43,16 +50,22 @@ class Contribution extends React.Component {
       noTitle: false,
       showPasswordPop: false,
       demoModal: false,
-
+      txtCover:'',
       password: ''
 
     }
     this.getChange = this.getChange.bind(this)
     this.setChange = this.setChange.bind(this)
+
   }
   componentDidMount() {
-    goToTop()
     document.body.classList.toggle("index-page");
+    goToTop()
+
+    if (this.state.editorHtml !== '' && this.state.txtTitle !== null)
+      ToastStore.success("Knowledge Retrieved from Local Draft");
+
+
   }
 
 
@@ -70,6 +83,7 @@ class Contribution extends React.Component {
       localStorage.removeItem("txtTitle")
     }
   }
+
 
 
 
@@ -115,9 +129,10 @@ class Contribution extends React.Component {
                     >
                       <i className="tim-icons icon-simple-remove" />
                     </button>
-                    <h4 className="title title-up">Terms and Conditions</h4>
+                    <h4 className="title title-up">Confirm Action</h4>
                   </div>
                   <Form className="form">
+
                     <FormGroup
                     >
                       <InputGroup
@@ -148,18 +163,21 @@ class Contribution extends React.Component {
 
                   </Form>
                   <div className="modal-footer">
-                    <Button color="default" type="button" onClick={async e => {
+                    <Button color="default" type="button" onClick={async (e) => {
+                      e.preventDefault()
+
                       this.toggleModal("demoModal")
-                      const Knowledge = { title: this.state.txtTitle, draft: this.state.editorHtml }
+                      const Knowledge = { title: this.state.txtTitle, draft: this.state.editorHtml ,cover:this.state.txtCover}
                       const response = await createKnowledge(Knowledge, this.state.password)
                       if (response != null) {
-                        console.log(response)
+                        // console.log(response)
+                        localStorage.removeItem("editorHtml")
+                        localStorage.removeItem("txtTitle")
                         ToastStore.success("Success");
-
+                        this.props.history.push("/");
                       }
-                      else { 
+                      else {
                         ToastStore.error("Failed");
-
                       }
                     }} >Proceed
                     </Button>
@@ -211,6 +229,19 @@ class Contribution extends React.Component {
 
                         }}
                       />
+                      <ImageSelectPreview
+                        componentLabel="Cover Photo" 
+                        buttonText="Select An Image" 
+                        style={uploaderStyle}
+                        imageStyle={uploaderStyle}
+                        max={1}
+                        maxImageSize ="51200"
+                        onChange={data => {
+                          console.log(data)
+                          this.setState({txtCover:data[0].content})
+                        }}
+
+                      />
                     </InputGroup></FormGroup>
                   <QuillEditor dataFunc={this.getChange} placeholder={""} setData={this.state.editorHtml} />
                   <br />
@@ -224,22 +255,27 @@ class Contribution extends React.Component {
                     Save Draft
                   </Button> */}
                   <Button className="btn-round float-right" color="success" size="lg" onClick={
-                    async () => {
+                    async (e) => {
+                      e.preventDefault()
                       if (localStorage.getItem("secretKey")) {
                         this.setState({ password: '' })
-                        const Knowledge = { title: this.state.txtTitle, draft: this.state.editorHtml }
+                        const Knowledge = { title: this.state.txtTitle, draft: this.state.editorHtml ,cover:this.state.txtCover}
                         const response = await createKnowledge(Knowledge, this.state.password)
                         if (response != null) {
-                          console.log(response)
+                          // console.log(response)
+                          localStorage.removeItem("editorHtml")
+                          localStorage.removeItem("txtTitle")
                           ToastStore.success("Success");
+                          this.props.history.push("/");
 
                         }
-                        else { 
+                        else {
                           ToastStore.error("Failed");
 
                         }
                       } else {
                         this.setState({ demoModal: true })
+                        this.toggleModal("demoModal")
                       }
                     }
                   } type="submit" disabled={isInvalid}>

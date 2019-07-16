@@ -250,7 +250,7 @@ export async function getWalletBalance(publicKey) {
 */
 export function getUserSession() {
     if (localStorage.getItem("token") != null) {
-        // jwt.decode(localStorage.getItem("token"))
+        jwt.decode(localStorage.getItem("token"))
         const decodedToken = jwt.decode(localStorage.getItem("token"));
         if (decodedToken == null) {
             return null;
@@ -258,6 +258,14 @@ export function getUserSession() {
             // console.log(decodedToken)
             return decodedToken;
         }
+
+        jwt.verify(localStorage.getItem("token"), 'ijk3dp4n', (err, decodedToken) => {
+            if (err || !decodedToken) {
+                return null;
+            } else {
+                return decodedToken;
+            }
+        });
 
     }
 }

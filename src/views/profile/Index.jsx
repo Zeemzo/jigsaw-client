@@ -15,9 +15,9 @@ import withAuthorization from "components/Authentication/Index.jsx";
 import { getWalletBalance, getUserSession } from "services/UserManagement";
 import { ToastContainer, ToastStore } from 'react-toasts';
 import ReactLoading from "react-loading";
-import{ goToTop } from 'react-scrollable-anchor'
+import { goToTop } from 'react-scrollable-anchor'
 
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 let ps = null;
 
@@ -35,7 +35,6 @@ class Profile extends React.Component {
 
     };
 
-    // this.componentDidMount = this.componentDidMount().bind(this);
   }
 
   copyMessage(val) {
@@ -57,6 +56,16 @@ class Profile extends React.Component {
   // }
 
   async componentDidMount() {
+    if (navigator.platform.indexOf("Win") > -1) {
+      document.documentElement.className += " perfect-scrollbar-on";
+      document.documentElement.classList.remove("perfect-scrollbar-off");
+      let tables = document.querySelectorAll(".table-responsive");
+      for (let i = 0; i < tables.length; i++) {
+        ps = new PerfectScrollbar(tables[i]);
+      }
+    }
+    document.body.classList.toggle("profile-page");
+    
     goToTop()
     const user = getUserSession()
     if (user != null) {
@@ -72,15 +81,7 @@ class Profile extends React.Component {
 
 
     // this.getBalance()
-    if (navigator.platform.indexOf("Win") > -1) {
-      document.documentElement.className += " perfect-scrollbar-on";
-      document.documentElement.classList.remove("perfect-scrollbar-off");
-      let tables = document.querySelectorAll(".table-responsive");
-      for (let i = 0; i < tables.length; i++) {
-        ps = new PerfectScrollbar(tables[i]);
-      }
-    }
-    document.body.classList.toggle("profile-page");
+
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {

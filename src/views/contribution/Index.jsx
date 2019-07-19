@@ -12,6 +12,8 @@ import { createKnowledge } from 'services/KnowledgeManagement';
 import ImageSelectPreview from 'react-image-select-pv';
 
 import QuillEditor from "views/contribution/QuillEditor.jsx";
+import Crop from "views/contribution/Crop.jsx";
+
 import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
 
 import {
@@ -50,13 +52,14 @@ class Contribution extends React.Component {
       noTitle: false,
       showPasswordPop: false,
       demoModal: false,
-      txtCover:'',
-      password: ''
+      txtCover: '',
+      password: '',
+      text: ''
 
     }
     this.getChange = this.getChange.bind(this)
     this.setChange = this.setChange.bind(this)
-
+    this.getImage = this.getImage.bind(this)
   }
   componentDidMount() {
     document.body.classList.toggle("index-page");
@@ -84,7 +87,9 @@ class Contribution extends React.Component {
     }
   }
 
-
+  getImage(image) {
+    this.setState({ txtCover: image })
+  }
 
 
   toggleModal = modalState => {
@@ -92,9 +97,14 @@ class Contribution extends React.Component {
       [modalState]: !this.state[modalState]
     });
   };
-  getChange(data) {
+  getChange(data, text) {
     console.log(data)
-    this.setState({ editorHtml: data })
+    console.log(text)
+
+    this.setState({
+      editorHtml: data,
+      text: text
+    })
   }
 
   setChange() {
@@ -167,7 +177,12 @@ class Contribution extends React.Component {
                       e.preventDefault()
 
                       this.toggleModal("demoModal")
-                      const Knowledge = { title: this.state.txtTitle, draft: this.state.editorHtml ,cover:this.state.txtCover}
+                      const Knowledge = {
+                        title: this.state.txtTitle,
+                        draft: this.state.editorHtml,
+                        cover: this.state.txtCover,
+                        textDraft: this.state.text
+                      }
                       const response = await createKnowledge(Knowledge, this.state.password)
                       if (response != null) {
                         // console.log(response)
@@ -229,20 +244,22 @@ class Contribution extends React.Component {
 
                         }}
                       />
-                      <ImageSelectPreview
-                        componentLabel="Cover Photo" 
-                        buttonText="Select An Image" 
+                      {/* <ImageSelectPreview
+                        componentLabel="Cover Photo"
+                        buttonText="Select An Image"
                         style={uploaderStyle}
                         imageStyle={uploaderStyle}
                         max={1}
-                        maxImageSize ="51200"
+                        maxImageSize="204800"
                         onChange={data => {
                           console.log(data)
-                          this.setState({txtCover:data[0].content})
+                          this.setState({ txtCover: data[0].content })
                         }}
 
-                      />
+                      /> */}
                     </InputGroup></FormGroup>
+                    <Crop getImage={this.getImage}></Crop>
+
                   <QuillEditor dataFunc={this.getChange} placeholder={""} setData={this.state.editorHtml} />
                   <br />
                   <br />
@@ -259,7 +276,12 @@ class Contribution extends React.Component {
                       e.preventDefault()
                       if (localStorage.getItem("secretKey")) {
                         this.setState({ password: '' })
-                        const Knowledge = { title: this.state.txtTitle, draft: this.state.editorHtml ,cover:this.state.txtCover}
+                        const Knowledge = {
+                          title: this.state.txtTitle,
+                          draft: this.state.editorHtml,
+                          cover: this.state.txtCover,
+                          textDraft: this.state.text
+                        }
                         const response = await createKnowledge(Knowledge, this.state.password)
                         if (response != null) {
                           // console.log(response)

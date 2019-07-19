@@ -102,18 +102,21 @@ class Feed extends React.Component {
                         <Row className="row-grid justify-content-center">
                           {results.map(el => (
                             <Col lg="3" key={el.id}>
+                               <Link to={`/knowledge/${el.id}`} tag={Link}>
+                                   
                               <Card className="articleCard">
                                 <CardBody>
                                   <h4 className="info-title">{el.title}</h4>
                                   <hr className="line-primary" />
-                                  <img width="100%" src={el.cover}/>
+                                  <img width="100%"
+                                    className="img-fluid rounded shadow" src={el.cover}/>
                                   {/* <p dangerouslySetInnerHTML={{ __html: el.draft }} /> */}
                                 </CardBody>
-                                <div>
+                                {/* <div>
                                   <Link to={`/knowledge/${el.id}`} tag={Link}>
                                     <Button className="expandButton" color="primary" >View</Button></Link>
-                                </div>
-                              </Card>
+                                </div> */}
+                              </Card> </Link>
                             </Col>
                           ))}
                         </Row>

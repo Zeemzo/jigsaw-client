@@ -89,6 +89,7 @@ export async function createKnowledge(knowledge, password) {
 
 
         let postBody = {
+            timestamp:Math.floor(new Date().getTime() / 1000.0),
             publicKey:publicKey,
             data: knowledge,
             xdr: transaction.toEnvelope().toXDR('base64'),

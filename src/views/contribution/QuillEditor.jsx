@@ -16,11 +16,19 @@ class QuillEditor extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
-  handleChange(html) {
+  handleChange(html, delta, source, editor) {
     // this.setState({ editorHtml: html });
-    this.props.dataFunc(html);
+    const text = editor.getText(html);
+    // console.log(text)
+
+    this.props.dataFunc(html,text);
   }
 
+  // onChange(content, delta, source, editor) {
+  //   const text = editor.getText(content);
+  //   this.setState ({ content: text });
+  //   console.log(text)
+  // }
 
   render() {
     return (

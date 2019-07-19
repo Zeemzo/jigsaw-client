@@ -50,3 +50,15 @@
   .imageUploader p{
     background-color:transparent;
   }
+
+  del{
+    color: red;
+    font-size: inherit;
+  }
+
+  
+  ins{
+    color: lime;
+    font-size: inherit;
+
+  }

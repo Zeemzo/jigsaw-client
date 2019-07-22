@@ -9,7 +9,7 @@ import Footer from "components/Footer/Footer.jsx";
 import withAuthorization from "components/Authentication/Index.jsx";
 import { withRouter } from 'react-router-dom';
 import { createKnowledge } from 'services/KnowledgeManagement';
-import ImageSelectPreview from 'react-image-select-pv';
+// import ImageSelectPreview from 'react-image-select-pv';
 
 import QuillEditor from "views/contribution/QuillEditor.jsx";
 import Crop from "views/contribution/Crop.jsx";
@@ -26,13 +26,13 @@ import {
   InputGroupText,
   InputGroup,
   Container,
-  Row, Col
+  // Row, Col
 } from "reactstrap";
 
 
-const uploaderStyle = {
-  'background-color': 'black',
-};
+// const uploaderStyle = {
+//   'background-color': 'black',
+// };
 
 let editorHtml = ''
 let txtTitle = ''
@@ -227,7 +227,7 @@ class Contribution extends React.Component {
                         onFocus={e => this.setState({ titleFocus: true })}
                         onBlur={e => {
                           this.setState({ titleFocus: false })
-                          if (this.state.txtTitle.length == 0) {
+                          if (this.state.txtTitle.length === 0) {
                             this.setState({ noTitle: true })
                           } else {
                             this.setState({ noTitle: false })

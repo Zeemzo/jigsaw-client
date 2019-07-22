@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter, Route, Switch
-  , Redirect
+  // , Redirect
 } from "react-router-dom";
 
 import CookieConsent from "react-cookie-consent";
@@ -36,7 +36,8 @@ ReactDOM.render(
   </CookieConsent>
     <BrowserRouter>
       <Switch>
-        <Route path="/contribution-page" render={props => <Contribution {...props} />} />
+        <Route path="/create" render={props => <Contribution {...props} />} />
+        <Route path="/contribute/:id" render={props => <Contribution {...props} />} />
         <Route path="/register" render={props => <Register {...props} />} />
         <Route path="/login" render={props => <Login {...props} />} />
         <Route path="/profile" render={props => <Profile {...props} />} />

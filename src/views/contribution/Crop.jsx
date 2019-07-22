@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 import React, { PureComponent } from "react";
   import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
@@ -75,7 +75,7 @@ class Crop extends PureComponent {
   }
 
   render() {
-    const { crop, croppedImageUrl, src } = this.state;
+    const { crop, src } = this.state;
 
     return (
       <div className="App">

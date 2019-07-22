@@ -56,6 +56,8 @@ class Contribution extends React.Component {
   componentDidMount() {
     document.body.classList.toggle("index-page");
     goToTop()
+    const { id } = this.props.match.params
+
   }
 
 

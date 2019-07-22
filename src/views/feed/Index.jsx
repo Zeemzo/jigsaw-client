@@ -1,12 +1,12 @@
 import React from "react";
 import FilterResults from 'react-filter-search';
 import {
-  Button,
+  // Button,
   Card,
   CardBody,
   Container,
   Row, Input, InputGroupAddon, InputGroupText, InputGroup,
-  Col,Media
+  Col,
 } from "reactstrap";
 import classnames from "classnames";
 import { Link, withRouter } from 'react-router-dom';
@@ -39,7 +39,7 @@ class Feed extends React.Component {
     goToTop()
 
     const res = await findKnowledge()
-    if (res != null) {
+    if (res !== null) {
       console.log(res)
       this.setState({ data: res.data.knowledge })
     }
@@ -108,7 +108,7 @@ class Feed extends React.Component {
                                 <CardBody>
                                   <h4 className="info-title">{el.title}</h4>
                                   <hr className="line-primary" />
-                                  <img width="100%"
+                                  <img width="100%" alt="cover"
                                     className="img-fluid rounded shadow" src={el.cover}/>
                                   {/* <p dangerouslySetInnerHTML={{ __html: el.draft }} /> */}
                                 </CardBody>

@@ -68,7 +68,7 @@ QuillEditor.modules = {
     ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code'],
     [{ 'list': 'ordered' }, { 'list': 'bullet' },
     { 'indent': '-1' }, { 'indent': '+1' }, { 'align': '' }, { 'align': 'center' }, { 'align': 'right' }, { 'align': 'justify' }],
-    ['link', 'image', 'video'],
+    // ['link', 'image', 'video'],
     ['clean']
   ],
   clipboard: {

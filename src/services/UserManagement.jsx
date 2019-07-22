@@ -1,6 +1,6 @@
 import axios from "axios";
 import { jigsawBackend, issuerPublicKey } from "variables/constants";
-import { AES, enc } from "crypto-js";
+import { AES} from "crypto-js";
 import sha256 from "sha256";
 import StellarSdk from "stellar-sdk";
 // var StellarSdk = require('stellar-sdk');
@@ -14,15 +14,15 @@ function hashEmail(email) {
     return sha256(email);
 }
 
-function decyrptSecret(secret, signer) {
-    try {
-        const decrypted = AES.decrypt(secret, signer);
-        const plaintext = decrypted.toString(enc.Utf8);
-        return plaintext;
-    } catch (error) {
-        return null;
-    }
-}
+// function decyrptSecret(secret, signer) {
+//     try {
+//         const decrypted = AES.decrypt(secret, signer);
+//         const plaintext = decrypted.toString(enc.Utf8);
+//         return plaintext;
+//     } catch (error) {
+//         return null;
+//     }
+// }
 
 
 function encyrptSecret(secret, signer) {
@@ -59,7 +59,7 @@ export async function login(email, password) {
                 })
 
         if (res != null) {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 // localStorage.setItem("keypair", JSON.stringify(keypair))
                 localStorage.setItem("token", res.data.token)
                 return res.status
@@ -101,7 +101,7 @@ export async function loginWithSecret(secretKey) {
                 })
 
         if (res != null) {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 // localStorage.setItem("keypair", JSON.stringify(keypair))
                 localStorage.setItem("token", res.data.token)
                 return res.status
@@ -145,14 +145,14 @@ export async function register(email, password, nameAlias) {
         const STELLAT_FRIEND_BOT_URL = `https://friendbot.stellar.org/?addr=`;
         const stellarResponse = await axios.get(`${STELLAT_FRIEND_BOT_URL}${publicKey}`);
 
-        if (stellarResponse != null && stellarResponse.status !== 200) {
+        if (stellarResponse !== null && stellarResponse.status !== 200) {
             return null;
         }
         console.log("BOT funded")
 
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         const sourceAccount = await server.loadAccount(publicKey);
-        if (sourceAccount == null) {
+        if (sourceAccount === null) {
             return null
         }
         let transaction = new StellarSdk.TransactionBuilder(sourceAccount)
@@ -168,7 +168,7 @@ export async function register(email, password, nameAlias) {
         transaction.sign(keypair);
         // And finally, send it off to Stellar!
         const transactionResponse = await server.submitTransaction(transaction);
-        if (transactionResponse == null) {
+        if (transactionResponse === null) {
             return null;
         }
 
@@ -185,16 +185,16 @@ export async function register(email, password, nameAlias) {
                 }
             );
 
-        if (res != null) {
+        if (res !== null) {
 
-            if (res.status == 200) {
+            if (res.status === 200) {
                 console.log("Success:" + res.status)
                 localStorage.setItem("token", res.data.token)
                 localStorage.setItem("secretKey",keypair.secret());
                 localStorage.setItem("publicKey",keypair.publicKey());
 
                 return res.status
-            } else if (res.status == 203) {
+            } else if (res.status === 203) {
                 console.log("already: " + res.status)
                 return res.status
             }
@@ -223,7 +223,7 @@ export async function getWalletBalance(publicKey) {
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         // the JS SDK uses promises for most actions, such as retrieving an account
         const account = await server.loadAccount(publicKey);
-        if (account == null) {
+        if (account === null) {
             return null
         }
         account.balances.forEach(function (balance) {
@@ -249,23 +249,23 @@ export async function getWalletBalance(publicKey) {
 * @return 
 */
 export function getUserSession() {
-    if (localStorage.getItem("token") != null) {
+    if (localStorage.getItem("token") !== null) {
         jwt.decode(localStorage.getItem("token"))
         const decodedToken = jwt.decode(localStorage.getItem("token"));
-        if (decodedToken == null) {
+        if (decodedToken === null) {
             return null;
         } else {
             // console.log(decodedToken)
             return decodedToken;
         }
 
-        jwt.verify(localStorage.getItem("token"), 'ijk3dp4n', (err, decodedToken) => {
-            if (err || !decodedToken) {
-                return null;
-            } else {
-                return decodedToken;
-            }
-        });
+        // jwt.verify(localStorage.getItem("token"), 'ijk3dp4n', (err, decodedToken) => {
+        //     if (err || !decodedToken) {
+        //         return null;
+        //     } else {
+        //         return decodedToken;
+        //     }
+        // });
 
     }
 }

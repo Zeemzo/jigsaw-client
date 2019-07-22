@@ -236,7 +236,7 @@ class Register extends React.Component {
                                 onChange={e => {
                                   this.setState({ txtEmail: e.target.value })
 
-                                  if (this.state.txtEmail.length == 0) {
+                                  if (this.state.txtEmail.length === 0) {
                                     this.setState({ invalidEmail: false })
                                   }
                                 }}
@@ -270,7 +270,7 @@ class Register extends React.Component {
                               onChange={e => {
                                 this.setState({ txtPassword: e.target.value })
                                 this.checkStrength();
-                                if (e.target.value.length != 0) {
+                                if (e.target.value.length !== 0) {
                                   this.setState({ showPasswordMeter: true })
                                 } else {
                                   this.setState({ showPasswordMeter: false })
@@ -298,7 +298,7 @@ class Register extends React.Component {
                                 onBlur={e => this.setState({ confirmPasswordFocus: false })}
                                 onChange={e => {
                                   this.setState({ txtConfirmPassword: e.target.value })
-                                  if (e.target.value.length >= this.state.txtPassword.length && e.target.value != this.state.txtPassword) {
+                                  if (e.target.value.length >= this.state.txtPassword.length && e.target.value !== this.state.txtPassword) {
                                     this.setState({ passwordMatched: false })
                                   } else {
                                     this.setState({ passwordMatched: true })
@@ -337,7 +337,7 @@ class Register extends React.Component {
 
                             const responseStatus = await register(this.state.txtEmail, this.state.txtPassword, this.state.txtFullName)
 
-                            if (responseStatus != null) {
+                            if (responseStatus !== null) {
                               console.log(responseStatus)
                             }
 
@@ -354,7 +354,8 @@ class Register extends React.Component {
                                 ToastStore.warning("Account Already Exists"); break;
                               case null:
                                 this.setState({ showSpinner: false });
-                                ToastStore.error("Registration Failed");
+                                ToastStore.error("Registration Failed");break;
+                                default:;
                             }
 
                           }

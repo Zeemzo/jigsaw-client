@@ -1,15 +1,15 @@
 import axios from "axios";
-import { jigsawBackend, issuerPublicKey } from "variables/constants";
+import { jigsawBackend } from "variables/constants";
 import { AES, enc } from "crypto-js";
 import sha256 from "sha256";
 import StellarSdk from "stellar-sdk";
-import { getWalletBalance, getUserSession } from "services/UserManagement";
+import { getUserSession } from "services/UserManagement";
 
 // var StellarSdk = require('stellar-sdk');
 const Keypair = StellarSdk.Keypair
-const Asset = StellarSdk.Asset
+// const Asset = StellarSdk.Asset
 StellarSdk.Network.useTestNetwork();
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 
 // function hash(email) {
@@ -27,14 +27,14 @@ function decryptSecret(secret, signer) {
 }
 
 
-function encryptSecret(secret, signer) {
-    try {
-        const ciphertext = AES.encrypt(secret, signer);
-        return ciphertext.toString();
-    } catch (error) {
-        return null;
-    }
-}
+// function encryptSecret(secret, signer) {
+//     try {
+//         const ciphertext = AES.encrypt(secret, signer);
+//         return ciphertext.toString();
+//     } catch (error) {
+//         return null;
+//     }
+// }
 
 /**
 * @desc 
@@ -115,7 +115,7 @@ export async function createKnowledge(knowledge, password) {
                 })
 
         if (res != null) {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 // localStorage.setItem("keypair", JSON.stringify(keypair))
                 return res.status
             } else {

@@ -4,8 +4,8 @@ import classnames from "classnames";
 import PerfectScrollbar from "perfect-scrollbar";
 // reactstrap components
 import {
-  Button, Card, CardHeader, CardBody, Label, FormGroup, Form, Input, FormText, NavItem, NavLink,
-  Nav, Table, TabContent, TabPane, Container, Row, Col, UncontrolledTooltip, UncontrolledCarousel
+  Button, Card, CardHeader, CardBody, Label, FormGroup,  Input, FormText, NavItem, NavLink,
+  Nav, Table, TabContent, TabPane, Container, Row, Col, UncontrolledTooltip
 } from "reactstrap";
 
 // core components
@@ -21,7 +21,7 @@ import { withRouter } from 'react-router-dom';
 
 let ps = null;
 
-const sample = [{ assetCode: "JIGXU", amount: "10000" }];
+// const sample = [{ assetCode: "JIGXU", amount: "10000" }];
 class Profile extends React.Component {
   constructor(props) {
     super(props);

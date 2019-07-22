@@ -53,12 +53,20 @@
 
   del{
     color: red;
-    font-size: inherit;
+    background: transparent;
   }
 
   
   ins{
     color: lime;
-    font-size: inherit;
-
+    background: transparent;
+    
   }
+
+ol li {
+    color: inherit;
+}
+
+ol {
+  color: inherit;
+}

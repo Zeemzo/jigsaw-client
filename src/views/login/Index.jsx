@@ -163,7 +163,7 @@ class Login extends React.Component {
                                 }}
                                 onChange={e => {
                                   this.setState({ txtEmail: e.target.value })
-                                  if (this.state.txtEmail.length == 0) {
+                                  if (this.state.txtEmail.length === 0) {
                                     this.setState({ invalidEmail: false })
                                   }
                                 }}
@@ -220,7 +220,8 @@ class Login extends React.Component {
                                     ToastStore.error("Password is incorrect"); break;
                                   case null:
                                     this.setState({ showSpinner: false });
-                                    ToastStore.error("Login Failed");
+                                    ToastStore.error("Login Failed");break;
+                                  default:;
                                 }
                               } else {
                                 this.setState({ showSpinner: true });
@@ -240,7 +241,9 @@ class Login extends React.Component {
                                     ToastStore.error("Private Key is incorrect"); break;
                                   case null:
                                     this.setState({ showSpinner: false });
-                                    ToastStore.error("Login Failed");
+                                    ToastStore.error("Login Failed");break;
+                                    default:;
+
                                 }
                               }
 

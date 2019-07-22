@@ -1,10 +1,10 @@
 import React from "react";
 import { Link ,withRouter} from "react-router-dom";
-import { Route } from 'react-router';
+// import { Route } from 'react-router';
 
 // reactstrap components
 import {
-  Button, Collapse, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown,
+  Button, Collapse, 
   NavbarBrand, Navbar, NavItem, NavLink, Nav, Container, Row, Col
 } from "reactstrap";
 
@@ -116,8 +116,9 @@ class ComponentsNavbar extends React.Component {
             </div>
             <Nav navbar>
               <NavItem>
-              {this.props.location.pathname=="/" ?<a href="#Home"><NavLink>Home
-                   </NavLink> </a>: <NavLink
+              {this.props.location.pathname==="/" ?<a href="#Home"><NavLink
+              >Home
+              </NavLink></a>: <NavLink
                 to="/#Home" tag={Link}
               >Home
               </NavLink> }
@@ -128,11 +129,11 @@ class ComponentsNavbar extends React.Component {
                   </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/contribution-page/#Editor" tag={Link}>
-                  Write
+                <NavLink to="/create/#Editor" tag={Link}>
+                  Create
                   </NavLink>
               </NavItem>
-              <NavItem>{this.props.location.pathname=="/" ?<a href="#findKnowledge"><NavLink>Find Knowledge
+              <NavItem>{this.props.location.pathname==="/" ?<a href="#findKnowledge"><NavLink>Find Knowledge
                    </NavLink> </a>: <NavLink
                 to="/#findKnowledge" tag={Link}
               >Find Knowledge

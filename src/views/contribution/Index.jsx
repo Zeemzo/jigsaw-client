@@ -2,6 +2,7 @@ import React from "react";
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import classnames from "classnames";
 import { ToastContainer, ToastStore } from 'react-toasts';
+import ReactLoading from "react-loading";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
@@ -54,7 +55,9 @@ class Contribution extends React.Component {
       demoModal: false,
       txtCover: '',
       password: '',
-      text: ''
+      text: '',      
+      showSpinner:false
+
 
     }
     this.getChange = this.getChange.bind(this)
@@ -119,8 +122,12 @@ class Contribution extends React.Component {
     return (
       <>
         <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
+        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
+          <div class="modalLoad-content" >
+            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+          </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
 
-        <IndexNavbar />
+        </div>               <IndexNavbar />
         <ScrollableAnchor id={'Editor'}>
 
           <div className="wrapper">
@@ -175,6 +182,7 @@ class Contribution extends React.Component {
                   <div className="modal-footer">
                     <Button color="default" type="button" onClick={async (e) => {
                       e.preventDefault()
+                      this.setState({ showSpinner: true });
 
                       this.toggleModal("demoModal")
                       const Knowledge = {
@@ -188,10 +196,15 @@ class Contribution extends React.Component {
                         // console.log(response)
                         localStorage.removeItem("editorHtml")
                         localStorage.removeItem("txtTitle")
+
+                        this.setState({ showSpinner: false });
+
                         ToastStore.success("Success");
                         this.props.history.push("/");
                       }
                       else {
+                        this.setState({ showSpinner: false });
+
                         ToastStore.error("Failed");
                       }
                     }} >Proceed
@@ -258,7 +271,9 @@ class Contribution extends React.Component {
 
                       /> */}
                     </InputGroup></FormGroup>
-                    <Crop getImage={this.getImage}></Crop>
+
+                  <Crop imageAlt="cover pic" getImage={this.getImage}></Crop>
+
 
                   <QuillEditor dataFunc={this.getChange} placeholder={""} setData={this.state.editorHtml} />
                   <br />
@@ -275,6 +290,8 @@ class Contribution extends React.Component {
                     async (e) => {
                       e.preventDefault()
                       if (localStorage.getItem("secretKey")) {
+                        this.setState({ showSpinner: true });
+
                         this.setState({ password: '' })
                         const Knowledge = {
                           title: this.state.txtTitle,
@@ -287,11 +304,15 @@ class Contribution extends React.Component {
                           // console.log(response)
                           localStorage.removeItem("editorHtml")
                           localStorage.removeItem("txtTitle")
+                          this.setState({ showSpinner: false });
+
                           ToastStore.success("Success");
                           this.props.history.push("/");
 
                         }
                         else {
+                          this.setState({ showSpinner: false });
+
                           ToastStore.error("Failed");
 
                         }

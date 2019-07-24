@@ -250,7 +250,7 @@ export async function getWalletBalance(publicKey) {
 */
 export function getUserSession() {
     if (localStorage.getItem("token") !== null) {
-        jwt.decode(localStorage.getItem("token"))
+        // jwt.decode(localStorage.getItem("token"))
         const decodedToken = jwt.decode(localStorage.getItem("token"));
         if (decodedToken === null) {
             return null;

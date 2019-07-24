@@ -14,7 +14,6 @@ import { Link, withRouter } from 'react-router-dom';
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
 import { findKnowledge } from 'services/KnowledgeManagement';
 
@@ -23,7 +22,7 @@ class Feed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+      data: null,
       value: ''
     };
     console.log(this.props.location)
@@ -39,7 +38,7 @@ class Feed extends React.Component {
     goToTop()
 
     const res = await findKnowledge()
-    if (res !== null) {
+    if (res != null) {
       console.log(res)
       this.setState({ data: res.data.knowledge })
     }
@@ -95,33 +94,36 @@ class Feed extends React.Component {
                 </InputGroup>
                 <Row className="justify-content-center">
                   <Col lg="12">
-                    <FilterResults
-                      value={this.state.value}
-                      data={this.state.data}
-                      renderResults={results => (
-                        <Row className="row-grid justify-content-center">
-                          {results.map(el => (
-                            <Col lg="3" key={el.id}>
-                               <Link to={`/knowledge/${el.id}`} tag={Link}>
-                                   
-                              <Card className="articleCard">
-                                <CardBody>
-                                  <h4 className="info-title">{el.title}</h4>
-                                  <hr className="line-primary" />
-                                  <img width="100%" alt="cover"
-                                    className="img-fluid rounded shadow" src={el.cover}/>
-                                  {/* <p dangerouslySetInnerHTML={{ __html: el.draft }} /> */}
-                                </CardBody>
-                                {/* <div>
-                                  <Link to={`/knowledge/${el.id}`} tag={Link}>
-                                    <Button className="expandButton" color="primary" >View</Button></Link>
-                                </div> */}
-                              </Card> </Link>
-                            </Col>
-                          ))}
-                        </Row>
-                      )}
-                    />
+                    {this.state.data != null ?
+                      <FilterResults
+                        value={this.state.value}
+                        data={this.state.data}
+                        renderResults={results => (
+                          <Row className="row-grid justify-content-center">
+                            {results.map(el => (
+                              <Col lg="3" key={el.id}>
+                                <Link to={`/knowledge/${el.id}`} tag={Link}>
+
+                                  <Card className="articleCard">
+                                    <CardBody>
+                                      <h4 className="info-title">{el.title}</h4>
+                                      <hr className="line-primary" />
+                                      <img width="100%" alt="cover"
+                                        className="img-fluid rounded shadow" src={el.cover} />
+                                      {/* <p dangerouslySetInnerHTML={{ __html: el.draft }} /> */}
+                                    </CardBody>
+                                    {/* <div>
+                                      <Link to={`/knowledge/${el.id}`} tag={Link}>
+                                        <Button className="expandButton" color="primary" >View</Button></Link>
+                                    </div> */}
+                                  </Card> </Link>
+                              </Col>
+                            ))}
+                          </Row>
+                        )}
+                      />
+                      : <h3 style={{textAlign:"center"}}>No Knowledge Available</h3>}
+
                   </Col>
                 </Row>
               </Container>

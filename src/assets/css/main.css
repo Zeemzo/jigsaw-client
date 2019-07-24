@@ -37,7 +37,7 @@
   .articleCard{
     height: 300px;
     overflow: hidden;
-    max-height: 300px;
+    max-height: 200px;
   }
 
   .expandButton{
@@ -63,10 +63,21 @@
     
   }
 
-ol li {
+/* ol li {
     color: inherit;
 }
 
 ol {
   color: inherit;
+} */
+
+.contributionCollapser{
+  background: transparent
+}
+
+.list-group-item{
+  background: #171941;
+  border:none;
+  border: #098098   
+
 }

@@ -20,6 +20,7 @@ import BlockchainAccount from "views/register/BlockchainAccount.jsx";
 import Login from "views/login/Index.jsx";
 import Profile from "views/profile/Index.jsx";
 import View from "views/knowledge/view.jsx";
+import Contribute from "views/knowledge/contribution.jsx";
 
 
 ReactDOM.render(
@@ -37,7 +38,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route path="/create" render={props => <Contribution {...props} />} />
-        <Route path="/contribute/:id" render={props => <Contribution {...props} />} />
+        <Route path="/contribute/:id" render={props => <Contribute {...props} />} />
         <Route path="/register" render={props => <Register {...props} />} />
         <Route path="/login" render={props => <Login {...props} />} />
         <Route path="/profile" render={props => <Profile {...props} />} />

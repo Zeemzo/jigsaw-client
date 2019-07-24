@@ -1,7 +1,8 @@
 // import ReactDOM from "react-dom";
 import React, { PureComponent } from "react";
-  import ReactCrop from "react-image-crop";
+import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import {Button} from 'reactstrap';
 
 class Crop extends PureComponent {
   state = {
@@ -9,8 +10,11 @@ class Crop extends PureComponent {
     crop: {
       unit: "%",
       width: 30,
-      aspect: 21 / 9
-    }
+      aspect: 30 / 9
+    },
+    croppedImageUrl: '',
+    done: false,
+    showCropButton:false
   };
 
   onSelectFile = e => {
@@ -20,6 +24,7 @@ class Crop extends PureComponent {
         this.setState({ src: reader.result })
       );
       reader.readAsDataURL(e.target.files[0]);
+      this.setState({done:false})
     }
   };
 
@@ -35,6 +40,7 @@ class Crop extends PureComponent {
   onCropChange = (crop, percentCrop) => {
     // You could also use percentCrop:
     // this.setState({ crop: percentCrop });
+    this.setState({showCropButton:true})
     this.setState({ crop });
   };
 
@@ -71,18 +77,19 @@ class Crop extends PureComponent {
       crop.height
     );
 
-    return canvas.toDataURL()   
+    return canvas.toDataURL()
   }
 
   render() {
-    const { crop, src } = this.state;
+    const { crop, src, croppedImageUrl } = this.state;
 
     return (
       <div className="App">
+        <h4>Cover Photo{" "}</h4>
         <div>
           <input type="file" onChange={this.onSelectFile} />
         </div>
-        {src && (
+        {!this.state.done ? src && (
           <ReactCrop
             src={src}
             crop={crop}
@@ -90,10 +97,14 @@ class Crop extends PureComponent {
             onComplete={this.onCropComplete}
             onChange={this.onCropChange}
           />
-        )}
-        {/* {croppedImageUrl && (
+        ) : null}
+
+        {this.state.done && (
           <img alt="Crop" style={{ maxWidth: "100%" }} src={croppedImageUrl} />
-        )} */}
+        )}
+        {!this.state.done&& this.state.showCropButton?<Button onClick={()=>{
+          this.setState({done:true})
+        }}>Crop</Button>:null}
       </div>
     );
   }

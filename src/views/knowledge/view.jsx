@@ -3,14 +3,18 @@ import 'react-quill/dist/quill.snow.css'; // ES6
 import 'react-quill/dist/quill.bubble.css'; // ES6
 import Switch from "react-bootstrap-switch";
 import { goToTop } from 'react-scrollable-anchor'
-
+import ListGroupCollapse from "views/knowledge/listGroup.jsx"
 // reactstrap components
+import { Link, withRouter } from 'react-router-dom';
+import ReactLoading from "react-loading";
+import { ToastContainer, ToastStore } from 'react-toasts';
+
 import {
-    Card, Container
+    Card, Container, UncontrolledTooltip, Collapse, ListGroupItem, Button, ListGroup
 } from "reactstrap";
 import Footer from "components/Footer/Footer.jsx";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
-import { getKnowledge } from 'services/KnowledgeManagement';
+import { getKnowledge, getContributions } from 'services/KnowledgeManagement';
 import { getUserSession } from 'services/UserManagement';
 // import Diff from './diffViewer.jsx'
 // const jwt = require('jsonwebtoken');
@@ -18,55 +22,27 @@ import { getUserSession } from 'services/UserManagement';
 const DiffMatchPatch = require('diff-match-patch');
 const dmp = new DiffMatchPatch();
 
-function prettyHtml(diffs) {
+function prettyHtml(diffs, alias) {
     var html = [];
-    var pattern_amp = /&/g;
-    var pattern_lt = /</g;
-    var pattern_gt = />/g;
-    var pattern_para = /\n/g;
     for (var x = 0; x < diffs.length; x++) {
-      var op = diffs[x][0];    // Operation (insert, delete, equal)
-      var data = diffs[x][1];  // Text of change.
-    //   var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
-    //       .replace(pattern_gt, '&gt;').replace(pattern_para, '&para;<br>');
-      switch (op) {
-        case 1:
-          html[x] = '<ins style="background:transparent;">' + data + '</ins>';
-          break;
-        case -1:
-          html[x] = '<del style="background:transparent;">' + data + '</del>';
-          break;
-        case 0:
-          html[x] = '<span style="background:transparent;">' + data + '</span>';
-          break;
-      }
+        var op = diffs[x][0];    // Operation (insert, delete, equal)
+        var data = diffs[x][1];  // Text of change.
+        //   var text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;')
+        //       .replace(pattern_gt, '&gt;').replace(pattern_para, '&para;<br>');
+        switch (op) {
+            case 1:
+                html[x] = '<ins id="' + alias + '" style="background:transparent;">' + data + '</ins>';
+                break;
+            case -1:
+                html[x] = '<del id="' + alias + '" style="background:transparent;">' + data + '</del>';
+                break;
+            case 0:
+                html[x] = '<span style="background:transparent;">' + data + '</span>';
+                break;
+        }
     }
     return html.join('');
-  };
-  
-var genesis = "<p>Many of us treat the question what women really want as a funny mystery.</p>"
-var contributions = []
-
-contributions.push({
-    alias: "azeem", publicKey: "", textDraft: "<p>Many of us treat the question what women really want as a funny mystery." +
-        "If you ask a women what she wants, this is her list:</p>",
-    votes: 6, previousSnapshot: genesis
-})
-
-contributions.push({
-    alias: "farhan", publicKey: "", textDraft: "<p>Many of us treat the question what women really want as a funny mystery.</p>" +
-        "<ol><li>To eat her Chocolate without judgement and still fit into that Zara dress on display.</li></ol>",
-    votes: 7, previousSnapshot: genesis
-})
-
-contributions.push({
-    alias: "sarah", publicKey: "", textDraft: "<p>Many of us treat the question what women really want as a funny mystery.</p><ol><li>To eat her Chocolate without judgement and still fit into that Zara dress on display.</li></ol>",
-    votes: 5,
-    previousSnapshot: "<p>Many of us treat the question what women really want as a funny mystery.</p>" +
-    "<ol><li>To eat her Chocolate without judgement and still fit into that Zara dress on display.</li></ol>"
-})
-
-
+};
 
 class View extends React.Component {
     constructor(props) {
@@ -78,12 +54,15 @@ class View extends React.Component {
             showContributions: false,
             isAuthenticated: false,
             textDraft: '',
-            contributions: [],
-            textDraftDiff: ''
+            showSpinner: false,
+            contributions: null,
+            textDraftDiff: '',
         }
-
     }
+
     async componentDidMount() {
+        this.setState({ showSpinner: true });
+
         goToTop()
 
         const { id } = this.props.match.params
@@ -92,71 +71,78 @@ class View extends React.Component {
         const res = await getKnowledge(id)
         if (res !== null) {
             console.log(res)
-            // this.setState(
-            //     {
-            //         title: res.data.knowledge.title,
-            //         draft: res.data.knowledge.draft,
-            //         cover: res.data.knowledge.cover,
-            //         textDraft: res.data.knowledge.textDraft
-            //     }
-            // )
             this.setState(
                 {
                     title: res.data.knowledge.title,
                     draft: res.data.knowledge.draft,
                     cover: res.data.knowledge.cover,
-                    textDraft: genesis
+                    textDraft: res.data.knowledge.textDraft
                 }
             )
+
+        }
+
+        const res1 = await getContributions(id)
+        if (res1 != null && res != null) {
+            console.log(res1)
+            this.setState(
+                {
+                    contributions: res1.data.contributions
+                }
+            )
+
+            var previousResult = this.state.draft
+
+            if (this.state.contributions != null) {
+                this.state.contributions.forEach((item, index) => {
+                    if (item.votes >= 5) {
+                        var diff = dmp.diff_main(item.data.previousSnapshot, item.data.draft)
+
+                        console.log(diff)
+                        var patch = dmp.patch_make(diff)
+
+                        var result = dmp.patch_apply(patch, previousResult)
+                        console.log(index + ": " + result[0] + "\n")
+                        previousResult = result[0]
+                    }
+
+                })
+                console.log(previousResult)
+                this.setState({ draft: previousResult })
+            }
 
 
         }
 
         const user = getUserSession()
-        if (user !== null) {
+        if (user != null) {
             this.setState({ isAuthenticated: true })
         }
 
-        // var diff = new TDiff(); // options may be passed to constructor; see below
-        // var textDiff = diff.main(
-        //     "I am the very model of a modern Major-General,I've information vegetable, animal, and mineral,I know the kings of England, and I quote the fights historical,From Marathon to Waterloo, in order categorical.",
-        //     `I am the very model of a cartoon individual,My animation's comical, unusual, and whimsical,I'm quite adept at funny gags, comedic theory I have read,From wicked puns and stupid jokes to anvils that drop on your head.`); // produces diff array
-        // console.log(textDiff)
-
-        // diff.cleanupSemantic(textDiff)
-        // console.log(textDiff)
-        // this.setState({ textDraftDiff: diff.prettyHtml(textDiff) });
-
-        this.setState({ contributions: contributions })
-
-        var previousResult = this.state.textDraft
-
-        this.state.contributions.forEach((item, index) => {
-            if (item.votes >= 5) {
-                var diff = dmp.diff_main(item.previousSnapshot, item.textDraft)
-
-                var patch = dmp.patch_make(diff)
-
-                var result = dmp.patch_apply(patch, previousResult)
-                console.log(index + ": " + result[0] + "\n")
-                previousResult = result[0]
-            }
 
 
 
-        })
+        this.setState({ showSpinner: false });
 
-        console.log(previousResult)
-        this.setState({ textDraft: previousResult })
+
     }
 
 
 
 
     render() {
+        const { id } = this.props.match.params
+
         // const { textDraftDiff } = this.state;
         return (
             <div>
+                <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
+                <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
+                    <div class="modalLoad-content" >
+                        <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                    </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
+
+                </div>
                 {/* <meta name="description" content={this.state.title} />
                 <meta property="og:title" content={this.state.title} />
                 <meta property="og:url" content={"https://jigsaw.cf/knowledge/"+this.props.match.params.id} />
@@ -174,61 +160,50 @@ class View extends React.Component {
                             {/* <br /> */}
                             {this.state.isAuthenticated ?
                                 <div>
-                                    <p className="category">Contributions Mode</p>
+                                    <p className="category">View Contributions</p>
                                     <Switch onChange={e => {
                                         this.setState({ showContributions: e.state.value });
                                     }} defaultValue={this.state.showContributions} offColor="" onColor="blue" />
+
+                                    <Link style={{ float: "right" }} to={`/contribute/${id}`} tag={Link}><Button color="primary">Contribute</Button></Link>
                                 </div>
 
                                 : null}
 
                             <h4 className="info-title">{this.state.title}</h4>
-                            <img width="100%" alt="..." src={this.state.cover} />
-                            <hr className="line-primary" />
+                            {/* <img width="100%" alt="..." src={this.state.cover} />
+                            <hr className="line-primary" /> */}
 
-                            {this.state.showContributions ?
+                            {this.state.showContributions ? (this.state.contributions != null ?
+
 
                                 this.state.contributions.map((item, key) => {
                                     console.log(item)
-                                    let diff = dmp.diff_main(item.previousSnapshot, item.textDraft)
+                                    let diff = dmp.diff_main(item.data.previousSnapshot, item.data.draft)
 
-                                    // dmp.diff_cleanupSemantic(diff)
+                                    var collapse = false
+                                    if (key == 0) {
+                                        collapse = true
+                                    }
+                                    dmp.diff_cleanupSemantic(diff)
                                     console.log(diff)
-                                    
-
-                                    // var rep1 = (dmp.diff_prettyHtml(diff)).replace(/<span>/g, '')
-                                    // var rep2 = rep1.replace(/<\/span>/g, '')
-                                    // console.log(rep2)
+                                    // const lol = (<div>
+                                    //     <p dangerouslySetInnerHTML={{ __html: prettyHtml(diff, item.alias + key) }} />
+                                    //     <UncontrolledTooltip placement="bottom" target={item.alias + key} delay={0}>{item.alias + " at: " + item.timestamp}</UncontrolledTooltip>
+                                    // </div>
+                                    // );
                                     return (
-                                        <div key={key}>{item.alias}
-                                            {/* {diff.map((item1, i) => {
+                                        <ListGroupCollapse collapse={collapse} diff={diff} key={key} no={key} item={item} html={prettyHtml(diff, item.alias + key)}>
 
-                                            switch (item1[0]) {
-                                                case 0: return (
-                                                    <p key={i} style={{color :"blue"}} dangerouslySetInnerHTML={{ __html: item1[1] }} />
-                                                );
-                                                case 1: return (
-                                                    <p key={i} style={{color :"lime"}} dangerouslySetInnerHTML={{ __html: item1[1] }} />
-                                                ); 
-                                                case -1:return (
-                                                    <p key={i} style={{color: "red"}} dangerouslySetInnerHTML={{ __html: item1[1] }} />
-                                                ); 
-                                            }
+                                        </ListGroupCollapse>
 
-                                        })
-
-                                        } */}
-
-
-                                            <p dangerouslySetInnerHTML={{ __html: prettyHtml(diff) }} />
-
-                                        </div>
                                     )
+                                })
+                                : <h3>Sorry, no contributions yet!</h3>)
+                                :
+                                <div><img width="100%" alt="..." src={this.state.cover} />
+                                    <hr className="line-primary" /> <div dangerouslySetInnerHTML={{ __html: this.state.draft }} /></div>
 
-                                }
-                                ) :
-                                // <p>{this.state.textDraft}</p>
-                                <div dangerouslySetInnerHTML={{ __html: this.state.textDraft }} />
                             }
 
                             {/* <Diff textDraft={this.state.textDraft!=''?this.state.textDraft:null}/> */}

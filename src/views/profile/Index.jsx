@@ -4,7 +4,7 @@ import classnames from "classnames";
 import PerfectScrollbar from "perfect-scrollbar";
 // reactstrap components
 import {
-  Button, Card, CardHeader, CardBody, Label, FormGroup,  Input, FormText, NavItem, NavLink,
+  Button, Card, CardHeader, CardBody, Label, FormGroup, Input, FormText, NavItem, NavLink,
   Nav, Table, TabContent, TabPane, Container, Row, Col, UncontrolledTooltip
 } from "reactstrap";
 
@@ -65,7 +65,7 @@ class Profile extends React.Component {
       }
     }
     document.body.classList.toggle("profile-page");
-    
+
     goToTop()
     const user = getUserSession()
     if (user != null) {
@@ -177,7 +177,9 @@ class Profile extends React.Component {
                         className="tab-subcategories"
                         activeTab={"tab" + this.state.tabs}
                       >
-                        <TabPane tabId="tab1">
+                        <TabPane tabId="tab1"><div hidden={!this.state.showSpinner} id="myModal" className="modal">
+                          <ReactLoading className="modal-content" type={"cubes"} color="#fff" />
+                        </div>
                           <Table className="tablesorter" responsive>
                             <thead className="text-primary">
                               <tr>
@@ -185,9 +187,7 @@ class Profile extends React.Component {
                                 <th className="header">AMOUNT</th>
                               </tr>
                             </thead><tbody>
-                              <div hidden={!this.state.showSpinner} id="myModal" class="modal">
-                                <ReactLoading class="modal-content" type={"cubes"} color="#fff" />
-                              </div>
+
                               {this.state.balance.map((item, i) => (
                                 <tr key={i + "g"}>
                                   <td>{item.assetCode != null ? item.assetCode : "XLM"}</td>

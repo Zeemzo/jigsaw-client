@@ -5,6 +5,7 @@ import sha256 from "sha256";
 import StellarSdk from "stellar-sdk";
 import { getUserSession } from "services/UserManagement";
 import {stringify} from "canonicalize-json";
+import { store } from "variables/redux";
 
 // var StellarSdk = require('stellar-sdk');
 const Keypair = StellarSdk.Keypair
@@ -46,6 +47,10 @@ function decryptSecret(secret, signer) {
 export async function createKnowledge(knowledge, password) {
     try {
 
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'building knowledge transaction'
+          })
         console.log(knowledge)
         console.log(password)
 
@@ -104,6 +109,10 @@ export async function createKnowledge(knowledge, password) {
             token = localStorage.getItem("token")
         }
 
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'submitting knowledge transaction'
+          })
         // return postBody
         const res = await axios
             .post(jigsawBackend + "/api/article/create/", postBody,
@@ -116,6 +125,9 @@ export async function createKnowledge(knowledge, password) {
                 })
 
         if (res != null) {
+            localStorage.removeItem("txtTitle");
+            localStorage.removeItem("editorHtml");
+
             if (res.status == 200) {
                 // localStorage.setItem("keypair", JSON.stringify(keypair))
                 localStorage.removeItem("txtTitle");
@@ -153,6 +165,10 @@ export async function findKnowledge() {
         // }
 
         // return postBody
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'retrieving knowledge from datastore'
+          })
         const res = await axios
             .get(jigsawBackend + "/api/article/find",
                 {
@@ -181,7 +197,10 @@ export async function findKnowledge() {
 
 export async function getKnowledge(id) {
     try {
-
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'retrieving knowledge from datastore'
+          })
         // let token
         // if (localStorage.getItem("token") === null) {
         //     return null
@@ -224,7 +243,10 @@ export async function getKnowledge(id) {
 */
 export async function AddKnowledge(kID, knowledge, password) {
     try {
-
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'building contribution transaction'
+          })
         console.log(kID)
         console.log(knowledge)
         console.log(password)
@@ -281,7 +303,10 @@ export async function AddKnowledge(kID, knowledge, password) {
         }
 
         console.log(postBody)
-
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'submitting contribution transaction'
+          })
         let token
         if (localStorage.getItem("token") != null) {
             token = localStorage.getItem("token")
@@ -299,6 +324,9 @@ export async function AddKnowledge(kID, knowledge, password) {
                 })
 
         if (res != null) {
+            localStorage.removeItem("txtTitle");
+            localStorage.removeItem("editorHtml");
+
             if (res.status == 200) {
                 return res.status
             } else {
@@ -319,7 +347,10 @@ export async function AddKnowledge(kID, knowledge, password) {
 
 export async function getContributions(id) {
     try {
-
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'retrieving contribution from datastore'
+          })
         // let token
         // if (localStorage.getItem("token") === null) {
         //     return null

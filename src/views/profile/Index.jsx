@@ -16,6 +16,7 @@ import { getWalletBalance, getUserSession } from "services/UserManagement";
 import { ToastContainer, ToastStore } from 'react-toasts';
 import ReactLoading from "react-loading";
 import { goToTop } from 'react-scrollable-anchor'
+import { store } from "variables/redux";
 
 import { withRouter } from 'react-router-dom';
 
@@ -31,9 +32,12 @@ class Profile extends React.Component {
       balance: [],
       userName: user != null ? user.alias : "",
       publicKey: user != null ? user.publicKey : "",
-      showSpinner: false
+      showSpinner: false,
+      loadingMessage: 'something is happenning...'
 
     };
+
+    this.handleChange = this.handleChange.bind(this)
 
   }
 
@@ -65,6 +69,7 @@ class Profile extends React.Component {
       }
     }
     document.body.classList.toggle("profile-page");
+    store.subscribe(this.handleChange)
 
     goToTop()
     const user = getUserSession()
@@ -82,6 +87,11 @@ class Profile extends React.Component {
 
     // this.getBalance()
 
+  }
+
+  handleChange() {
+    console.log(store.getState())
+    this.setState({ loadingMessage: store.getState() + '...' })
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -120,6 +130,7 @@ class Profile extends React.Component {
               <Row>
                 <Col className="ml-auto mr-auto" lg="4" md="6">
                   <Card className="card-coin card-plain">
+
                     <CardHeader>
                       <img
                         alt="..."
@@ -161,25 +172,15 @@ class Profile extends React.Component {
                             Send
                           </NavLink>
                         </NavItem>
-                        <NavItem>
-                          <NavLink
-                            className={classnames({
-                              active: this.state.tabs === 3
-                            })}
-                            onClick={e => this.toggleTabs(e, "tabs", 3)}
-                            href="#pablo"
-                          >
-                            News
-                          </NavLink>
-                        </NavItem>
                       </Nav>
                       <TabContent
                         className="tab-subcategories"
                         activeTab={"tab" + this.state.tabs}
                       >
-                        <TabPane tabId="tab1"><div hidden={!this.state.showSpinner} id="myModal" className="modal">
+                        <TabPane tabId="tab1">
+                          {/* <div hidden={!this.state.showSpinner} id="myModal" className="modal">
                           <ReactLoading className="modal-content" type={"cubes"} color="#fff" />
-                        </div>
+                        </div> */}
                           <Table className="tablesorter" responsive>
                             <thead className="text-primary">
                               <tr>
@@ -228,28 +229,14 @@ class Profile extends React.Component {
                             <i className="tim-icons icon-send" />
                           </Button>
                         </TabPane>
-                        <TabPane tabId="tab3">
-                          <Table className="tablesorter" responsive>
-                            <thead className="text-primary">
-                              <tr>
-                                <th className="header">Latest Crypto News</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>The Daily: Nexo to Pay on Stable...</td>
-                              </tr>
-                              <tr>
-                                <td>Venezuela Begins Public of Nation...</td>
-                              </tr>
-                              <tr>
-                                <td>PR: BitCanna – Dutch Blockchain...</td>
-                              </tr>
-                            </tbody>
-                          </Table>
-                        </TabPane>
                       </TabContent>
                     </CardBody>
+                    <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
+                          <div class="modalLoad-content" >
+                            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+
+                        </div>
                   </Card>
                 </Col>
               </Row>

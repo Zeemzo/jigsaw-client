@@ -6,6 +6,7 @@ import Switch from "react-bootstrap-switch";
 import { goToTop } from 'react-scrollable-anchor'
 import { loadReCaptcha, ReCaptcha } from 'react-recaptcha-v3'
 // import { ReCaptcha } from 'react-recaptcha-v3'
+import { store } from "variables/redux";
 
 // reactstrap components
 import {
@@ -45,9 +46,12 @@ class Login extends React.Component {
       txtPassword: "",
       invalidEmail: false,
       showSpinner: false,
-      privateLogin: false
+      privateLogin: false,
+      loadingMessage: 'something is happenning...'
 
     }
+    this.handleChange=this.handleChange.bind(this)
+
   }
   componentDidMount() {
     loadReCaptcha("6Lek76sUAAAAAILsTOL7ixa863iywT6tvwSnzvYb");
@@ -55,6 +59,8 @@ class Login extends React.Component {
     goToTop()
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
+    store.subscribe(this.handleChange)
+
   }
   componentWillUnmount() {
     document.body.classList.toggle("register-page");
@@ -65,6 +71,10 @@ class Login extends React.Component {
 
 
   }
+  handleChange() {
+    console.log(store.getState())
+    this.setState({loadingMessage:store.getState()+'...'})
+}
   followCursor = event => {
     let posX = event.clientX - window.innerWidth / 2;
     let posY = event.clientY - window.innerWidth / 6;
@@ -193,10 +203,10 @@ class Login extends React.Component {
                         </Form>
                       </CardBody>
                       <CardFooter>
-                        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
+                      <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
                           <div class="modalLoad-content" >
                             <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                          </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
+                          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
                         </div>
                         <Button className="btn-round" color="info" size="lg" onClick={
@@ -211,7 +221,7 @@ class Login extends React.Component {
                                   case 200:
                                     this.setState({ showSpinner: false });
                                     ToastStore.success("Login Successful");
-                                    this.props.history.push('/profile'); break;
+                                    this.props.history.goBack(); break;
                                   case 203:
                                     this.setState({ showSpinner: false });
                                     ToastStore.warning("Account Doesn't Exist"); break;
@@ -232,7 +242,7 @@ class Login extends React.Component {
                                   case 200:
                                     this.setState({ showSpinner: false });
                                     ToastStore.success("Login Successful");
-                                    this.props.history.push('/profile'); break;
+                                    this.props.history.goBack(); break;
                                   case 203:
                                     this.setState({ showSpinner: false });
                                     ToastStore.warning("Account Doesn't Exist"); break;

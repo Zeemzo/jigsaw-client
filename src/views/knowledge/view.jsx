@@ -8,7 +8,10 @@ import ListGroupCollapse from "views/knowledge/listGroup.jsx"
 import { Link, withRouter } from 'react-router-dom';
 import ReactLoading from "react-loading";
 import { ToastContainer, ToastStore } from 'react-toasts';
-
+import { store } from "variables/redux";
+import { TextBlock, MediaBlock, TextRow, RectShape, RoundShape } from 'react-placeholder/lib/placeholders';
+import ReactPlaceholder from 'react-placeholder';
+import "react-placeholder/lib/reactPlaceholder.css";
 import {
     Card, Container, UncontrolledTooltip, Collapse, ListGroupItem, Button, ListGroup
 } from "reactstrap";
@@ -57,10 +60,15 @@ class View extends React.Component {
             showSpinner: false,
             contributions: null,
             textDraftDiff: '',
+            loadingMessage: 'something is happenning...'
         }
+        this.handleLoadChange = this.handleLoadChange.bind(this)
+
     }
 
     async componentDidMount() {
+        store.subscribe(this.handleLoadChange)
+
         this.setState({ showSpinner: true });
 
         goToTop()
@@ -129,10 +137,24 @@ class View extends React.Component {
 
 
 
+    handleLoadChange() {
+        console.log(store.getState())
+        this.setState({ loadingMessage: store.getState() + '...' })
+    }
 
     render() {
         const { id } = this.props.match.params
+        const awesomePlaceholder = (
+            <div className='my-awesome-placeholder'>
 
+                <TextBlock rows={1} color='grey' />
+                <hr className="line-primary" />
+                <RectShape color='grey' />
+                <TextBlock rows={5} color='grey' />
+
+
+            </div>
+        );
         // const { textDraftDiff } = this.state;
         return (
             <div>
@@ -140,7 +162,7 @@ class View extends React.Component {
                 <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
                     <div class="modalLoad-content" >
                         <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                    </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
+                    </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
                 </div>
                 {/* <meta name="description" content={this.state.title} />
@@ -200,9 +222,11 @@ class View extends React.Component {
                                     )
                                 })
                                 : <h3>Sorry, no contributions yet!</h3>)
-                                :
-                                <div><img width="100%" alt="..." src={this.state.cover} />
-                                    <hr className="line-primary" /> <div dangerouslySetInnerHTML={{ __html: this.state.draft }} /></div>
+                                : (this.state.showSpinner ?
+                                    <ReactPlaceholder ready={this.state.ready} customPlaceholder={awesomePlaceholder}>
+                                    </ReactPlaceholder> : <div><img width="100%" alt="..." src={this.state.cover} />
+                                        <hr className="line-primary" /> <div dangerouslySetInnerHTML={{ __html: this.state.draft }} /></div>)
+
 
                             }
 

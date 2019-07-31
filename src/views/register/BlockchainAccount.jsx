@@ -18,6 +18,7 @@ class BlockchainAccount extends React.Component {
         this.state = {
             squares1to6: "",
             squares7and8: "",
+            canProceed:false,
         }
     }
     copyMessage(val) {
@@ -133,17 +134,19 @@ class BlockchainAccount extends React.Component {
                                                 + ' \nSecretKey: ' + localStorage.getItem("secretKey")], { type: "text/plain;charset=utf-8" });
                                             FileSaver.saveAs(blob, "JigsawCredentials.txt");
                                      
+                                            this.setState({canProceed:true})
                                         }
 
                                     }}>
                                         Export to File</Button>
-                                    <Link to="/" tag={Link}>
-                                        <Button onClick={e => {
+                                        {this.state.canProceed?<Link to="/" tag={Link}>
+                                        <Button  onClick={e => {
                                             localStorage.removeItem("secretKey");
                                             localStorage.removeItem("publicKey");
                                         }} className="btn-simple" color="info">
                                             Proceed
-                                    </Button></Link>
+                                    </Button></Link>:null}
+                                    
 
                                 </CardFooter>
                             </Card>

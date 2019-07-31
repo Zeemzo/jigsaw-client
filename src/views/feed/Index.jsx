@@ -10,12 +10,17 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import { Link, withRouter } from 'react-router-dom';
+import ReactLoading from "react-loading";
+import { store } from "variables/redux";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
 import { findKnowledge } from 'services/KnowledgeManagement';
+import { TextBlock, MediaBlock, TextRow, RectShape, RoundShape } from 'react-placeholder/lib/placeholders';
+import ReactPlaceholder from 'react-placeholder';
+import "react-placeholder/lib/reactPlaceholder.css";
 
 
 class Feed extends React.Component {
@@ -23,9 +28,14 @@ class Feed extends React.Component {
     super(props);
     this.state = {
       data: null,
-      value: ''
+      value: '',
+      showSpinner: false,
+      loadingMessage: 'something is happenning...'
+
     };
     console.log(this.props.location)
+    this.handleLoadChange = this.handleLoadChange.bind(this)
+
   }
 
   handleChange = event => {
@@ -36,19 +46,64 @@ class Feed extends React.Component {
   async componentDidMount() {
     document.body.classList.toggle("index-page");
     goToTop()
+    store.subscribe(this.handleLoadChange)
+    this.setState({ showSpinner: true });
+
 
     const res = await findKnowledge()
     if (res != null) {
       console.log(res)
       this.setState({ data: res.data.knowledge })
+      this.setState({ showSpinner: false });
+
     }
 
+  }
+
+  handleLoadChange() {
+    console.log(store.getState())
+    this.setState({ loadingMessage: store.getState() + '...' })
   }
   componentWillUnmount() {
     document.body.classList.toggle("index-page");
 
   }
   render() {
+    const awesomePlaceholder = (
+      <div className='my-awesome-placeholder'>
+        <Row className="row-grid justify-content-center">
+        <Col lg="3">
+            <Card className="articleCard">
+              <CardBody>
+                <TextBlock rows={1} color='grey'/>
+                <hr className="line-primary" />
+                <RectShape color='grey' />
+              </CardBody></Card>
+          </Col><Col lg="3">
+            <Card className="articleCard">
+              <CardBody>
+                <TextBlock rows={1} color='grey'/>
+                <hr className="line-primary" />
+                <RectShape color='grey'/>
+              </CardBody></Card>
+          </Col><Col lg="3">
+            <Card className="articleCard">
+              <CardBody>
+                <TextBlock rows={1} color='grey'/>
+                <hr className="line-primary" />
+                <RectShape color='grey'/>
+              </CardBody></Card>
+          </Col><Col lg="3">
+          <Card className="articleCard">
+              <CardBody>
+                <TextBlock rows={1} color='grey'/>
+                <hr className="line-primary" />
+                <RectShape color='grey'/>
+              </CardBody></Card>
+          </Col>
+        </Row>
+      </div>
+    );
     return (
       <>
         <IndexNavbar />
@@ -92,6 +147,10 @@ class Feed extends React.Component {
                     onChange={this.handleChange}
                   />
                 </InputGroup>
+
+
+
+
                 <Row className="justify-content-center">
                   <Col lg="12">
                     {this.state.data != null ?
@@ -122,7 +181,16 @@ class Feed extends React.Component {
                           </Row>
                         )}
                       />
-                      : <h3 style={{textAlign:"center"}}>No Knowledge Available</h3>}
+                      :<div>
+                      <ReactPlaceholder ready={this.state.ready} customPlaceholder={awesomePlaceholder}>
+                      </ReactPlaceholder>
+                      <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                        <div className="modalLoad-content" >
+                          <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                        </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+
+                      </div></div>
+                    }
 
                   </Col>
                 </Row>

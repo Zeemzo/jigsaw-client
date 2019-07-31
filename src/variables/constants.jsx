@@ -2,4 +2,4 @@
 export var jigsawBackend = "https://jigsaw-server.herokuapp.com";
 
 
-export var issuerPublicKey = "GDUQM4RJ37OHGZOSTTJRYKEVUSPQFDNQVCKZBVRXOE4YRH3YQTNOLA63";
+export var issuerPublicKey = "GD5VAU3K6RQE5SUPNJADXMMYNXYQREO5YW334T23N43IHNPJT2DAPPME";

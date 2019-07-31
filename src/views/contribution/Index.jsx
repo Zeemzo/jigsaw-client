@@ -3,6 +3,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import classnames from "classnames";
 import { ToastContainer, ToastStore } from 'react-toasts';
 import ReactLoading from "react-loading";
+import { store } from "variables/redux";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
@@ -55,11 +56,11 @@ class Contribution extends React.Component {
       demoModal: false,
       txtCover: '',
       password: '',
-      text: '',      
-      showSpinner:false
-
-
+      text: '',
+      showSpinner: false,
+      loadingMessage: 'something is happenning...'
     }
+    this.handleLoadChange = this.handleLoadChange.bind(this)
     this.getChange = this.getChange.bind(this)
     this.setChange = this.setChange.bind(this)
     this.getImage = this.getImage.bind(this)
@@ -68,7 +69,9 @@ class Contribution extends React.Component {
     document.body.classList.toggle("index-page");
     goToTop()
 
-    if (this.state.editorHtml !== '' && this.state.txtTitle !== null)
+    store.subscribe(this.handleLoadChange)
+
+    if (this.state.editorHtml != '' && this.state.txtTitle != null)
       ToastStore.success("Knowledge Retrieved from Local Draft");
 
 
@@ -78,15 +81,15 @@ class Contribution extends React.Component {
   componentWillUnmount() {
     document.body.classList.toggle("index-page");
 
-    if (this.state.editorHtml !== ''
-      && this.state.txtTitle !== '') {
+    if (this.state.editorHtml == ""
+      && this.state.txtTitle == "") {
+
+      localStorage.removeItem("editorHtml")
+      localStorage.removeItem("txtTitle")
+    } else {
       localStorage.setItem("editorHtml", this.state.editorHtml)
       localStorage.setItem("txtTitle", this.state.txtTitle)
       ToastStore.warning("Knowledge Drafted Locally");
-
-    } else {
-      localStorage.removeItem("editorHtml")
-      localStorage.removeItem("txtTitle")
     }
   }
 
@@ -116,6 +119,10 @@ class Contribution extends React.Component {
 
   }
 
+  handleLoadChange() {
+    console.log(store.getState())
+    this.setState({ loadingMessage: store.getState() + '...' })
+}
   render() {
     const isInvalid =
       this.state.txtTitle === "" || this.state.editorHtml === "";
@@ -125,9 +132,9 @@ class Contribution extends React.Component {
         <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
           <div class="modalLoad-content" >
             <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-          </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
+          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-        </div>               <IndexNavbar />
+        </div>                 <IndexNavbar />
         <ScrollableAnchor id={'Editor'}>
 
           <div className="wrapper">
@@ -240,7 +247,7 @@ class Contribution extends React.Component {
                         onFocus={e => this.setState({ titleFocus: true })}
                         onBlur={e => {
                           this.setState({ titleFocus: false })
-                          if (this.state.txtTitle.length === 0) {
+                          if (this.state.txtTitle.length == 0) {
                             this.setState({ noTitle: true })
                           } else {
                             this.setState({ noTitle: false })

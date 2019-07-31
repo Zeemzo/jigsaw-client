@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { register } from "services/UserManagement";
 import ReactLoading from "react-loading";
 import { goToTop } from 'react-scrollable-anchor'
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { store } from "variables/redux";
 
 // reactstrap components
 import {
@@ -41,14 +42,19 @@ class Register extends React.Component {
       invalidEmail: false,
       showSpinner: false,
       iAgree: false,
-      demoModal: false
+      demoModal: false,
+      loadingMessage: 'something is happenning...'
 
     }
+
+    this.handleChange=this.handleChange.bind(this)
   }
   componentDidMount() {
     goToTop()
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
+    store.subscribe(this.handleChange)
+
 
   }
   componentWillUnmount() {
@@ -82,6 +88,12 @@ class Register extends React.Component {
       [modalState]: !this.state[modalState]
     });
   };
+
+
+  handleChange() {
+      console.log(store.getState())
+      this.setState({loadingMessage:store.getState()+'...'})
+  }
   checkStrength() {
     const hsimp = setup({
       calculation: {
@@ -165,11 +177,11 @@ class Register extends React.Component {
                           </div>
                           <div className="modal-footer">
                             <Button color="default" type="button" onClick={e => {
-                                this.setState({ iAgree: !this.state.iAgree })
-                                this.toggleModal("demoModal")
-                              }} >{this.state.iAgree?"I Disagree":"I Agree"}
-                              
-                </Button>
+                              this.setState({ iAgree: !this.state.iAgree })
+                              this.toggleModal("demoModal")
+                            }} >{this.state.iAgree ? "I Disagree" : "I Agree"}
+
+                            </Button>
                             <Button
                               color="danger"
                               type="button"
@@ -243,11 +255,11 @@ class Register extends React.Component {
                               />
                             </InputGroup>
                           </FormGroup>
-                          {this.state.showPasswordMeter && this.state.passwordFocus?
+                          {this.state.showPasswordMeter && this.state.passwordFocus ?
                             <Alert color="warning">
                               It takes {this.state.passwordStrength} to crack your password!</Alert>
                             : null}
-                          {this.state.passwordFocus&&!this.state.showPasswordMeter ? <Alert color="danger">
+                          {this.state.passwordFocus && !this.state.showPasswordMeter ? <Alert color="danger">
                             THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</Alert> : null}
                           {/* <UncontrolledTooltip placement="top" target="txtPassword" delay={0}>THIS IS A ONE TIME PASSWORD, DON'T FORGET IT!!!</UncontrolledTooltip> */}
 
@@ -310,7 +322,7 @@ class Register extends React.Component {
 
                             </InputGroup></FormGroup>
 
-                          
+
                           {/* 
                           {!this.state.passwordMatched ? <Alert color="danger">
                             Your password confirmation doesn't match  </Alert> : null} */}
@@ -318,7 +330,7 @@ class Register extends React.Component {
                             <Label check>
                               <Input type="checkbox" onClick={e => {
                                 this.setState({ iAgree: !this.state.iAgree })
-                              }} checked={this.state.iAgree}/>
+                              }} checked={this.state.iAgree} />
                               <span className="form-check-sign" />I agree to the{" "}
                               <a href="#pablo"
                                 onClick={() => this.toggleModal("demoModal")}
@@ -354,8 +366,8 @@ class Register extends React.Component {
                                 ToastStore.warning("Account Already Exists"); break;
                               case null:
                                 this.setState({ showSpinner: false });
-                                ToastStore.error("Registration Failed");break;
-                                default:;
+                                ToastStore.error("Registration Failed"); break;
+                              default: ;
                             }
 
                           }
@@ -366,10 +378,10 @@ class Register extends React.Component {
                         <Label check> Already a user? <Link to="/login" tag={Link}>
                           Login
                   </Link></Label>
-                  <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
+                        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
                           <div class="modalLoad-content" >
                             <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                          </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
+                          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
                         </div>
 

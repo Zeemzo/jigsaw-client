@@ -1,8 +1,9 @@
 import axios from "axios";
 import { jigsawBackend, issuerPublicKey } from "variables/constants";
-import { AES} from "crypto-js";
+import { AES } from "crypto-js";
 import sha256 from "sha256";
 import StellarSdk from "stellar-sdk";
+import { store } from "variables/redux";
 // var StellarSdk = require('stellar-sdk');
 const Keypair = StellarSdk.Keypair
 const Asset = StellarSdk.Asset
@@ -34,7 +35,7 @@ function encyrptSecret(secret, signer) {
     }
 }
 
- /**
+/**
 * @desc 
 * @param object 
 * @author Azeem Ashraf azeemashraf@outlook.com
@@ -42,6 +43,10 @@ function encyrptSecret(secret, signer) {
 */
 export async function login(email, password) {
     try {
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'validating credentials'
+        })
         let emailHash = hashEmail(email.toLowerCase());
 
         let postBody = {
@@ -78,7 +83,7 @@ export async function login(email, password) {
 
 }
 
- /**
+/**
 * @desc 
 * @param object 
 * @author Azeem Ashraf azeemashraf@outlook.com
@@ -86,7 +91,10 @@ export async function login(email, password) {
 */
 export async function loginWithSecret(secretKey) {
     try {
-
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'validating credentials'
+        })
         let postBody = {
             secretKey: secretKey
         }
@@ -120,7 +128,7 @@ export async function loginWithSecret(secretKey) {
 
 }
 
- /**
+/**
 * @desc 
 * @param object 
 * @author Azeem Ashraf azeemashraf@outlook.com
@@ -129,6 +137,13 @@ export async function loginWithSecret(secretKey) {
 export async function register(email, password, nameAlias) {
 
     try {
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'creating keypair'
+        })
+
+        // store.dispatch('creating keys')
+
         let emailHash = hashEmail(email.toLowerCase());
         let keypair = Keypair.random();
         let publicKey = keypair.publicKey();
@@ -149,6 +164,10 @@ export async function register(email, password, nameAlias) {
             return null;
         }
         console.log("BOT funded")
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'funding address'
+        })
 
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         const sourceAccount = await server.loadAccount(publicKey);
@@ -174,6 +193,10 @@ export async function register(email, password, nameAlias) {
 
         console.log("CHANGE ASSET DONE")
 
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'creating user instance'
+        })
         const res = await axios
             .post(jigsawBackend + "/api/user/add/", postBody,
                 {
@@ -190,8 +213,8 @@ export async function register(email, password, nameAlias) {
             if (res.status === 200) {
                 console.log("Success:" + res.status)
                 localStorage.setItem("token", res.data.token)
-                localStorage.setItem("secretKey",keypair.secret());
-                localStorage.setItem("publicKey",keypair.publicKey());
+                localStorage.setItem("secretKey", keypair.secret());
+                localStorage.setItem("publicKey", keypair.publicKey());
 
                 return res.status
             } else if (res.status === 203) {
@@ -209,7 +232,7 @@ export async function register(email, password, nameAlias) {
 
 }
 
- /**
+/**
 * @desc 
 * @param object 
 * @author Azeem Ashraf azeemashraf@outlook.com
@@ -218,6 +241,10 @@ export async function register(email, password, nameAlias) {
 export async function getWalletBalance(publicKey) {
 
     try {
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'accessing wallet'
+        })
         let assets = [];
 
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
@@ -242,7 +269,7 @@ export async function getWalletBalance(publicKey) {
 
 }
 
- /**
+/**
 * @desc 
 * @param object 
 * @author Azeem Ashraf azeemashraf@outlook.com

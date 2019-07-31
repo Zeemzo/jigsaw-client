@@ -11,6 +11,7 @@ import withAuthorization from "components/Authentication/Index.jsx";
 import { withRouter } from 'react-router-dom';
 import { AddKnowledge, getContributions, getKnowledge } from 'services/KnowledgeManagement';
 import ImageSelectPreview from 'react-image-select-pv';
+import { store } from "variables/redux";
 
 import QuillEditor from "views/contribution/QuillEditor.jsx";
 import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
@@ -53,14 +54,22 @@ class Contribution extends React.Component {
       text: '',
       textDraft: '',
       contributions: null,
-      showSpinner: false
+      showSpinner: false,
+      loadingMessage: 'something is happenning...'
 
     }
     this.getChange = this.getChange.bind(this)
     this.setChange = this.setChange.bind(this)
+    this.handleLoadChange = this.handleLoadChange.bind(this)
 
   }
+  handleLoadChange() {
+    console.log(store.getState())
+    this.setState({ loadingMessage: store.getState() + '...' })
+  }
   async componentDidMount() {
+    store.subscribe(this.handleLoadChange)
+
     this.setState({ showSpinner: true });
 
     document.body.classList.toggle("index-page");
@@ -157,9 +166,9 @@ class Contribution extends React.Component {
         <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
           <div class="modalLoad-content" >
             <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-          </div> <h3 style={{ "textAlign": "center" }}>something is happenning...</h3>
+          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-        </div>        <IndexNavbar />
+        </div>       <IndexNavbar />
 
 
         <div className="wrapper">

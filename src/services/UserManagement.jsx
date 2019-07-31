@@ -163,7 +163,7 @@ export async function register(email, password, nameAlias) {
         if (stellarResponse !== null && stellarResponse.status !== 200) {
             return null;
         }
-        console.log("BOT funded")
+        //console.log("BOT funded")
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'funding address'
@@ -191,7 +191,7 @@ export async function register(email, password, nameAlias) {
             return null;
         }
 
-        console.log("CHANGE ASSET DONE")
+        //console.log("CHANGE ASSET DONE")
 
         store.dispatch({
             type: 'ADD_MESSAGE',
@@ -211,14 +211,14 @@ export async function register(email, password, nameAlias) {
         if (res !== null) {
 
             if (res.status === 200) {
-                console.log("Success:" + res.status)
+                //console.log("Success:" + res.status)
                 localStorage.setItem("token", res.data.token)
                 localStorage.setItem("secretKey", keypair.secret());
                 localStorage.setItem("publicKey", keypair.publicKey());
 
                 return res.status
             } else if (res.status === 203) {
-                console.log("already: " + res.status)
+                //console.log("already: " + res.status)
                 return res.status
             }
         } else {
@@ -255,13 +255,13 @@ export async function getWalletBalance(publicKey) {
         }
         account.balances.forEach(function (balance) {
             // @ts-ignore
-            // console.log('Asset_code:', balance.asset_code, ', Balance:', balance.balance);
+            // //console.log('Asset_code:', balance.asset_code, ', Balance:', balance.balance);
             let bal = parseFloat(balance.balance)
             // @ts-ignore
             assets.push({ 'assetCode': balance.asset_code, 'balance': bal.toFixed(0) });
         });
         // assets.pop();
-        console.log(assets)
+        //console.log(assets)
         return assets;
     } catch (err) {
         return null;
@@ -282,7 +282,7 @@ export function getUserSession() {
         if (decodedToken === null) {
             return null;
         } else {
-            // console.log(decodedToken)
+            // //console.log(decodedToken)
             return decodedToken;
         }
 

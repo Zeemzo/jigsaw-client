@@ -104,8 +104,8 @@ class Contribution extends React.Component {
     });
   };
   getChange(data, text) {
-    console.log(data)
-    console.log(text)
+    //console.log(data)
+    //console.log(text)
 
     this.setState({
       editorHtml: data,
@@ -120,21 +120,21 @@ class Contribution extends React.Component {
   }
 
   handleLoadChange() {
-    console.log(store.getState())
+    //console.log(store.getState())
     this.setState({ loadingMessage: store.getState() + '...' })
-}
+  }
   render() {
     const isInvalid =
       this.state.txtTitle === "" || this.state.editorHtml === "";
     return (
       <>
         <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
-        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
-          <div class="modalLoad-content" >
-            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+        <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+          <div className="modalLoad-content" >
+            <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+          </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-        </div>                 <IndexNavbar />
+        </div>               <IndexNavbar />
         <ScrollableAnchor id={'Editor'}>
 
           <div className="wrapper">
@@ -200,7 +200,7 @@ class Contribution extends React.Component {
                       }
                       const response = await createKnowledge(Knowledge, this.state.password)
                       if (response != null) {
-                        // console.log(response)
+                        // //console.log(response)
                         localStorage.removeItem("editorHtml")
                         localStorage.removeItem("txtTitle")
 
@@ -272,7 +272,7 @@ class Contribution extends React.Component {
                         max={1}
                         maxImageSize="204800"
                         onChange={data => {
-                          console.log(data)
+                          //console.log(data)
                           this.setState({ txtCover: data[0].content })
                         }}
 
@@ -308,7 +308,7 @@ class Contribution extends React.Component {
                         }
                         const response = await createKnowledge(Knowledge, this.state.password)
                         if (response != null) {
-                          // console.log(response)
+                          // //console.log(response)
                           localStorage.removeItem("editorHtml")
                           localStorage.removeItem("txtTitle")
                           this.setState({ showSpinner: false });

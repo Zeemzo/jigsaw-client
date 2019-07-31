@@ -91,7 +91,7 @@ class Register extends React.Component {
 
 
   handleChange() {
-      console.log(store.getState())
+      //console.log(store.getState())
       this.setState({loadingMessage:store.getState()+'...'})
   }
   checkStrength() {
@@ -350,18 +350,18 @@ class Register extends React.Component {
                             const responseStatus = await register(this.state.txtEmail, this.state.txtPassword, this.state.txtFullName)
 
                             if (responseStatus !== null) {
-                              console.log(responseStatus)
+                              //console.log(responseStatus)
                             }
 
                             switch (responseStatus) {
                               case 200:
-                                console.log("Registration Successful")
+                                //console.log("Registration Successful")
                                 this.setState({ showSpinner: false });
                                 ToastStore.success("Registration Successful");
                                 this.props.history.push('/blockchainAccount');
                                 break;
                               case 203:
-                                console.log("Account Already Exists")
+                                //console.log("Account Already Exists")
                                 this.setState({ showSpinner: false });
                                 ToastStore.warning("Account Already Exists"); break;
                               case null:
@@ -378,12 +378,12 @@ class Register extends React.Component {
                         <Label check> Already a user? <Link to="/login" tag={Link}>
                           Login
                   </Link></Label>
-                        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
-                          <div class="modalLoad-content" >
-                            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                  <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                        <div className="modalLoad-content" >
+                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-                        </div>
+                      </div>
 
                       </CardFooter>
                     </Card>

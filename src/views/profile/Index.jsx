@@ -80,7 +80,7 @@ class Profile extends React.Component {
 
         this.setState({ balance: balance });
         this.setState({ showSpinner: false })
-        console.log(balance);
+        //console.log(balance);
       }
     }
 
@@ -90,7 +90,7 @@ class Profile extends React.Component {
   }
 
   handleChange() {
-    console.log(store.getState())
+    //console.log(store.getState())
     this.setState({ loadingMessage: store.getState() + '...' })
   }
   componentWillUnmount() {
@@ -231,12 +231,12 @@ class Profile extends React.Component {
                         </TabPane>
                       </TabContent>
                     </CardBody>
-                    <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
-                          <div class="modalLoad-content" >
-                            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                    <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                        <div className="modalLoad-content" >
+                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-                        </div>
+                      </div>
                   </Card>
                 </Col>
               </Row>

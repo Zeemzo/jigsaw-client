@@ -14,12 +14,12 @@ class Diff extends React.Component {
         // var textDiff = diff.main('text1', 'text2'); // produces diff array
         // diff.prettyHtml(textDiff); // produces a formatted HTML string
 
-        // console.log(diff.prettyHtml(textDiff))
+        // //console.log(diff.prettyHtml(textDiff))
     }
     componentWillMount() {
         if (this.props.textDraft != null) {
             this.setState({ textDraft: this.props.textDraft })
-            console.log(this.state.textDraft)
+            //console.log(this.state.textDraft)
         }
 
 

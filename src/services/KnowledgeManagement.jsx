@@ -51,8 +51,8 @@ export async function createKnowledge(knowledge, password) {
             type: 'ADD_MESSAGE',
             text: 'building knowledge transaction'
           })
-        console.log(knowledge)
-        console.log(password)
+        //console.log(knowledge)
+        //console.log(password)
 
 
         var keypair
@@ -61,9 +61,9 @@ export async function createKnowledge(knowledge, password) {
         if (user == null) {
             return null
         }
-        console.log(user)
+        //console.log(user)
         publicKey = user.publicKey
-        console.log(user.encryptedSecret)
+        //console.log(user.encryptedSecret)
 
         if (password === "") {
             if (localStorage.getItem("secretKey") != null) {
@@ -76,7 +76,7 @@ export async function createKnowledge(knowledge, password) {
 
         }
 
-        // console.log(keypair)
+        // //console.log(keypair)
 
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         const sourceAccount = await server.loadAccount(publicKey);
@@ -84,7 +84,7 @@ export async function createKnowledge(knowledge, password) {
             return null
         }
 
-        // console.log(sha256(JSON.stringify(knowledge)))
+        // //console.log(sha256(JSON.stringify(knowledge)))
 
         let transaction = new StellarSdk.TransactionBuilder(sourceAccount)
             .addOperation(StellarSdk.Operation.manageData({ name: 'Type', value: 'K0', }))
@@ -102,7 +102,7 @@ export async function createKnowledge(knowledge, password) {
             hash: transaction.hash().toString('hex')
         }
 
-        console.log(postBody)
+        //console.log(postBody)
 
         let token
         if (localStorage.getItem("token") != null) {
@@ -143,7 +143,7 @@ export async function createKnowledge(knowledge, password) {
         }
 
     } catch (err) {
-        console.log(err)
+        //console.log(err)
         return null
     }
 
@@ -247,9 +247,9 @@ export async function AddKnowledge(kID, knowledge, password) {
             type: 'ADD_MESSAGE',
             text: 'building contribution transaction'
           })
-        console.log(kID)
-        console.log(knowledge)
-        console.log(password)
+        //console.log(kID)
+        //console.log(knowledge)
+        //console.log(password)
 
 
         var keypair
@@ -258,10 +258,10 @@ export async function AddKnowledge(kID, knowledge, password) {
         if (user == null) {
             return null
         }
-        console.log(user)
+        //console.log(user)
         publicKey = user.publicKey
 
-        console.log(user.encryptedSecret)
+        //console.log(user.encryptedSecret)
 
         if (password == "") {
             if (localStorage.getItem("secretKey") != null) {
@@ -272,7 +272,7 @@ export async function AddKnowledge(kID, knowledge, password) {
             localStorage.setItem("secretKey", decryptSecret(user.encryptedSecret, password))
         }
 
-        // console.log(keypair)
+        // //console.log(keypair)
 
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         const sourceAccount = await server.loadAccount(publicKey);
@@ -280,7 +280,7 @@ export async function AddKnowledge(kID, knowledge, password) {
             return null
         }
 
-        // console.log(sha256(JSON.stringify(knowledge)))
+        // //console.log(sha256(JSON.stringify(knowledge)))
 
         let transaction = new StellarSdk.TransactionBuilder(sourceAccount)
             .addOperation(StellarSdk.Operation.manageData({ name: 'Type', value: 'K1', }))
@@ -302,7 +302,7 @@ export async function AddKnowledge(kID, knowledge, password) {
             votes:7
         }
 
-        console.log(postBody)
+        //console.log(postBody)
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'submitting contribution transaction'
@@ -338,7 +338,7 @@ export async function AddKnowledge(kID, knowledge, password) {
         }
 
     } catch (err) {
-        console.log(err)
+        //console.log(err)
         return null
     }
 

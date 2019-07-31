@@ -98,7 +98,7 @@
                     if (tagEnd < 0) {
                         // Invalid HTML
                         // Truncate at the start of the tag
-                        console.log('Invalid HTML. String will be truncated.');
+                        //console.log('Invalid HTML. String will be truncated.');
                         diffableString += htmlString.substr(offset, tagStart - offset);
                         break;
                     }
@@ -158,4 +158,4 @@
 
     var lol=new RichTextDiffController()
     lol.convertHtmlToDiffableString("<p>A</p>")
-    console.log(lol.convertHtmlToDiffableString("<p>A</p>"))
+    //console.log(lol.convertHtmlToDiffableString("<p>A</p>"))

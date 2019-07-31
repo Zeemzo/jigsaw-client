@@ -75,10 +75,10 @@ class View extends React.Component {
 
         const { id } = this.props.match.params
 
-        console.log(id)
+        //console.log(id)
         const res = await getKnowledge(id)
         if (res !== null) {
-            console.log(res)
+            //console.log(res)
             this.setState(
                 {
                     title: res.data.knowledge.title,
@@ -92,7 +92,7 @@ class View extends React.Component {
 
         const res1 = await getContributions(id)
         if (res1 != null && res != null) {
-            console.log(res1)
+            //console.log(res1)
             this.setState(
                 {
                     contributions: res1.data.contributions
@@ -106,16 +106,16 @@ class View extends React.Component {
                     if (item.votes >= 5) {
                         var diff = dmp.diff_main(item.data.previousSnapshot, item.data.draft)
 
-                        console.log(diff)
+                        //console.log(diff)
                         var patch = dmp.patch_make(diff)
 
                         var result = dmp.patch_apply(patch, previousResult)
-                        console.log(index + ": " + result[0] + "\n")
+                        //console.log(index + ": " + result[0] + "\n")
                         previousResult = result[0]
                     }
 
                 })
-                console.log(previousResult)
+                //console.log(previousResult)
                 this.setState({ draft: previousResult })
             }
 
@@ -138,7 +138,7 @@ class View extends React.Component {
 
 
     handleLoadChange() {
-        console.log(store.getState())
+        //console.log(store.getState())
         this.setState({ loadingMessage: store.getState() + '...' })
     }
 
@@ -159,12 +159,12 @@ class View extends React.Component {
         return (
             <div>
                 <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
-                <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
-                    <div class="modalLoad-content" >
-                        <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                    </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                        <div className="modalLoad-content" >
+                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-                </div>
+                      </div>
                 {/* <meta name="description" content={this.state.title} />
                 <meta property="og:title" content={this.state.title} />
                 <meta property="og:url" content={"https://jigsaw.cf/knowledge/"+this.props.match.params.id} />
@@ -200,7 +200,7 @@ class View extends React.Component {
 
 
                                 this.state.contributions.map((item, key) => {
-                                    console.log(item)
+                                    //console.log(item)
                                     let diff = dmp.diff_main(item.data.previousSnapshot, item.data.draft)
 
                                     var collapse = false
@@ -208,7 +208,7 @@ class View extends React.Component {
                                         collapse = true
                                     }
                                     dmp.diff_cleanupSemantic(diff)
-                                    console.log(diff)
+                                    //console.log(diff)
                                     // const lol = (<div>
                                     //     <p dangerouslySetInnerHTML={{ __html: prettyHtml(diff, item.alias + key) }} />
                                     //     <UncontrolledTooltip placement="bottom" target={item.alias + key} delay={0}>{item.alias + " at: " + item.timestamp}</UncontrolledTooltip>

@@ -15,6 +15,6 @@ store.dispatch({
     text: 'something is happenning'
   })
 
-// console.log(store.getState())
+// //console.log(store.getState())
 
-// console.log(store.getState())
+// //console.log(store.getState())

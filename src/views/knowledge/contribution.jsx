@@ -64,7 +64,7 @@ class Contribution extends React.Component {
 
   }
   handleLoadChange() {
-    console.log(store.getState())
+    //console.log(store.getState())
     this.setState({ loadingMessage: store.getState() + '...' })
   }
   async componentDidMount() {
@@ -78,7 +78,7 @@ class Contribution extends React.Component {
     const res = await getKnowledge(id)
     if (res !== null) {
 
-      console.log(res)
+      //console.log(res)
       this.setState(
         {
           editorHtml: res.data.knowledge.draft
@@ -88,7 +88,7 @@ class Contribution extends React.Component {
     // this.setState({ contributions: contributions })
     const res1 = await getContributions(id)
     if (res1 != null && res != null) {
-      console.log(res1)
+      //console.log(res1)
       this.setState({ showSpinner: false });
 
       this.setState(
@@ -107,7 +107,7 @@ class Contribution extends React.Component {
             var patch = dmp.patch_make(diff)
 
             var result = dmp.patch_apply(patch, previousResult)
-            console.log(index + ": " + result[0] + "\n")
+            //console.log(index + ": " + result[0] + "\n")
             previousResult = result[0]
           }
 
@@ -124,7 +124,7 @@ class Contribution extends React.Component {
 
 
 
-    // console.log(previousResult)
+    // //console.log(previousResult)
   }
 
 
@@ -141,8 +141,8 @@ class Contribution extends React.Component {
     });
   };
   getChange(data, text) {
-    console.log(data)
-    console.log(text)
+    //console.log(data)
+    //console.log(text)
 
     this.setState({
       editorHtml: data,
@@ -163,12 +163,12 @@ class Contribution extends React.Component {
     return (
       <>
         <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
-        <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
-          <div class="modalLoad-content" >
-            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+        <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                        <div className="modalLoad-content" >
+                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-        </div>       <IndexNavbar />
+                      </div>  <IndexNavbar />
 
 
         <div className="wrapper">
@@ -234,7 +234,7 @@ class Contribution extends React.Component {
                     if (response != null) {
                       this.setState({ showSpinner: false });
 
-                      // console.log(response)
+                      // //console.log(response)
                       ToastStore.success("Success");
                       this.props.history.push(`/knowledge/${id}`);
                     }
@@ -286,7 +286,7 @@ class Contribution extends React.Component {
                       if (response != null) {
                         this.setState({ showSpinner: false });
 
-                        // console.log(response)
+                        // //console.log(response)
                         ToastStore.success("Success");
                         this.props.history.push(`/knowledge/${id}`);
                       }

@@ -16,7 +16,7 @@ class ComponentsNavbar extends React.Component {
       collapseOpen: false,
       color: "navbar-transparent"
     };
-    console.log(this.props.location.pathname)
+    //console.log(this.props.location.pathname)
   }
   componentDidMount() {
     window.addEventListener("scroll", this.changeColor);

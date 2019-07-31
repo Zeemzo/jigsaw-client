@@ -12,7 +12,6 @@ import classnames from "classnames";
 import { Link, withRouter } from 'react-router-dom';
 import ReactLoading from "react-loading";
 import { store } from "variables/redux";
-
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
@@ -21,7 +20,6 @@ import { findKnowledge } from 'services/KnowledgeManagement';
 import { TextBlock, MediaBlock, TextRow, RectShape, RoundShape } from 'react-placeholder/lib/placeholders';
 import ReactPlaceholder from 'react-placeholder';
 import "react-placeholder/lib/reactPlaceholder.css";
-
 
 class Feed extends React.Component {
   constructor(props) {
@@ -33,7 +31,7 @@ class Feed extends React.Component {
       loadingMessage: 'something is happenning...'
 
     };
-    console.log(this.props.location)
+    //console.log(this.props.location)
     this.handleLoadChange = this.handleLoadChange.bind(this)
 
   }
@@ -52,7 +50,7 @@ class Feed extends React.Component {
 
     const res = await findKnowledge()
     if (res != null) {
-      console.log(res)
+      //console.log(res)
       this.setState({ data: res.data.knowledge })
       this.setState({ showSpinner: false });
 
@@ -61,7 +59,7 @@ class Feed extends React.Component {
   }
 
   handleLoadChange() {
-    console.log(store.getState())
+    //console.log(store.getState())
     this.setState({ loadingMessage: store.getState() + '...' })
   }
   componentWillUnmount() {
@@ -149,8 +147,13 @@ class Feed extends React.Component {
                 </InputGroup>
 
 
+{/* 
+                <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                        <div className="modalLoad-content" >
+                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-
+                      </div> */}
                 <Row className="justify-content-center">
                   <Col lg="12">
                     {this.state.data != null ?
@@ -186,8 +189,8 @@ class Feed extends React.Component {
                       </ReactPlaceholder>
                       <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
                         <div className="modalLoad-content" >
-                          <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                        </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
                       </div></div>
                     }

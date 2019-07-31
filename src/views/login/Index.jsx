@@ -50,7 +50,7 @@ class Login extends React.Component {
       loadingMessage: 'something is happenning...'
 
     }
-    this.handleChange=this.handleChange.bind(this)
+    this.handleChange = this.handleChange.bind(this)
 
   }
   componentDidMount() {
@@ -72,9 +72,9 @@ class Login extends React.Component {
 
   }
   handleChange() {
-    console.log(store.getState())
-    this.setState({loadingMessage:store.getState()+'...'})
-}
+    //console.log(store.getState())
+    this.setState({ loadingMessage: store.getState() + '...' })
+  }
   followCursor = event => {
     let posX = event.clientX - window.innerWidth / 2;
     let posY = event.clientY - window.innerWidth / 6;
@@ -97,7 +97,7 @@ class Login extends React.Component {
 
   verifyCallback = (recaptchaToken) => {
     // Here you will get the final recaptchaToken!!!  
-    console.log(recaptchaToken, "<= your recaptcha token")
+    //console.log(recaptchaToken, "<= your recaptcha token")
   }
 
   render() {
@@ -203,10 +203,10 @@ class Login extends React.Component {
                         </Form>
                       </CardBody>
                       <CardFooter>
-                      <div hidden={!this.state.showSpinner} id="myModal" class="modalLoad">
-                          <div class="modalLoad-content" >
-                            <ReactLoading class="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                          </div> <h3 style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                        <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                          <div className="modalLoad-content" >
+                            <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                          </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
                         </div>
                         <Button className="btn-round" color="info" size="lg" onClick={
@@ -230,8 +230,8 @@ class Login extends React.Component {
                                     ToastStore.error("Password is incorrect"); break;
                                   case null:
                                     this.setState({ showSpinner: false });
-                                    ToastStore.error("Login Failed");break;
-                                  default:;
+                                    ToastStore.error("Login Failed"); break;
+                                  default: ;
                                 }
                               } else {
                                 this.setState({ showSpinner: true });
@@ -251,8 +251,8 @@ class Login extends React.Component {
                                     ToastStore.error("Private Key is incorrect"); break;
                                   case null:
                                     this.setState({ showSpinner: false });
-                                    ToastStore.error("Login Failed");break;
-                                    default:;
+                                    ToastStore.error("Login Failed"); break;
+                                  default: ;
 
                                 }
                               }

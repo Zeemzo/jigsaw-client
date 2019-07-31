@@ -52,7 +52,7 @@ class Crop extends PureComponent {
       );
       this.setState({ croppedImageUrl });
       this.props.getImage(croppedImageUrl);
-      console.log(croppedImageUrl)
+      //console.log(croppedImageUrl)
 
     }
   }

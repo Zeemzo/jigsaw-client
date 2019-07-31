@@ -1,14 +1,14 @@
 .modalLoad {
     display: block; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 1060; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
+    overflow: none; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
   }
   
   /* Modal Content/Box */
@@ -80,4 +80,27 @@ ol {
   border:none;
   border: #098098   
 
+}
+
+.loadingMessage {
+  /* font-family: sans-serif;
+  text-transform: uppercase; */
+  font-size: 2em;
+  letter-spacing: 4px;
+  /* overflow: hidden; */
+  background: linear-gradient(90deg, #000, #fff, #000);
+  background-repeat: no-repeat;
+  background-size: 80%;
+  animation: animate 2s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0);
+}
+
+@keyframes animate {
+  0% {
+    background-position: -250%;
+  }
+  100% {
+    background-position: 250%;
+  }
 }

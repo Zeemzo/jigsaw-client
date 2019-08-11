@@ -1,5 +1,5 @@
 import React from "react";
-import { Link ,withRouter} from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -18,7 +18,7 @@ class BlockchainAccount extends React.Component {
         this.state = {
             squares1to6: "",
             squares7and8: "",
-            canProceed:false,
+            canProceed: false,
         }
     }
     copyMessage(val) {
@@ -92,21 +92,26 @@ class BlockchainAccount extends React.Component {
                                     <img
                                         alt="..."
                                         className="img-center img-fluid"
-                                        src={require("assets/img/bitcoin.png")}
+                                        src={require("assets/img/favicon.ico")}
                                     />
                                 </CardHeader>
                                 <CardBody>
                                     <Row>
                                         <Col className="text-center" md="12">
                                             <h4 className="text-uppercase">JIGX Coin</h4>
-                                            <span>BUILT ON STELLAR</span><br/>
+                                            <span>BUILT ON STELLAR</span><br />
                                             <h3>This is the only time you are going to see your SECRETKEY, Keep it safe! </h3>
+                                            <p>We have provided you 10,000 test XLMs to be used in the Stellar Testnet</p>
+                                            <p>Optional : <a href="https://cex.io/cards-xlm/" target="_blank">Click to buy XLMs for the PublicNet</a></p>
                                             <hr className="line-info" />
+                                            <h4>Here's your keypair</h4>
+
                                         </Col>
                                     </Row>
                                     <Row>
+
                                         <ListGroup>
-                                        
+
                                             {localStorage.getItem("publicKey") != null ?
                                                 <ListGroupItem>Public Key: <Button onClick={e => {
                                                     this.copyMessage(localStorage.getItem("publicKey"))
@@ -130,23 +135,23 @@ class BlockchainAccount extends React.Component {
                                         if (localStorage.getItem("secretKey") != null && localStorage.getItem("publicKey") != null) {
 
                                             var FileSaver = require('file-saver');
-                                            var blob = new Blob(['PublicKey: '+ localStorage.getItem("publicKey") 
+                                            var blob = new Blob(['PublicKey: ' + localStorage.getItem("publicKey")
                                                 + ' \nSecretKey: ' + localStorage.getItem("secretKey")], { type: "text/plain;charset=utf-8" });
                                             FileSaver.saveAs(blob, "JigsawCredentials.txt");
-                                     
-                                            this.setState({canProceed:true})
+
+                                            this.setState({ canProceed: true })
                                         }
 
                                     }}>
                                         Export to File</Button>
-                                        {this.state.canProceed?<Link to="/" tag={Link}>
-                                        <Button  onClick={e => {
+                                    
+                                        <Button disabled={!this.state.canProceed} onClick={e => {
                                             localStorage.removeItem("secretKey");
                                             localStorage.removeItem("publicKey");
                                         }} className="btn-simple" color="info">
-                                            Proceed
-                                    </Button></Link>:null}
-                                    
+                                            <Link to="/" disabled={!this.state.canProceed} tag={Link}>Proceed</Link>
+                                    </Button>
+
 
                                 </CardFooter>
                             </Card>

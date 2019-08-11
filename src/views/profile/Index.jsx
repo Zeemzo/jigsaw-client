@@ -17,6 +17,8 @@ import { ToastContainer, ToastStore } from 'react-toasts';
 import ReactLoading from "react-loading";
 import { goToTop } from 'react-scrollable-anchor'
 import { store } from "variables/redux";
+import Transfer from "views/profile/transfer"
+import Convert from "views/profile/convert"
 
 import { withRouter } from 'react-router-dom';
 
@@ -38,7 +40,7 @@ class Profile extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this)
-
+    this.updateWallet = this.updateWallet.bind(this)
   }
 
   copyMessage(val) {
@@ -58,7 +60,19 @@ class Profile extends React.Component {
   // async getBalance() {
 
   // }
+  async updateWallet() {
+    const user = getUserSession()
+    if (user != null) {
+      this.setState({ showSpinner: true })
+      const balance = await getWalletBalance(user.publicKey);
+      if (balance != null) {
 
+        this.setState({ balance: balance });
+        this.setState({ showSpinner: false })
+        //console.log(balance);
+      }
+    }
+  }
   async componentDidMount() {
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
@@ -169,7 +183,18 @@ class Profile extends React.Component {
                             onClick={e => this.toggleTabs(e, "tabs", 2)}
                             href="#pablo"
                           >
-                            Send
+                            Transfer
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            className={classnames({
+                              active: this.state.tabs === 3
+                            })}
+                            onClick={e => this.toggleTabs(e, "tabs", 3)}
+                            href="#pablo"
+                          >
+                            Convert
                           </NavLink>
                         </NavItem>
                       </Nav>
@@ -188,7 +213,6 @@ class Profile extends React.Component {
                                 <th className="header">AMOUNT</th>
                               </tr>
                             </thead><tbody>
-
                               {this.state.balance.map((item, i) => (
                                 <tr key={i + "g"}>
                                   <td>{item.assetCode != null ? item.assetCode : "XLM"}</td>
@@ -199,44 +223,19 @@ class Profile extends React.Component {
                           </Table>
                         </TabPane>
                         <TabPane tabId="tab2">
-                          <Row>
-                            <Label sm="3">Pay to</Label>
-                            <Col sm="9">
-                              <FormGroup>
-                                <Input
-                                  placeholder="e.g. 1Nasd92348hU984353hfid"
-                                  type="text"
-                                />
-                                <FormText color="default" tag="span">
-                                  Please enter a valid address.
-                                </FormText>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Label sm="3">Amount</Label>
-                            <Col sm="9">
-                              <FormGroup>
-                                <Input placeholder="1.587" type="text" />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Button
-                            className="btn-simple btn-icon btn-round float-right"
-                            color="primary"
-                            type="submit"
-                          >
-                            <i className="tim-icons icon-send" />
-                          </Button>
+                          <Transfer alias={this.state.userName} updateWallet={this.updateWallet}></Transfer>
+                        </TabPane>
+                        <TabPane tabId="tab3">
+                          <Convert updateWallet={this.updateWallet} balance={this.state.balance}></Convert>
                         </TabPane>
                       </TabContent>
                     </CardBody>
                     <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
-                        <div className="modalLoad-content" >
-                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                      <div className="modalLoad-content" >
+                        <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                      </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-                      </div>
+                    </div>
                   </Card>
                 </Col>
               </Row>

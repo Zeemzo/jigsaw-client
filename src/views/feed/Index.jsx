@@ -71,28 +71,28 @@ class Feed extends React.Component {
       <div className='my-awesome-placeholder'>
         <Row className="row-grid justify-content-center">
         <Col lg="3">
-            <Card className="articleCard">
+            <Card className="loadingCard">
               <CardBody>
                 <TextBlock rows={1} color='grey'/>
                 <hr className="line-primary" />
                 <RectShape color='grey' />
               </CardBody></Card>
-          </Col><Col lg="3">
-            <Card className="articleCard">
+              </Col><Col lg="3">
+            <Card className="loadingCard">
               <CardBody>
                 <TextBlock rows={1} color='grey'/>
                 <hr className="line-primary" />
                 <RectShape color='grey'/>
               </CardBody></Card>
           </Col><Col lg="3">
-            <Card className="articleCard">
+            <Card className="loadingCard">
               <CardBody>
                 <TextBlock rows={1} color='grey'/>
                 <hr className="line-primary" />
                 <RectShape color='grey'/>
               </CardBody></Card>
-          </Col><Col lg="3">
-          <Card className="articleCard">
+              </Col><Col lg="3">
+            <Card className="loadingCard">
               <CardBody>
                 <TextBlock rows={1} color='grey'/>
                 <hr className="line-primary" />

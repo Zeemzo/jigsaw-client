@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import { register } from "services/UserManagement";
+import { register, GetAllUsers, hashEmail } from "services/UserManagement";
 import ReactLoading from "react-loading";
 import { goToTop } from 'react-scrollable-anchor'
 import { withRouter } from 'react-router-dom';
@@ -43,19 +43,30 @@ class Register extends React.Component {
       showSpinner: false,
       iAgree: false,
       demoModal: false,
-      loadingMessage: 'something is happenning...'
-
+      loadingMessage: 'something is happenning...',
+      aliasList: [],
+      aliasOK: true,
+      miniErrorMessage: '',
+      aliasErrorMessage:'',
+      emailTaken: false
     }
 
-    this.handleChange=this.handleChange.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
-  componentDidMount() {
+  async componentDidMount() {
     goToTop()
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
     store.subscribe(this.handleChange)
 
-
+    const res = await GetAllUsers()
+    if (res != null) {
+      var arr = []
+      res.data.publicKeys.forEach(element => {
+        arr.push({ alias: element.alias, emailHash: element.emailHash })
+      })
+      this.setState({ aliasList: arr })
+    }
   }
   componentWillUnmount() {
     document.body.classList.toggle("register-page");
@@ -91,8 +102,8 @@ class Register extends React.Component {
 
 
   handleChange() {
-      //console.log(store.getState())
-      this.setState({loadingMessage:store.getState()+'...'})
+    //console.log(store.getState())
+    this.setState({ loadingMessage: store.getState() + '...' })
   }
   checkStrength() {
     const hsimp = setup({
@@ -199,24 +210,42 @@ class Register extends React.Component {
                       </CardHeader>
                       <CardBody>
                         <Form className="form">
-                          <InputGroup
-                            className={classnames({
-                              "input-group-focus": this.state.fullNameFocus
-                            })}
-                          >
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="tim-icons icon-single-02" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="Alias"
-                              type="text"
-                              onFocus={e => this.setState({ fullNameFocus: true })}
-                              onBlur={e => this.setState({ fullNameFocus: false })}
-                              onChange={e => { this.setState({ txtFullName: e.target.value }) }}
-                            />
-                          </InputGroup>
+                          <FormGroup className={!this.state.aliasOK ? "has-danger" : null}>
+
+                            <InputGroup
+                              className={this.state.aliasOK ? classnames({
+                                "input-group-focus": this.state.fullNameFocus
+                              }) : "has-danger"}
+                            >
+
+
+                              <InputGroupAddon addonType="prepend">
+                                <InputGroupText>
+                                  <i className="tim-icons icon-single-02" />
+                                </InputGroupText>
+                              </InputGroupAddon>
+                              <Input
+                                placeholder="Alias"
+                                type="text"
+                                onFocus={e => this.setState({ fullNameFocus: true })}
+                                onBlur={e => this.setState({ fullNameFocus: false })}
+                                onChange={e => {
+                                  this.setState({ txtFullName: e.target.value })
+                                  this.setState({ aliasOK: true })
+
+                                  this.state.aliasList.forEach(element => {
+                                    if (e.target.value == element.alias) {
+                                      this.setState({ aliasOK: false, txtFullName: '', aliasErrorMessage: 'alias already taken' })
+                                      return
+                                    }
+                                  })
+
+
+                                }}
+                              />
+                            </InputGroup>
+                            {!this.state.aliasOK ? <p style={{ color: "red" }}>{this.state.aliasErrorMessage}</p> : null}
+                          </FormGroup>
 
                           <FormGroup className={this.state.invalidEmail ? "has-danger" : null}>
                             <InputGroup
@@ -244,6 +273,15 @@ class Register extends React.Component {
                                   } else {
                                     this.setState({ invalidEmail: false })
                                   }
+
+                                  this.setState({ emailTaken: false})
+
+                                  this.state.aliasList.forEach(element => {
+                                    if (hashEmail(e.target.value) == element.emailHash) {
+                                      this.setState({ invalidEmail: true, emailTaken: true, txtEmail: '', miniErrorMessage: 'email already taken' })
+                                      return
+                                    }
+                                  })
                                 }}
                                 onChange={e => {
                                   this.setState({ txtEmail: e.target.value })
@@ -251,9 +289,22 @@ class Register extends React.Component {
                                   if (this.state.txtEmail.length === 0) {
                                     this.setState({ invalidEmail: false })
                                   }
+
+                                  this.setState({ emailTaken: false})
+
+                                  this.state.aliasList.forEach(element => {
+                                    if (hashEmail(e.target.value) == element.emailHash) {
+                                      this.setState({ invalidEmail: true, emailTaken: true, txtEmail: '', miniErrorMessage: 'email already taken' })
+                                      return
+                                    }
+                                  })
+
+
                                 }}
                               />
                             </InputGroup>
+                            {this.state.emailTaken ? <p style={{ color: "red" }}>{this.state.miniErrorMessage}</p> : null}
+
                           </FormGroup>
                           {this.state.showPasswordMeter && this.state.passwordFocus ?
                             <Alert color="warning">
@@ -378,12 +429,12 @@ class Register extends React.Component {
                         <Label check> Already a user? <Link to="/login" tag={Link}>
                           Login
                   </Link></Label>
-                  <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
-                        <div className="modalLoad-content" >
-                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                        <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                          <div className="modalLoad-content" >
+                            <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                          </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-                      </div>
+                        </div>
 
                       </CardFooter>
                     </Card>

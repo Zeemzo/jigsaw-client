@@ -145,11 +145,11 @@ class View extends React.Component {
     render() {
         const { id } = this.props.match.params
         const awesomePlaceholder = (
-            <div className='my-awesome-placeholder'>
+            <div className='my-awesome-placeholder loadingView'>
 
                 <TextBlock rows={1} color='grey' />
                 <hr className="line-primary" />
-                <RectShape color='grey' />
+                <RectShape color='grey' style={{height:"200px",width:"100%"}}/>
                 <TextBlock rows={5} color='grey' />
 
 

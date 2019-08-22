@@ -88,9 +88,13 @@ class Crop extends PureComponent {
         <h4>Cover Photo{" "}</h4>
         <div>
           <input type="file" onChange={this.onSelectFile} />
-        </div>
+        </div> 
+        {!this.state.done&& this.state.showCropButton?<Button onClick={()=>{
+          this.setState({done:true})
+        }}>Crop</Button>:null}
         {!this.state.done ? src && (
           <ReactCrop
+          width="50px"
             src={src}
             crop={crop}
             onImageLoaded={this.onImageLoaded}
@@ -102,9 +106,7 @@ class Crop extends PureComponent {
         {this.state.done && (
           <img alt="Crop" style={{ maxWidth: "100%" }} src={croppedImageUrl} />
         )}
-        {!this.state.done&& this.state.showCropButton?<Button onClick={()=>{
-          this.setState({done:true})
-        }}>Crop</Button>:null}
+       
       </div>
     );
   }

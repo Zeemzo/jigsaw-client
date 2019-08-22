@@ -89,6 +89,55 @@ export async function login(email, password) {
 * @author Azeem Ashraf azeemashraf@outlook.com
 * @return 
 */
+export async function UpdatePushToken(emailHash, pushToken) {
+    try {
+        // store.dispatch({
+        //     type: 'ADD_MESSAGE',
+        //     text: 'updating pushtoken'
+        // })
+
+        let postBody = {
+            pushToken: pushToken,
+            emailHash: emailHash
+        }
+
+        let token
+        if (localStorage.getItem("token") != null) {
+            token = localStorage.getItem("token")
+        }
+
+        const res = await axios
+            .post(jigsawBackend + "/api/user/pushToken/", postBody,
+                {
+                    headers: {
+                        'Authorization': "bearer " + token,
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                })
+
+        if (res != null) {
+
+            return res
+
+        } else {
+            return null
+
+        }
+
+    } catch (err) {
+        return null
+    }
+
+
+}
+
+/**
+* @desc 
+* @param object 
+* @author Azeem Ashraf azeemashraf@outlook.com
+* @return 
+*/
 export async function loginWithSecret(secretKey) {
     try {
         store.dispatch({
@@ -357,6 +406,7 @@ export async function TransferJIGXUAsset(DestinationPublicKey, Amount, password)
         if (transactionResponse === null) {
             return null;
         }
+        
 
         return transactionResponse
 

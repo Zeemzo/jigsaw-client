@@ -164,11 +164,11 @@ class Contribution extends React.Component {
       <>
         <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
         <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
-                        <div className="modalLoad-content" >
-                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+          <div className="modalLoad-content" >
+            <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+          </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-                      </div>  <IndexNavbar />
+        </div>  <IndexNavbar />
 
 
         <div className="wrapper">
@@ -189,6 +189,14 @@ class Contribution extends React.Component {
                   </button>
                   <h4 className="title title-up">Confirm Action</h4>
                 </div>
+                <Row>
+                  <Col className="text-center" md="12">
+                    <hr className="line-info" />
+
+                    <h4>Warning!</h4>
+                    <p>You will spend 2 JIGXU for this action</p>
+                  </Col>
+                </Row>
                 <Form className="form">
 
                   <FormGroup
@@ -221,6 +229,13 @@ class Contribution extends React.Component {
 
                 </Form>
                 <div className="modal-footer">
+                  <Button
+                    color="danger"
+                    type="button"
+                    onClick={() => this.toggleModal("demoModal")}
+                  >
+                    Close
+                </Button>
                   <Button color="default" type="button" onClick={async (e) => {
                     this.setState({ showSpinner: true });
 
@@ -248,13 +263,7 @@ class Contribution extends React.Component {
 
                   }} >Proceed
                     </Button>
-                  <Button
-                    color="danger"
-                    type="button"
-                    onClick={() => this.toggleModal("demoModal")}
-                  >
-                    Close
-                </Button>
+
                 </div>
               </Modal>
               <Form className="form">

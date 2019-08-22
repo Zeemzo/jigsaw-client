@@ -1,10 +1,10 @@
 import axios from "axios";
-import { jigsawBackend,JIGXUPoolAccount,JIGXUDistributorPublicKey, JIGXUIssuerPublicKey, JIGXKIssuerPublicKey } from "variables/constants";
+import { jigsawBackend, jigsawGateway, JIGXUPoolAccount, JIGXUDistributorPublicKey, JIGXUIssuerPublicKey, JIGXKIssuerPublicKey } from "variables/constants";
 import { AES, enc } from "crypto-js";
 import sha256 from "sha256";
-import StellarSdk ,{Asset}from "stellar-sdk";
+import StellarSdk, { Asset } from "stellar-sdk";
 import { getUserSession } from "services/UserManagement";
-import {stringify} from "canonicalize-json";
+import { stringify } from "canonicalize-json";
 import { store } from "variables/redux";
 
 // var StellarSdk = require('stellar-sdk');
@@ -50,17 +50,21 @@ export async function createKnowledge(knowledge, password) {
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'building knowledge transaction'
-          })
+        })
         //console.log(knowledge)
         //console.log(password)
-
+        console.log("alive 1")
 
         var keypair
         var publicKey
+        var PreviousTxn
         const user = getUserSession()
         if (user == null) {
             return null
         }
+
+        console.log("alive 2")
+
         //console.log(user)
         publicKey = user.publicKey
         //console.log(user.encryptedSecret)
@@ -72,11 +76,35 @@ export async function createKnowledge(knowledge, password) {
             }
         } else {
             keypair = Keypair.fromSecret(decryptSecret(user.encryptedSecret, password))
+            
             localStorage.setItem("secretKey", decryptSecret(user.encryptedSecret, password))
 
         }
+        console.log("alive 3")
 
         // //console.log(keypair)
+
+        const gatewayRes = await axios
+            .get(`${jigsawGateway}/api/transactions/lastKnowledge/${publicKey}`,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                })
+
+        if (gatewayRes == null) {
+            return null
+        }
+
+        console.log("alive 4")
+
+        switch (gatewayRes.status) {
+            case 200: PreviousTxn = gatewayRes.data.lastTxn; break;
+            case 201: PreviousTxn = '';
+        }
+        console.log(gatewayRes)
+        console.log("alive 5")
 
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         const sourceAccount = await server.loadAccount(publicKey);
@@ -88,6 +116,7 @@ export async function createKnowledge(knowledge, password) {
 
         let transaction = new StellarSdk.TransactionBuilder(sourceAccount)
             .addOperation(StellarSdk.Operation.manageData({ name: 'Type', value: 'K0', }))
+            .addOperation(StellarSdk.Operation.manageData({ name: 'PreviousTxn', value: PreviousTxn, }))
             .addOperation(StellarSdk.Operation.manageData({ name: 'KnowledgeHash', value: sha256(stringify(knowledge)), }))
             .addOperation(StellarSdk.Operation.payment({
                 destination: JIGXUPoolAccount,
@@ -100,13 +129,15 @@ export async function createKnowledge(knowledge, password) {
 
 
         let postBody = {
-            timestamp:Math.floor(new Date().getTime() / 1000.0),
-            publicKey:publicKey,
+            timestamp: Math.floor(new Date().getTime() / 1000.0),
+            publicKey: publicKey,
             data: knowledge,
+            alias: user.alias,
             xdr: transaction.toEnvelope().toXDR('base64'),
             hash: transaction.hash().toString('hex')
         }
 
+        let hash=transaction.hash().toString('hex')
         //console.log(postBody)
 
         let token
@@ -117,7 +148,7 @@ export async function createKnowledge(knowledge, password) {
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'submitting knowledge transaction'
-          })
+        })
         // return postBody
         const res = await axios
             .post(jigsawBackend + "/api/article/create/", postBody,
@@ -130,17 +161,18 @@ export async function createKnowledge(knowledge, password) {
                 })
 
         if (res != null) {
-            localStorage.removeItem("txtTitle");
-            localStorage.removeItem("editorHtml");
+            // localStorage.removeItem("txtTitle");
+            // localStorage.removeItem("editorHtml");
 
             if (res.status == 200) {
                 // localStorage.setItem("keypair", JSON.stringify(keypair))
-                localStorage.removeItem("txtTitle");
-                localStorage.removeItem("editorHtml");
+                // localStorage.removeItem("txtTitle");
+                // localStorage.removeItem("editorHtml");
 
-                return res.status
+                res.data.txn=hash
+                return res
             } else {
-                return res.status
+                return res
             }
         } else {
             return null
@@ -173,7 +205,7 @@ export async function findKnowledge() {
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'retrieving knowledge from datastore'
-          })
+        })
         const res = await axios
             .get(jigsawBackend + "/api/article/find",
                 {
@@ -199,13 +231,55 @@ export async function findKnowledge() {
 
 }
 
+/**
+* @desc 
+* @param object 
+* @author Azeem Ashraf azeemashraf@outlook.com
+* @return 
+*/
+export async function getKnowledgeList() {
+    try {
 
+        // let token
+        // if (localStorage.getItem("token") != null) {
+        //     token = localStorage.getItem("token")
+        // }
+
+        // return postBody
+        store.dispatch({
+            type: 'ADD_MESSAGE',
+            text: 'retrieving knowledge from datastore'
+        })
+        const res = await axios
+            .get(jigsawBackend + "/api/article/getList",
+                {
+                    headers: {
+                        // 'Authorization': "bearer " + token,
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                })
+
+        if (res != null) {
+
+            return res
+
+        } else {
+            return null
+
+        }
+
+    } catch (err) {
+        return null
+    }
+
+}
 export async function getKnowledge(id) {
     try {
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'retrieving knowledge from datastore'
-          })
+        })
         // let token
         // if (localStorage.getItem("token") === null) {
         //     return null
@@ -251,7 +325,7 @@ export async function AddKnowledge(kID, knowledge, password) {
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'building contribution transaction'
-          })
+        })
         //console.log(kID)
         //console.log(knowledge)
         //console.log(password)
@@ -259,6 +333,7 @@ export async function AddKnowledge(kID, knowledge, password) {
 
         var keypair
         var publicKey
+        var PreviousTxn
         const user = getUserSession()
         if (user == null) {
             return null
@@ -279,6 +354,28 @@ export async function AddKnowledge(kID, knowledge, password) {
 
         // //console.log(keypair)
 
+        const gatewayRes = await axios
+            .get(`${jigsawGateway}/api/transactions/lastContribution/${kID}`,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+
+                    }
+                })
+
+        if (gatewayRes == null) {
+            return null
+        }
+        switch (gatewayRes.status) {
+            case 200: PreviousTxn = gatewayRes.data.lastTxn; break;
+            case 201: PreviousTxn = '';
+        }
+        console.log(gatewayRes)
+
+
+
+
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         const sourceAccount = await server.loadAccount(publicKey);
         if (sourceAccount == null) {
@@ -289,6 +386,7 @@ export async function AddKnowledge(kID, knowledge, password) {
 
         let transaction = new StellarSdk.TransactionBuilder(sourceAccount)
             .addOperation(StellarSdk.Operation.manageData({ name: 'Type', value: 'K1', }))
+            .addOperation(StellarSdk.Operation.manageData({ name: 'PreviousTxn', value: PreviousTxn, }))
             .addOperation(StellarSdk.Operation.manageData({ name: 'KnowledgeTxn', value: kID, }))
             .addOperation(StellarSdk.Operation.manageData({ name: 'KnowledgeHash', value: sha256(stringify(knowledge)), }))
             .addOperation(StellarSdk.Operation.payment({
@@ -302,21 +400,21 @@ export async function AddKnowledge(kID, knowledge, password) {
 
 
         let postBody = {
-            kId:kID,
-            timestamp:Math.floor(new Date().getTime() / 1000.0),
-            publicKey:publicKey,
-            alias:user.alias,
+            kId: kID,
+            timestamp: Math.floor(new Date().getTime() / 1000.0),
+            publicKey: publicKey,
+            alias: user.alias,
             data: knowledge,
             xdr: transaction.toEnvelope().toXDR('base64'),
             hash: transaction.hash().toString('hex'),
-            votes:0
+            votes: 0
         }
 
         //console.log(postBody)
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'submitting contribution transaction'
-          })
+        })
         let token
         if (localStorage.getItem("token") != null) {
             token = localStorage.getItem("token")
@@ -360,7 +458,7 @@ export async function getContributions(id) {
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'retrieving contribution from datastore'
-          })
+        })
         // let token
         // if (localStorage.getItem("token") === null) {
         //     return null
@@ -406,12 +504,12 @@ export async function AddVote(kID, cID, password) {
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'building vote transaction'
-          })
+        })
         //console.log(kID)
         //console.log(knowledge)
         //console.log(password)
 
-
+        var PreviousTxn
         var keypair
         var publicKey
         const user = getUserSession()
@@ -433,6 +531,26 @@ export async function AddVote(kID, cID, password) {
         }
 
         // //console.log(keypair)
+        const gatewayRes = await axios
+            .get(`${jigsawGateway}/api/transactions/lastVote/${cID}`,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                })
+
+        if (gatewayRes == null) {
+            return null
+        }
+        switch (gatewayRes.status) {
+            case 200: PreviousTxn = gatewayRes.data.lastTxn; break;
+            case 201: PreviousTxn = '';
+        }
+        console.log(gatewayRes)
+
+
+
 
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         const sourceAccount = await server.loadAccount(publicKey);
@@ -444,6 +562,7 @@ export async function AddVote(kID, cID, password) {
 
         let transaction = new StellarSdk.TransactionBuilder(sourceAccount)
             .addOperation(StellarSdk.Operation.manageData({ name: 'Type', value: 'V1', }))
+            .addOperation(StellarSdk.Operation.manageData({ name: 'PreviousTxn', value: PreviousTxn, }))
             .addOperation(StellarSdk.Operation.manageData({ name: 'KnowledgeTxn', value: kID, }))
             .addOperation(StellarSdk.Operation.manageData({ name: 'ContributionTxn', value: cID, }))
             .addOperation(StellarSdk.Operation.payment({
@@ -457,20 +576,20 @@ export async function AddVote(kID, cID, password) {
 
 
         let postBody = {
-            kId:kID,
-            timestamp:Math.floor(new Date().getTime() / 1000.0),
-            publicKey:publicKey,
-            alias:user.alias,
+            kId: kID,
+            timestamp: Math.floor(new Date().getTime() / 1000.0),
+            publicKey: publicKey,
+            alias: user.alias,
             xdr: transaction.toEnvelope().toXDR('base64'),
             hash: transaction.hash().toString('hex'),
-            cId:cID
+            cId: cID
         }
 
         //console.log(postBody)
         store.dispatch({
             type: 'ADD_MESSAGE',
             text: 'submitting vote transaction'
-          })
+        })
         let token
         if (localStorage.getItem("token") != null) {
             token = localStorage.getItem("token")

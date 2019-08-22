@@ -142,7 +142,7 @@ class Profile extends React.Component {
             />
             <Container className="align-items-center">
               <Row>
-                <Col className="ml-auto mr-auto" lg="4" md="6">
+                <Col className="ml-auto mr-auto" lg="6" sm="12">
                   <Card className="card-coin card-plain">
 
                     <CardHeader>

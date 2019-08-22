@@ -15,6 +15,8 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import { ToastContainer, ToastStore } from 'react-toasts';
+import ReactLoading from "react-loading";
+import { store } from "variables/redux";
 
 class ListGroupCollapse extends React.Component {
     constructor(props) {
@@ -28,16 +30,30 @@ class ListGroupCollapse extends React.Component {
             showPasswordPop: false,
             demoModal: false,
             password: '',
+            showSpinner: false,
+
+            loadingMessage: 'something is happenning...'
         };
+        this.handleLoadChange = this.handleLoadChange.bind(this)
+
     }
 
+    componentDidMount() {
+        store.subscribe(this.handleLoadChange)
+
+    }
     toggleModal = modalState => {
         this.setState({
-          [modalState]: !this.state[modalState]
+            [modalState]: !this.state[modalState]
         });
-      };
+    };
     toggle() {
         this.setState({ collapse: !this.state.collapse });
+    }
+
+    handleLoadChange() {
+        //console.log(store.getState())
+        this.setState({ loadingMessage: store.getState() + '...' })
     }
 
     render() {
@@ -45,7 +61,11 @@ class ListGroupCollapse extends React.Component {
         return (
             <ListGroupItem className="card-plain">
                 <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
-
+                <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                    <div className="modalLoad-content" >
+                        <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                    </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                </div>
                 <p style={{ "textAlign": "center" }}
                     onClick={this.toggle}><strong width="300px">{(item.hash).substring(0, 30) + "... By: " + item.alias}</strong>
                 </p>
@@ -61,10 +81,18 @@ class ListGroupCollapse extends React.Component {
                         >
                             <i className="tim-icons icon-simple-remove" />
                         </button>
-                        <h4 className="title title-up">Confirm Action</h4>
-                    </div>
-                    <Form className="form">
+                        <h3 className="title title-up">Confirm Action</h3>
 
+                    </div>
+                    <Row>
+                        <Col className="text-center" md="12">
+                        <hr className="line-info" />
+
+                            <h4>Warning!</h4>
+                            <p>You will spend 1 JIGXU for this action</p>
+                        </Col>
+                    </Row>
+                    <Form className="form">
                         <FormGroup
                         >
                             <InputGroup
@@ -108,7 +136,7 @@ class ListGroupCollapse extends React.Component {
                             const response = await AddVote(item.kId, item.hash, this.state.password)
                             if (response != null) {
                                 this.setState({ showSpinner: false });
-                                this.setState({votes:this.state.votes+1})
+                                this.setState({ votes: this.state.votes + 1 })
                                 // //console.log(response)
                                 ToastStore.success("Success");
                                 // this.props.history.push(`/knowledge/${id}`);
@@ -141,7 +169,7 @@ class ListGroupCollapse extends React.Component {
                                 const response = await AddVote(item.kId, item.hash, this.state.password)
                                 if (response != null) {
                                     this.setState({ showSpinner: false });
-                                    this.setState({votes:this.state.votes+1})
+                                    this.setState({ votes: this.state.votes + 1 })
                                     // //console.log(response)
                                     ToastStore.success("Success");
                                     // this.props.history.push(`/knowledge/${id}`);

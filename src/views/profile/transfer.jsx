@@ -11,10 +11,7 @@ import { ToastContainer, ToastStore } from 'react-toasts';
 import { store } from "variables/redux";
 
 import SelectSearch from 'react-select-search'
-const options = [
-    { name: 'Swedish', value: 'sv' },
-    { name: 'English', value: 'en' },
-];
+
 class Transfer extends React.Component {
     constructor(props) {
         super(props);

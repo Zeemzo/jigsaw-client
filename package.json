@@ -19,6 +19,7 @@
     "diff-match-patch": "^1.0.4",
     "draft-js": "^0.10.5",
     "file-saver": "^2.0.2",
+    "firebase": "^6.3.5",
     "fs-web": "^1.0.1",
     "hsimp-checker": "^0.1.6",
     "hsimp-checks": "^0.1.2",

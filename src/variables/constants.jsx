@@ -1,6 +1,8 @@
-// export var jigsawBackend = "http://localhost:7000";
-export var jigsawBackend = "https://jigsaw-server.herokuapp.com";
+export var jigsawBackend = "http://localhost:7000";
+// export var jigsawBackend = "https://jigsaw-server.herokuapp.com";
 
+// export var jigsawGateway= "http://localhost:8000";
+export var jigsawGateway = "https://jigsaw-gateway.herokuapp.com";
 
 export var issuerPublicKey = "GD5VAU3K6RQE5SUPNJADXMMYNXYQREO5YW334T23N43IHNPJT2DAPPME";
 

@@ -144,7 +144,7 @@ ol {
     width: 300px;
     position: relative;
     margin-bottom: 20px;
-    background: #fff;
+    background: black;
     border-radius: 4px;
 }
 
@@ -155,7 +155,6 @@ ol {
     }
 
     .select-search-box::after {
-        font-family: fontawesome;
         content:"\f078";
         position: absolute;
         top: 0;
@@ -192,7 +191,7 @@ ol {
         outline: none;
         font-size: 16px;
         padding: 0 20px;
-        color: #222f3e;
+        color: #fff;
         -webkit-appearance: none;
         box-sizing: border-box;
         position: relative;
@@ -281,7 +280,7 @@ ol {
     .select-search-box__option {
         font-size: 16px;
         font-weight: 400;
-        color: #616b74;
+        color: black;
         padding: 15px 20px;
         border-top: 1px solid #eee;
         cursor: pointer;
@@ -300,13 +299,13 @@ ol {
         }
 
         .select-search-box__option--selected {
-            background: #54A0FF;
+            background: black;
             color: #fff;
             border-top-color: #2184ff;
         }
 
             .select-search-box__option--selected:hover, .select-search-box__option--selected.select-search-box__option--hover {
-                background: #2184ff;
+                background: grey;
                 color: #fff;
                 border-top-color: #2184ff;
             }

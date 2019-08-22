@@ -9,16 +9,16 @@ import { store } from "variables/redux";
 import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import withAuthorization from "components/Authentication/Index.jsx";
-import { withRouter } from 'react-router-dom';
-import { createKnowledge } from 'services/KnowledgeManagement';
+import { createKnowledge, getKnowledgeList } from 'services/KnowledgeManagement';
 // import ImageSelectPreview from 'react-image-select-pv';
 
 import QuillEditor from "views/contribution/QuillEditor.jsx";
 import Crop from "views/contribution/Crop.jsx";
 
 import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
+import { Link, withRouter } from "react-router-dom";
 
-import {
+import {Row,Col,
   Modal,
   Button,
   FormGroup,
@@ -58,14 +58,18 @@ class Contribution extends React.Component {
       password: '',
       text: '',
       showSpinner: false,
-      loadingMessage: 'something is happenning...'
+      loadingMessage: 'something is happenning...',
+      knowledgList: [],
+      titleErrorMessage: '',
+      titleOk: true,
+      takenId:''
     }
     this.handleLoadChange = this.handleLoadChange.bind(this)
     this.getChange = this.getChange.bind(this)
     this.setChange = this.setChange.bind(this)
     this.getImage = this.getImage.bind(this)
   }
-  componentDidMount() {
+  async componentDidMount() {
     document.body.classList.toggle("index-page");
     goToTop()
 
@@ -74,6 +78,11 @@ class Contribution extends React.Component {
     if (this.state.editorHtml != '' && this.state.txtTitle != null)
       ToastStore.success("Knowledge Retrieved from Local Draft");
 
+    const res = await getKnowledgeList()
+    if (res != null) {
+      console.log(res)
+      this.setState({ knowledgList: res.data.knowledge })
+    }
 
   }
 
@@ -84,12 +93,12 @@ class Contribution extends React.Component {
     if (this.state.editorHtml == ""
       && this.state.txtTitle == "") {
 
-      localStorage.removeItem("editorHtml")
-      localStorage.removeItem("txtTitle")
+      // localStorage.removeItem("editorHtml")
+      // localStorage.removeItem("txtTitle")
     } else {
-      localStorage.setItem("editorHtml", this.state.editorHtml)
-      localStorage.setItem("txtTitle", this.state.txtTitle)
-      ToastStore.warning("Knowledge Drafted Locally");
+      // localStorage.setItem("editorHtml", this.state.editorHtml)
+      // localStorage.setItem("txtTitle", this.state.txtTitle)
+      // ToastStore.warning("Knowledge Drafted Locally");
     }
   }
 
@@ -125,7 +134,7 @@ class Contribution extends React.Component {
   }
   render() {
     const isInvalid =
-      this.state.txtTitle === "" || this.state.editorHtml === "";
+      this.state.txtTitle === "" || this.state.editorHtml === ""||!this.state.titleOk;
     return (
       <>
         <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
@@ -139,7 +148,8 @@ class Contribution extends React.Component {
 
           <div className="wrapper">
             <div >
-              <br /><br /><br /><br />
+              <br /><br /><br /><br />        <br />
+
               <Container className="align-items-center">
                 <Modal
                   id="termsModal" modalClassName="modal-black"
@@ -155,6 +165,14 @@ class Contribution extends React.Component {
                     </button>
                     <h4 className="title title-up">Confirm Action</h4>
                   </div>
+                  <Row>
+                        <Col className="text-center" md="12">
+                        <hr className="line-info" />
+
+                            <h4>Warning!</h4>
+                            <p>You will spend 5 JIGXU for this action</p>
+                        </Col>
+                    </Row>
                   <Form className="form">
 
                     <FormGroup
@@ -186,7 +204,13 @@ class Contribution extends React.Component {
 
 
                   </Form>
-                  <div className="modal-footer">
+                  <div className="modal-footer">  <Button
+                      color="danger"
+                      type="button"
+                      onClick={() => this.toggleModal("demoModal")}
+                    >
+                      Close
+                </Button>
                     <Button color="default" type="button" onClick={async (e) => {
                       e.preventDefault()
                       this.setState({ showSpinner: true });
@@ -200,14 +224,14 @@ class Contribution extends React.Component {
                       }
                       const response = await createKnowledge(Knowledge, this.state.password)
                       if (response != null) {
-                        // //console.log(response)
-                        localStorage.removeItem("editorHtml")
-                        localStorage.removeItem("txtTitle")
+                        console.log(response)
+                        // localStorage.removeItem("editorHtml")
+                        // localStorage.removeItem("txtTitle")
 
                         this.setState({ showSpinner: false });
 
                         ToastStore.success("Success");
-                        this.props.history.push("/");
+                        this.props.history.push(`/knowledge/${response.data.txn}`);
                       }
                       else {
                         this.setState({ showSpinner: false });
@@ -216,21 +240,15 @@ class Contribution extends React.Component {
                       }
                     }} >Proceed
                     </Button>
-                    <Button
-                      color="danger"
-                      type="button"
-                      onClick={() => this.toggleModal("demoModal")}
-                    >
-                      Close
-                </Button>
+                  
                   </div>
                 </Modal>
                 <Form className="form">
                   <FormGroup
-                    className={this.state.noTitle ? "has-danger" : null}
+                    className={this.state.noTitle || !this.state.titleOk ? "has-danger" : null}
                   >
                     <InputGroup
-                      className={this.state.noTitle ? "has-danger" : classnames({
+                      className={this.state.noTitle || !this.state.titleOk ? "has-danger" : classnames({
                         "input-group-focus": this.state.titleFocus
                       })}
 
@@ -244,7 +262,15 @@ class Contribution extends React.Component {
                         value={this.state.txtTitle}
                         placeholder="Title"
                         type="text"
-                        onFocus={e => this.setState({ titleFocus: true })}
+                        onFocus={e => {
+                          this.setState({ titleFocus: true })
+                          this.state.knowledgList.forEach(element => {
+                            if (this.state.txtTitle == element.title) {
+                              this.setState({ titleOk: false, titleErrorMessage: 'title already taken' })
+                              return
+                            }
+                          })
+                        }}
                         onBlur={e => {
                           this.setState({ titleFocus: false })
                           if (this.state.txtTitle.length == 0) {
@@ -253,14 +279,31 @@ class Contribution extends React.Component {
                             this.setState({ noTitle: false })
                           }
 
+                          this.state.knowledgList.forEach(element => {
+                            if (this.state.txtTitle == element.title) {
+                              this.setState({ titleOk: false, titleErrorMessage: 'title already taken' })
+                              return
+                            }
+                          })
+
                         }}
                         onChange={e => {
+                          this.setState({ titleOk: true })
+
                           this.setState({ txtTitle: e.target.value })
-                          if (this.state.txtTitle.length > 0) {
-                            this.setState({ noTitle: false })
-                          } else {
+                          if (e.target.value.length == 0) {
                             this.setState({ noTitle: true })
+                          } else {
+                            this.setState({ noTitle: false })
                           }
+
+
+                          this.state.knowledgList.forEach(element => {
+                            if (e.target.value == element.title) {
+                              this.setState({ titleOk: false, titleErrorMessage: 'title already taken',takenId:element.id })
+                              return
+                            }
+                          })
 
                         }}
                       />
@@ -277,7 +320,11 @@ class Contribution extends React.Component {
                         }}
 
                       /> */}
-                    </InputGroup></FormGroup>
+                    </InputGroup>
+                    {!this.state.titleOk ? <><p style={{ color: "red" }}>{this.state.titleErrorMessage}</p><Link to={`/knowledge/${this.state.takenId}`} tag={Link}>
+                          Click to view and contribute to existing Knowledge
+                  </Link></> : null}
+                  </FormGroup>
 
                   <Crop imageAlt="cover pic" getImage={this.getImage}></Crop>
 
@@ -309,12 +356,12 @@ class Contribution extends React.Component {
                         const response = await createKnowledge(Knowledge, this.state.password)
                         if (response != null) {
                           // //console.log(response)
-                          localStorage.removeItem("editorHtml")
-                          localStorage.removeItem("txtTitle")
+                          // localStorage.removeItem("editorHtml")
+                          // localStorage.removeItem("txtTitle")
                           this.setState({ showSpinner: false });
 
                           ToastStore.success("Success");
-                          this.props.history.push("/");
+                          this.props.history.push(`/knowledge/${response.data.txn}`);
 
                         }
                         else {

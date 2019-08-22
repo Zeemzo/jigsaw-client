@@ -20,12 +20,13 @@ import { findKnowledge } from 'services/KnowledgeManagement';
 import { TextBlock, MediaBlock, TextRow, RectShape, RoundShape } from 'react-placeholder/lib/placeholders';
 import ReactPlaceholder from 'react-placeholder';
 import "react-placeholder/lib/reactPlaceholder.css";
-
+;
 class Feed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       data: null,
+      covers: null,
       value: '',
       showSpinner: false,
       loadingMessage: 'something is happenning...'
@@ -47,16 +48,49 @@ class Feed extends React.Component {
     store.subscribe(this.handleLoadChange)
     this.setState({ showSpinner: true });
 
+    // console.log(this.props.location.search)
+
+    const { key } = this.props.match.params
+    if (key == " ") {
+      this.setState({ value: "" });
+
+    } else {
+      this.setState({ value: key });
+
+    }
+
 
     const res = await findKnowledge()
     if (res != null) {
-      //console.log(res)
-      this.setState({ data: res.data.knowledge })
+      console.log(res)
+      var arrayData = []
+      var objectImage = {}
+
+      res.data.knowledge.forEach((element) => {
+        arrayData.push(
+          {
+            id: element.id,
+            title: element.title,
+            alias: element.alias,
+            publicKey: element.publicKey
+
+          }
+        )
+        objectImage[element.id] = element.cover
+
+      })
+      this.setState({ data: arrayData, covers: objectImage })
       this.setState({ showSpinner: false });
 
     }
 
   }
+
+
+  // async componentDidUpdate() {
+  //   const { key } = this.props.match.params
+  //     this.setState({ value:key });
+  // }
 
   handleLoadChange() {
     //console.log(store.getState())
@@ -70,33 +104,33 @@ class Feed extends React.Component {
     const awesomePlaceholder = (
       <div className='my-awesome-placeholder'>
         <Row className="row-grid justify-content-center">
-        <Col lg="3">
+          <Col lg="3">
             <Card className="loadingCard">
               <CardBody>
-                <TextBlock rows={1} color='grey'/>
+                <TextBlock rows={1} color='grey' />
                 <hr className="line-primary" />
                 <RectShape color='grey' />
-              </CardBody></Card>
-              </Col><Col lg="3">
-            <Card className="loadingCard">
-              <CardBody>
-                <TextBlock rows={1} color='grey'/>
-                <hr className="line-primary" />
-                <RectShape color='grey'/>
               </CardBody></Card>
           </Col><Col lg="3">
             <Card className="loadingCard">
               <CardBody>
-                <TextBlock rows={1} color='grey'/>
+                <TextBlock rows={1} color='grey' />
                 <hr className="line-primary" />
-                <RectShape color='grey'/>
+                <RectShape color='grey' />
               </CardBody></Card>
-              </Col><Col lg="3">
+          </Col><Col lg="3">
             <Card className="loadingCard">
               <CardBody>
-                <TextBlock rows={1} color='grey'/>
+                <TextBlock rows={1} color='grey' />
                 <hr className="line-primary" />
-                <RectShape color='grey'/>
+                <RectShape color='grey' />
+              </CardBody></Card>
+          </Col><Col lg="3">
+            <Card className="loadingCard">
+              <CardBody>
+                <TextBlock rows={1} color='grey' />
+                <hr className="line-primary" />
+                <RectShape color='grey' />
               </CardBody></Card>
           </Col>
         </Row>
@@ -106,24 +140,7 @@ class Feed extends React.Component {
       <>
         <IndexNavbar />
         <div className="wrapper">
-          <ScrollableAnchor id={'Home'}>
-            <div className="page-header header-filter">
-              <div className="squares square1" />
-              <div className="squares square2" />
-              <div className="squares square3" />
-              <div className="squares square4" />
-              <div className="squares square5" />
-              <div className="squares square6" />
-              <div className="squares square7" />
-              <Container>
-                <div className="content-center brand">
-                  <h1 className="h1-seo">JIGSAW</h1>
-                  <h3 className="d-none d-sm-block">
-                    Blockchain Based Knowledge Sharing and Organizing.</h3>
-                </div>
-              </Container>
-            </div></ScrollableAnchor>
-          <ScrollableAnchor id={'findKnowledge'}>
+          <ScrollableAnchor>
             <section className="section section-lg">
               <Container><br /><br /><br />
                 <InputGroup
@@ -137,7 +154,7 @@ class Feed extends React.Component {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Find Knowledge"
+                    placeholder="Search Knowledge"
                     type="text"
                     value={this.state.value}
                     onFocus={e => this.setState({ fullNameFocus: true })}
@@ -147,7 +164,7 @@ class Feed extends React.Component {
                 </InputGroup>
 
 
-{/* 
+                {/* 
                 <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
                         <div className="modalLoad-content" >
                           <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
@@ -171,8 +188,9 @@ class Feed extends React.Component {
                                       <h4 className="info-title">{el.title}</h4>
                                       <hr className="line-primary" />
                                       <img width="100%" alt="cover"
-                                        className="img-fluid rounded shadow" src={el.cover} />
+                                        className="img-fluid rounded shadow" src={this.state.covers[el.id]} />
                                       {/* <p dangerouslySetInnerHTML={{ __html: el.draft }} /> */}
+                                      by: {el.alias}
                                     </CardBody>
                                     {/* <div>
                                       <Link to={`/knowledge/${el.id}`} tag={Link}>
@@ -184,15 +202,15 @@ class Feed extends React.Component {
                           </Row>
                         )}
                       />
-                      :<div>
-                      <ReactPlaceholder ready={this.state.ready} customPlaceholder={awesomePlaceholder}>
-                      </ReactPlaceholder>
-                      <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
-                        <div className="modalLoad-content" >
-                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                      : <div>
+                        <ReactPlaceholder ready={this.state.showSpinner} customPlaceholder={awesomePlaceholder}>{""}
+                        </ReactPlaceholder>
+                        <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
+                          <div className="modalLoad-content" >
+                            <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                          </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-                      </div></div>
+                        </div></div>
                     }
 
                   </Col>
@@ -200,6 +218,7 @@ class Feed extends React.Component {
               </Container>
             </section>
           </ScrollableAnchor>
+
           <Footer />
         </div>
       </>

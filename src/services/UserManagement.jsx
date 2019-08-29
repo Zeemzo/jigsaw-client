@@ -161,6 +161,8 @@ export async function loginWithSecret(secretKey) {
             if (res.status === 200) {
                 // localStorage.setItem("keypair", JSON.stringify(keypair))
                 localStorage.setItem("token", res.data.token)
+
+
                 return res.status
             } else {
                 return res.status
@@ -228,14 +230,14 @@ export async function register(email, password, nameAlias) {
                 // Because Stellar allows transaction in many currencies, you must
                 // specify the asset type. The special "native" asset represents Lumens.
                 asset: new Asset("JIGXU", JIGXUIssuerPublicKey),
-                limit: "100",
+                // limit: "",
                 source: publicKey
             }))
             .addOperation(StellarSdk.Operation.changeTrust({
                 // Because Stellar allows transaction in many currencies, you must
                 // specify the asset type. The special "native" asset represents Lumens.
                 asset: new Asset("JIGXK", JIGXKIssuerPublicKey),
-                limit: "100",
+                // limit: "",
                 source: publicKey
             }))
             .build();
@@ -360,7 +362,7 @@ export function getUserSession() {
 
 
 
-export async function TransferJIGXUAsset(DestinationPublicKey, Amount, password) {
+export async function TransferJIGXUAsset(DestinationPublicKey, emailHash, Amount, password) {
     try {
 
         let publicKey
@@ -406,9 +408,39 @@ export async function TransferJIGXUAsset(DestinationPublicKey, Amount, password)
         if (transactionResponse === null) {
             return null;
         }
-        
 
-        return transactionResponse
+
+        let token
+        if (localStorage.getItem("token") != null) {
+            token = localStorage.getItem("token")
+        }
+        const res = await axios
+            .post(jigsawBackend + "/api/user/sendMessage/", {
+                publicKey: DestinationPublicKey,
+                emailHash: emailHash
+            },
+                {
+                    headers: {
+                        'Authorization': "bearer " + token,
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                }
+            );
+
+        if (res !== null) {
+
+
+            return res
+
+        } else {
+            return null
+
+        }
+
+
+
+        // return transactionResponse
 
     } catch (e) {
         return null
@@ -477,13 +509,13 @@ export async function ConvertXLMToJIGXUAsset(Amount, password, balances) {
         });
 
         let transaction = new StellarSdk.TransactionBuilder(sourceAccount)
-            .addOperation(StellarSdk.Operation.changeTrust({
-                // Because Stellar allows transaction in many currencies, you must
-                // specify the asset type. The special "native" asset represents Lumens.
-                asset: new Asset("JIGXU", JIGXUIssuerPublicKey),
-                limit: limit.toString(),
-                source: publicKey
-            }))
+            // .addOperation(StellarSdk.Operation.changeTrust({
+            //     // Because Stellar allows transaction in many currencies, you must
+            //     // specify the asset type. The special "native" asset represents Lumens.
+            //     asset: new Asset("JIGXU", JIGXUIssuerPublicKey),
+            //     limit: limit.toString(),
+            //     source: publicKey
+            // }))
             .addOperation(StellarSdk.Operation.payment({
                 destination: JIGXUDistributorPublicKey,
                 asset: StellarSdk.Asset.native(),

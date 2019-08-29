@@ -1,5 +1,5 @@
-export var jigsawBackend = "http://localhost:7000";
-// export var jigsawBackend = "https://jigsaw-server.herokuapp.com";
+// export var jigsawBackend = "http://localhost:7000";
+export var jigsawBackend = "https://jigsaw-server.herokuapp.com";
 
 // export var jigsawGateway= "http://localhost:8000";
 export var jigsawGateway = "https://jigsaw-gateway.herokuapp.com";

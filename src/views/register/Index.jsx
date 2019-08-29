@@ -47,8 +47,9 @@ class Register extends React.Component {
       aliasList: [],
       aliasOK: true,
       miniErrorMessage: '',
-      aliasErrorMessage:'',
-      emailTaken: false
+      aliasErrorMessage: '',
+      emailTaken: false,
+      showPassword: false
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -187,19 +188,20 @@ class Register extends React.Component {
                 </p>
                           </div>
                           <div className="modal-footer">
+
+                            <Button
+                              color="danger"
+                              type="button"
+                              onClick={() => this.toggleModal("demoModal")}
+                            >Close </Button>
+
+
                             <Button color="default" type="button" onClick={e => {
                               this.setState({ iAgree: !this.state.iAgree })
                               this.toggleModal("demoModal")
                             }} >{this.state.iAgree ? "I Disagree" : "I Agree"}
 
                             </Button>
-                            <Button
-                              color="danger"
-                              type="button"
-                              onClick={() => this.toggleModal("demoModal")}
-                            >
-                              Close
-                </Button>
                           </div>
                         </Modal>
                         <CardImg
@@ -235,7 +237,7 @@ class Register extends React.Component {
 
                                   this.state.aliasList.forEach(element => {
                                     if (e.target.value == element.alias) {
-                                      this.setState({ aliasOK: false, txtFullName: '', aliasErrorMessage: 'alias already taken' })
+                                      this.setState({ aliasOK: false, txtFullName: '', aliasErrorMessage: 'alias is already taken' })
                                       return
                                     }
                                   })
@@ -274,11 +276,11 @@ class Register extends React.Component {
                                     this.setState({ invalidEmail: false })
                                   }
 
-                                  this.setState({ emailTaken: false})
+                                  this.setState({ emailTaken: false })
 
                                   this.state.aliasList.forEach(element => {
                                     if (hashEmail(e.target.value) == element.emailHash) {
-                                      this.setState({ invalidEmail: true, emailTaken: true, txtEmail: '', miniErrorMessage: 'email already taken' })
+                                      this.setState({ invalidEmail: true, emailTaken: true, txtEmail: '', miniErrorMessage: 'email is already taken' })
                                       return
                                     }
                                   })
@@ -290,7 +292,7 @@ class Register extends React.Component {
                                     this.setState({ invalidEmail: false })
                                   }
 
-                                  this.setState({ emailTaken: false})
+                                  this.setState({ emailTaken: false })
 
                                   this.state.aliasList.forEach(element => {
                                     if (hashEmail(e.target.value) == element.emailHash) {
@@ -319,15 +321,17 @@ class Register extends React.Component {
                               "input-group-focus": this.state.passwordFocus
                             })}
                           >
-                            <InputGroupAddon addonType="prepend">
+                            <InputGroupAddon onClick={() => {
+                              this.setState({ showPassword: !this.state.showPassword })
+                            }} addonType="prepend">
                               <InputGroupText>
-                                <i className="tim-icons icon-lock-circle" />
+                                <i className={!this.state.showPassword ? "tim-icons icon-lock-circle" : "tim-icons icon-zoom-split"} />
                               </InputGroupText>
                             </InputGroupAddon>
                             <Input
                               id="txtPassword"
                               placeholder="Password"
-                              type="password"
+                              type={!this.state.showPassword ? "password" : "text"}
                               onFocus={e => this.setState({ passwordFocus: true })}
                               onBlur={e => this.setState({ passwordFocus: false })}
                               onChange={e => {
@@ -340,6 +344,13 @@ class Register extends React.Component {
                                 }
                               }}
                             />
+                            {/* <InputGroupAddon addonType="append" onClick={() => {
+                              this.setState({ showPassword: !this.state.showPassword })
+                            }}>
+                         <InputGroupText>
+                          <i  className="tim-icons icon-zoom-split" />
+                        </InputGroupText>
+                        </InputGroupAddon> */}
                           </InputGroup>
                           <FormGroup className={!this.state.passwordMatched ? "has-danger" : null}>
 

@@ -19,6 +19,8 @@ class BlockchainAccount extends React.Component {
             squares1to6: "",
             squares7and8: "",
             canProceed: false,
+            publicKey: '',
+            secretKey: ''
         }
     }
     copyMessage(val) {
@@ -37,6 +39,13 @@ class BlockchainAccount extends React.Component {
     componentDidMount() {
         document.body.classList.toggle("register-page");
         document.documentElement.addEventListener("mousemove", this.followCursor);
+        if (localStorage.getItem("secretKey") != null && localStorage.getItem("publicKey") != null) {
+
+            this.setState({
+                publicKey: localStorage.getItem("publicKey"),
+                secretKey: localStorage.getItem("secretKey")
+            })
+        }
 
     }
     componentWillUnmount() {
@@ -112,18 +121,28 @@ class BlockchainAccount extends React.Component {
 
                                         <ListGroup>
 
-                                            {localStorage.getItem("publicKey") != null ?
-                                                <ListGroupItem>Public Key: <Button onClick={e => {
-                                                    this.copyMessage(localStorage.getItem("publicKey"))
+                                            <ListGroupItem>Public Key: <Button onClick={e => {
+                                                if (this.state.secretKey != '') {
+
+                                                    this.copyMessage(this.state.publicKey)
                                                     ToastStore.success("Public Key Copied to Clipboard");
-                                                }} id="publicKey">{localStorage.getItem("publicKey").substring(0, 20)}...</Button>
-                                                </ListGroupItem> : null}
-                                            {localStorage.getItem("secretKey") != null ?
-                                                <ListGroupItem>Secret Key: <Button onClick={e => {
-                                                    this.copyMessage(localStorage.getItem("secretKey"))
+                                                } else {
+                                                    ToastStore.error("No Public Key in the Slot");
+                                                }
+                                            }
+                                            } id="publicKey">{this.state.publicKey.substring(0, 20)}...</Button>
+                                            </ListGroupItem>
+                                            <ListGroupItem>Secret Key: <Button onClick={e => {
+                                                if (this.state.secretKey != '') {
+                                                    this.copyMessage(this.state.secretKey)
                                                     ToastStore.success("Secret Key Copied to Clipboard");
-                                                }} id="secretKey">{localStorage.getItem("secretKey").substring(0, 20)}...</Button>
-                                                </ListGroupItem> : null}
+                                                } else {
+                                                    ToastStore.error("No Secret Key in the Slot");
+                                                }
+
+                                            }} id="secretKey">{this.state.secretKey.substring(0, 20)}...</Button>
+                                            </ListGroupItem>
+
                                         </ListGroup>
                                         <UncontrolledTooltip placement="bottom" target="publicKey" delay={0}>Click to Copy PublicKey</UncontrolledTooltip>
                                         <UncontrolledTooltip placement="bottom" target="secretKey" delay={0}>Click to Copy SecretKey</UncontrolledTooltip>
@@ -132,11 +151,11 @@ class BlockchainAccount extends React.Component {
                                 </CardBody>
                                 <CardFooter className="text-center">
                                     <Button className="btn-simple" color="info" onClick={e => {
-                                        if (localStorage.getItem("secretKey") != null && localStorage.getItem("publicKey") != null) {
+                                        if (this.state.secretKey != '' && this.state.publicKey != '') {
 
                                             var FileSaver = require('file-saver');
-                                            var blob = new Blob(['PublicKey: ' + localStorage.getItem("publicKey")
-                                                + ' \nSecretKey: ' + localStorage.getItem("secretKey")], { type: "text/plain;charset=utf-8" });
+                                            var blob = new Blob(['PublicKey: ' + this.state.publicKey
+                                                + ' \nSecretKey: ' + this.state.secretKey], { type: "text/plain;charset=utf-8" });
                                             FileSaver.saveAs(blob, "JigsawCredentials.txt");
 
                                             this.setState({ canProceed: true })
@@ -144,12 +163,12 @@ class BlockchainAccount extends React.Component {
 
                                     }}>
                                         Export to File</Button>
-                                    
-                                        <Button disabled={!this.state.canProceed} onClick={e => {
-                                            localStorage.removeItem("secretKey");
-                                            localStorage.removeItem("publicKey");
-                                        }} className="btn-simple" color="info">
-                                            <Link to="/" disabled={!this.state.canProceed} tag={Link}>Proceed</Link>
+
+                                    <Button disabled={!this.state.canProceed} onClick={e => {
+                                        localStorage.removeItem("secretKey");
+                                        localStorage.removeItem("publicKey");
+                                    }} className="btn-simple" color="info">
+                                        <Link to="/wallet" disabled={!this.state.canProceed} tag={Link}>Proceed</Link>
                                     </Button>
 
 

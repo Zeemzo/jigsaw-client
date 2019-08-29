@@ -16,6 +16,7 @@ class Transfer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            dataObj: null,
             options: [],
             destinationKey: '',
             amount: "",
@@ -34,12 +35,14 @@ class Transfer extends React.Component {
         if (res != null) {
             console.log(res.data.publicKeys)
             var arr = []
+            var dataObj = {}
             res.data.publicKeys.forEach(element => {
                 if (this.props.alias != element.alias) {
                     arr.push({ name: element.alias, value: element.publicKey })
+                    dataObj[element.publicKey] = element
                 }
             })
-            this.setState({ options: arr })
+            this.setState({ options: arr, dataObj: dataObj })
         }
     }
 
@@ -111,13 +114,16 @@ class Transfer extends React.Component {
 
                         this.setState({ showSpinner: true })
 
-                        const res = await TransferJIGXUAsset(this.state.destinationKey, this.state.amount, this.state.password)
+                        const res = await TransferJIGXUAsset(this.state.destinationKey
+                            , this.state.dataObj[this.state.destinationKey].emailHash,
+                            this.state.amount, this.state.password)
                         if (res != null) {
                             this.setState({ showSpinner: false })
+                            this.props.afterTransfer()
                             this.props.updateWallet()
                             // switch (res.status) {
                             //     case 200:
-                                    ToastStore.success("transfered!");
+                            ToastStore.success("transfered!");
                             //         this.props.updateWallet(); break;
                             //     case 201:
                             //         ToastStore.error("stellar did not respond!");
@@ -139,7 +145,7 @@ class Transfer extends React.Component {
 
                             // }
                             console.log(res)
-                            this.setState({ amount: '', password: '' })
+                            // this.setState({ amount: '', password: '' })
                         } else {
                             this.setState({ showSpinner: false })
                             ToastStore.error("failed!");

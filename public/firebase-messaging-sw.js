@@ -43,14 +43,12 @@ const messaging = firebase.messaging();
 messaging.setBackgroundMessageHandler(function (payload) {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
     // Customize notification here
-    var notificationTitle = "payload.data.title";
-    var notificationOptions = {
-        body: "payload.data.body",
-        icon: './favicon.ico',
-        vibrate: [200, 100, 200, 100, 200, 100, 200],
+    const notificationTitle = 'Background JIGSAW';
+    const notificationOptions = {
+        body: 'You have received assets',
+        icon: '/favicon.ico'
     };
 
     return self.registration.showNotification(notificationTitle,
         notificationOptions);
 });
-// [END background_handler]

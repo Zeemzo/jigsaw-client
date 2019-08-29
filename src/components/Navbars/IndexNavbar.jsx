@@ -177,7 +177,7 @@ class ComponentsNavbar extends React.Component {
               </NavLink>}
               </NavItem>
               <NavItem>
-                <NavLink to="/profile" tag={Link}>
+                <NavLink to="/wallet" tag={Link}>
                   Wallet
                   </NavLink>
               </NavItem>

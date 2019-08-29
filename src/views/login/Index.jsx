@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { Link, withRouter } from "react-router-dom";
-import { login } from "services/UserManagement";
+import { login, UpdatePushToken, getUserSession } from "services/UserManagement";
 import Switch from "react-bootstrap-switch";
 import { goToTop } from 'react-scrollable-anchor'
 import { loadReCaptcha, ReCaptcha } from 'react-recaptcha-v3'
@@ -47,6 +47,7 @@ class Login extends React.Component {
       invalidEmail: false,
       showSpinner: false,
       privateLogin: false,
+      showPassword: false,
       loadingMessage: 'something is happenning...'
 
     }
@@ -185,20 +186,29 @@ class Login extends React.Component {
                               "input-group-focus": this.state.passwordFocusLogin
                             })}
                           >
-                            <InputGroupAddon addonType="prepend">
+                            <InputGroupAddon onClick={() => {
+                              this.setState({ showPassword: !this.state.showPassword })
+                            }} addonType="prepend">
                               <InputGroupText>
-                                <i className="tim-icons icon-lock-circle" />
+                                <i className={!this.state.showPassword ? "tim-icons icon-lock-circle" : "tim-icons icon-zoom-split"} />
                               </InputGroupText>
                             </InputGroupAddon>
                             <Input
                               placeholder={!this.state.privateLogin ? "Password" : "Secret Key"}
-                              type="password"
+                              type={!this.state.showPassword ? "password" : "text"}
                               onFocus={e => this.setState({ passwordFocusLogin: true })}
                               onBlur={e => this.setState({ passwordFocusLogin: false })}
                               onChange={e => {
                                 this.setState({ txtPassword: e.target.value })
                               }}
                             />
+                            {/* <InputGroupAddon addonType="append" onClick={() => {
+                                this.setState({ showPassword: !this.state.showPassword })
+                              }}>
+                           <InputGroupText>
+                            <i  className="tim-icons icon-compass-05" />
+                          </InputGroupText>
+                          </InputGroupAddon> */}
                           </InputGroup>
                         </Form>
                       </CardBody>
@@ -233,6 +243,19 @@ class Login extends React.Component {
                                     ToastStore.error("Login Failed"); break;
                                   default: ;
                                 }
+
+                                if (localStorage.getItem("pushToken") != null) {
+                                  const user = getUserSession()
+                                  if (user != null) {
+                                    const res = await UpdatePushToken(user.emailHash, localStorage.getItem("pushToken"))
+                                    if (res != null) {
+                                      console.log("token pushed")
+                                    }
+                                  }
+                                }
+
+
+
                               } else {
                                 this.setState({ showSpinner: true });
 
@@ -254,6 +277,16 @@ class Login extends React.Component {
                                     ToastStore.error("Login Failed"); break;
                                   default: ;
 
+                                }
+
+                                if (localStorage.getItem("pushToken") != null) {
+                                  const user = getUserSession()
+                                  if (user != null) {
+                                    const res = await UpdatePushToken(user.emailHash, localStorage.getItem("pushToken"))
+                                    if (res != null) {
+                                      console.log("token pushed")
+                                    }
+                                  }
                                 }
                               }
 

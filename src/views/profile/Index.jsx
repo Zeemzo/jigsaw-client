@@ -41,6 +41,7 @@ class Profile extends React.Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.updateWallet = this.updateWallet.bind(this)
+    this.afterTransfer = this.afterTransfer.bind(this)
   }
 
   copyMessage(val) {
@@ -101,6 +102,10 @@ class Profile extends React.Component {
 
     // this.getBalance()
 
+  }
+
+  afterTransfer() {
+    this.setState({ tabs: 1 })
   }
 
   handleChange() {
@@ -223,7 +228,7 @@ class Profile extends React.Component {
                           </Table>
                         </TabPane>
                         <TabPane tabId="tab2">
-                          <Transfer alias={this.state.userName} updateWallet={this.updateWallet}></Transfer>
+                          <Transfer alias={this.state.userName} updateWallet={this.updateWallet} afterTransfer={this.afterTransfer}></Transfer>
                         </TabPane>
                         <TabPane tabId="tab3">
                           <Convert updateWallet={this.updateWallet} balance={this.state.balance}></Convert>

@@ -280,8 +280,8 @@ class Contribution extends React.Component {
                           }
 
                           this.state.knowledgList.forEach(element => {
-                            if (this.state.txtTitle == element.title) {
-                              this.setState({ titleOk: false, titleErrorMessage: 'title already taken' })
+                            if (e.target.value == element.title) {
+                              this.setState({ titleOk: false, titleErrorMessage: 'title is already taken',takenId:element.id })
                               return
                             }
                           })
@@ -300,7 +300,7 @@ class Contribution extends React.Component {
 
                           this.state.knowledgList.forEach(element => {
                             if (e.target.value == element.title) {
-                              this.setState({ titleOk: false, titleErrorMessage: 'title already taken',takenId:element.id })
+                              this.setState({ titleOk: false, titleErrorMessage: 'title is already taken',takenId:element.id })
                               return
                             }
                           })

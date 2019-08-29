@@ -4,7 +4,7 @@ import {
   BrowserRouter, Route, Switch
   // , Redirect
 } from "react-router-dom";
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
 
 import CookieConsent from "react-cookie-consent";
 import { UpdatePushToken, getUserSession } from 'services/UserManagement';
@@ -45,7 +45,7 @@ ReactDOM.render(
         <Route path="/contribute/:id" render={props => <Contribute {...props} />} />
         <Route path="/register" render={props => <Register {...props} />} />
         <Route path="/login" render={props => <Login {...props} />} />
-        <Route path="/profile" render={props => <Profile {...props} />} />
+        <Route path="/wallet" render={props => <Profile {...props} />} />
         <Route path="/blockchainAccount" render={props => <BlockchainAccount {...props} />} />
         <Route path='/knowledge/:id' render={props => <View {...props} />} />
         <Route path='/explore/:key' render={props => <Feed {...props} />} />
@@ -58,7 +58,9 @@ ReactDOM.render(
   ,
   document.getElementById("root")
 );
-registerServiceWorker();
+
+// registerServiceWorker()
+
 
 firebase.initializeApp({
   messagingSenderId: "524968000100"
@@ -76,6 +78,7 @@ Notification.requestPermission().then((permission) => {
     messaging.getToken().then(async (currentToken) => {
       if (currentToken) {
         console.log(currentToken)
+        localStorage.setItem("pushToken", currentToken)
         const user = await getUserSession()
         if (user != null) {
           const res = await UpdatePushToken(user.emailHash, currentToken)
@@ -111,8 +114,9 @@ messaging.onTokenRefresh(() => {
     console.log(refreshedToken)
     console.log('Token refreshed.');
 
+    localStorage.setItem("pushToken", refreshedToken)
 
-    const user = await getUserSession()
+    const user = getUserSession()
     if (user != null) {
       const res = await UpdatePushToken(user.emailHash, refreshedToken)
       if (res != null) {
@@ -136,17 +140,26 @@ messaging.onTokenRefresh(() => {
 messaging.onMessage((payload) => {
   console.log('[index.js] Received message ', payload);
 
-  Notification.requestPermission(function(result) {
-    if (result == 'granted') {
-      navigator.serviceWorker.ready.then(function(registration) {
-        registration.showNotification('Vibration Sample', {
-          body: 'Buzz! Buzz!',
-          icon: '../images/touch/chrome-touch-icon-192x192.png',
-          vibrate: [200, 100, 200, 100, 200, 100, 200],
-          tag: 'vibration-sample'
-        });
-      });
-    }
-  });
+  // // Notification.requestPermission(function (result) {
+  // //   if (result == 'granted') {
+  //     navigator.serviceWorker.ready.then(function (registration) {
+  //       registration.showNotification('JIGSAW', {
+  //         body: 'You have received assets',
+  //         icon: './favicon.ico',
+  //         vibrate: [200, 100, 200, 100, 200, 100, 200],
+  //         tag: 'assets'
+  //       });
+  //     });
+  //   // }
+  // // });
+  const notificationTitle = 'Background JIGSAW';
+  const notificationOptions = {
+    body: 'You have received assets',
+    icon: '/favicon.ico'
+  };
 
+  return ServiceWorkerRegistration.showNotification(notificationTitle,
+    notificationOptions);
 })
+
+

@@ -598,3 +598,41 @@ export async function GetAllUsers() {
 
 
 }
+
+
+
+/**
+* @desc 
+* @param object 
+* @author Azeem Ashraf azeemashraf@outlook.com
+* @return 
+*/
+export async function RecordUserMessage(email, message) {
+    try {
+
+        const res = await axios
+            .post(jigsawBackend + "/api/user/recordMessage", { email: email, message: message },
+                {
+                    headers: {
+                        // 'Authorization': "bearer " + token, 
+                        "Content-Type": "application/json",
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                })
+
+        if (res != null) {
+            if (res.status === 200) {
+                return res
+            } else {
+                return null
+            }
+        } else {
+            return null
+        }
+
+    } catch (err) {
+        return null
+    }
+
+
+}

@@ -77,7 +77,7 @@ export async function createKnowledge(knowledge, password) {
         } else {
             keypair = Keypair.fromSecret(decryptSecret(user.encryptedSecret, password))
             
-            localStorage.setItem("secretKey", decryptSecret(user.encryptedSecret, password))
+            // localStorage.setItem("secretKey", decryptSecret(user.encryptedSecret, password))
 
         }
         console.log("alive 3")
@@ -349,7 +349,7 @@ export async function AddKnowledge(kID, knowledge, password) {
             }
         } else {
             keypair = Keypair.fromSecret(decryptSecret(user.encryptedSecret, password))
-            localStorage.setItem("secretKey", decryptSecret(user.encryptedSecret, password))
+            // localStorage.setItem("secretKey", decryptSecret(user.encryptedSecret, password))
         }
 
         // //console.log(keypair)
@@ -527,7 +527,7 @@ export async function AddVote(kID, cID, password) {
             }
         } else {
             keypair = Keypair.fromSecret(decryptSecret(user.encryptedSecret, password))
-            localStorage.setItem("secretKey", decryptSecret(user.encryptedSecret, password))
+            // localStorage.setItem("secretKey", decryptSecret(user.encryptedSecret, password))
         }
 
         // //console.log(keypair)

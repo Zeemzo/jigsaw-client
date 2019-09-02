@@ -13,6 +13,7 @@ import "assets/css/nucleo-icons.css";
 import "assets/scss/blk-design-system-react.scss?v=1.0.0";
 import "assets/demo/demo.css";
 import "assets/css/main.css";
+import 'react-vertical-timeline-component/style.min.css';
 
 import Contribution from "views/contribution/Index.jsx";
 import Home from "views/home/Index.jsx";

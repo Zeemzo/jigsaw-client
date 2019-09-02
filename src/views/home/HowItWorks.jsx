@@ -23,7 +23,7 @@ class HowItWorks extends React.Component {
                         <Col lg="12" className='howItWorksContainer'>
                             <Row>
                                 <Col lg="12" className="text-center" >
-                                    <h2>EVERYTHING HAPPENS INSIDE <span style={{ color: "#1D8CF8", fontWeight: "bold", fontSize: "2.0625rem" }}>BLOCKCHAIN</span></h2>
+                                    <h2>EVERYTHING HAPPENS WITH <span style={{ color: "#1D8CF8", fontWeight: "bold", fontSize: "2.0625rem" }}>BLOCKCHAIN</span></h2>
                                 </Col>
                             </Row>
                             <div className="space-50 d-none d-lg-block" />
@@ -71,7 +71,7 @@ class HowItWorks extends React.Component {
                                     <img
                                         alt="Register"
                                         className="img-fluid"
-                                        src={require("assets/img/howItWorks/register.svg")}
+                                        src={require("assets/img/howItWorks/register2.svg")}
                                     />
                                     <div className="space-25" />
                                     <h4 className="text-uppercase" >Register</h4>
@@ -90,7 +90,7 @@ class HowItWorks extends React.Component {
                                     <img
                                         alt="Get Ticket"
                                         className="img-fluid"
-                                        src={require("assets/img/howItWorks/ticket.svg")}
+                                        src={require("assets/img/howItWorks/crypto.svg")}
                                     />
                                     <div className="space-25" />
                                     <h4 className="text-uppercase" >Acquire JIGX Assets</h4>
@@ -109,7 +109,7 @@ class HowItWorks extends React.Component {
                                     <img
                                         alt="QR Code"
                                         className="img-fluid"
-                                        src={require("assets/img/howItWorks/qrcode.svg")}
+                                        src={require("assets/img/howItWorks/knowledge.svg")}
                                     />
                                     <div className="space-25" />
                                     <h4 className="text-uppercase" >Create Knowledge</h4>
@@ -128,7 +128,7 @@ class HowItWorks extends React.Component {
                                     <img
                                         alt="Scan"
                                         className="img-fluid"
-                                        src={require("assets/img/howItWorks/scanner.svg")}
+                                        src={require("assets/img/howItWorks/contribution.svg")}
                                     />
                                     <div className="space-25" />
                                     <h4 className="text-uppercase" >Read and contribute</h4>
@@ -190,7 +190,7 @@ class HowItWorks extends React.Component {
                                     <img
                                         alt="Register"
                                         className="img-fluid"
-                                        src={require("assets/img/howItWorks/register.svg")}
+                                        src={require("assets/img/howItWorks/vote.svg")}
                                     />
                                     <div className="space-25" />
                                     <h4 className="text-uppercase" >Vote</h4>
@@ -209,10 +209,10 @@ class HowItWorks extends React.Component {
                                     <img
                                         alt="Get Ticket"
                                         className="img-fluid"
-                                        src={require("assets/img/howItWorks/ticket.svg")}
+                                        src={require("assets/img/howItWorks/crypto.svg")}
                                     />
                                     <div className="space-25" />
-                                    <h4 className="text-uppercase" >Rewards</h4>
+                                    <h4 className="text-uppercase" >Get Rewards</h4>
                                     <p>Get rewarded for your actions</p>
                                     <div className="space-25 d-lg-none d-xl-none d-md-none" />
                                     <img
@@ -228,7 +228,7 @@ class HowItWorks extends React.Component {
                                     <img
                                         alt="QR Code"
                                         className="img-fluid"
-                                        src={require("assets/img/howItWorks/qrcode.svg")}
+                                        src={require("assets/img/howItWorks/certificate.svg")}
                                     />
                                     <div className="space-25" />
                                     <h4 className="text-uppercase" >Gain Reputation</h4>
@@ -247,7 +247,7 @@ class HowItWorks extends React.Component {
                                     <img
                                         alt="Scan"
                                         className="img-fluid"
-                                        src={require("assets/img/howItWorks/scanner.svg")}
+                                        src={require("assets/img/howItWorks/forever.svg")}
                                     />
                                     <div className="space-25" />
                                     <h4 className="text-uppercase" >Earn Forever</h4>

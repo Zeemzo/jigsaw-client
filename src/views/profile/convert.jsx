@@ -90,8 +90,11 @@ class Convert extends React.Component {
 
                             switch (res.status) {
                                 case 200:
+
                                     ToastStore.success("converted!");
-                                    this.props.updateWallet(); break;
+                                    this.props.updateWallet();
+                                    this.props.afterTransfer()
+                                    break;
                                 case 201:
                                     ToastStore.error("stellar did not respond!");
                                     ; break;

@@ -231,7 +231,7 @@ class Profile extends React.Component {
                           <Transfer alias={this.state.userName} updateWallet={this.updateWallet} afterTransfer={this.afterTransfer}></Transfer>
                         </TabPane>
                         <TabPane tabId="tab3">
-                          <Convert updateWallet={this.updateWallet} balance={this.state.balance}></Convert>
+                          <Convert updateWallet={this.updateWallet} balance={this.state.balance}  afterTransfer={this.afterTransfer}></Convert>
                         </TabPane>
                       </TabContent>
                     </CardBody>

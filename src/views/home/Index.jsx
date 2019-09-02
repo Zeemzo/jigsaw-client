@@ -23,6 +23,8 @@ import "react-placeholder/lib/reactPlaceholder.css";
 import HowItWorks from "views/home/HowItWorks";
 import Contact from "views/home/Contact";
 import WhyJigsaw from "views/home/WhyJigsaw";
+import Time from "views/home/Time";
+
 class Feed extends React.Component {
   constructor(props) {
     super(props);
@@ -94,6 +96,7 @@ class Feed extends React.Component {
           </ScrollableAnchor>
           <WhyJigsaw />
           <HowItWorks />
+          <Time/>
           {/* <Team />
           <PastEvents /> */}
           <Contact />

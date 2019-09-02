@@ -104,35 +104,17 @@ class Feed extends React.Component {
     const awesomePlaceholder = (
       <div className='my-awesome-placeholder'>
         <Row className="row-grid justify-content-center">
-          <Col lg="3">
-            <Card className="loadingCard">
-              <CardBody>
-                <TextBlock rows={1} color='grey' />
-                <hr className="line-primary" />
-                <RectShape color='grey' />
-              </CardBody></Card>
-          </Col><Col lg="3">
-            <Card className="loadingCard">
-              <CardBody>
-                <TextBlock rows={1} color='grey' />
-                <hr className="line-primary" />
-                <RectShape color='grey' />
-              </CardBody></Card>
-          </Col><Col lg="3">
-            <Card className="loadingCard">
-              <CardBody>
-                <TextBlock rows={1} color='grey' />
-                <hr className="line-primary" />
-                <RectShape color='grey' />
-              </CardBody></Card>
-          </Col><Col lg="3">
-            <Card className="loadingCard">
-              <CardBody>
-                <TextBlock rows={1} color='grey' />
-                <hr className="line-primary" />
-                <RectShape color='grey' />
-              </CardBody></Card>
-          </Col>
+          {[0, 1, 2, 3, 4, 5, 6, 7].map(i =>
+            <Col key={i} lg="3">
+              <Card className="loadingCard">
+                <CardBody>
+                  <TextBlock rows={1} color='grey' />
+                  <hr className="line-primary" />
+                  <RectShape color='grey' />
+                </CardBody></Card>
+            </Col>
+          )}
+
         </Row>
       </div>
     );
@@ -162,7 +144,6 @@ class Feed extends React.Component {
                     onChange={this.handleChange}
                   />
                 </InputGroup>
-
 
                 {/* 
                 <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
@@ -203,8 +184,11 @@ class Feed extends React.Component {
                         )}
                       />
                       : <div>
-                        <ReactPlaceholder ready={this.state.showSpinner} customPlaceholder={awesomePlaceholder}>{""}
-                        </ReactPlaceholder>
+                        <Row className="justify-content-center">
+                          <Col lg="12">
+                            <ReactPlaceholder ready={!this.state.showSpinner == true && this.state.data == null ? true : false} customPlaceholder={awesomePlaceholder}>{""}
+                            </ReactPlaceholder>
+                          </Col></Row>
                         <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
                           <div className="modalLoad-content" >
                             <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />

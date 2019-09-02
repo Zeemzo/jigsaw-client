@@ -149,8 +149,9 @@ class ComponentsNavbar extends React.Component {
               </Row>
             </div>
             <Nav navbar className="justify-content-left">
-              <NavItem>
+              <NavItem onClick={this.toggleCollapse}>
                 {this.props.location.pathname === "/" ? <a href="#Home"><NavLink
+
                 >Home
               </NavLink></a> :
                   <NavLink
@@ -158,7 +159,7 @@ class ComponentsNavbar extends React.Component {
                   >Home
               </NavLink>}
               </NavItem>
-              <NavItem>
+              <NavItem onClick={this.toggleCollapse}>
                 {this.props.location.pathname === "/" ? <a href="#why"><NavLink
                 >Why
               </NavLink></a> :
@@ -167,7 +168,7 @@ class ComponentsNavbar extends React.Component {
                   >Why
               </NavLink>}
               </NavItem>
-              <NavItem>
+              <NavItem onClick={this.toggleCollapse}>
                 {this.props.location.pathname === "/" ? <a href="#how"><NavLink
                 >How
               </NavLink></a> :
@@ -176,7 +177,16 @@ class ComponentsNavbar extends React.Component {
                   >How
               </NavLink>}
               </NavItem>
-              <NavItem>
+              <NavItem onClick={this.toggleCollapse}>
+                {this.props.location.pathname === "/" ? <a href="#roadmap"><NavLink
+                >Roadmap
+              </NavLink></a> :
+                  <NavLink
+                    to="/#roadmap" tag={Link}
+                  >Roadmap
+              </NavLink>}
+              </NavItem>
+              <NavItem onClick={this.toggleCollapse}>
                 <NavLink to="/wallet" tag={Link}>
                   Wallet
                   </NavLink>
@@ -186,12 +196,12 @@ class ComponentsNavbar extends React.Component {
                   Create
                   </NavLink>
               </NavItem>
-              <NavItem>
+              <NavItem onClick={this.toggleCollapse}>
                 <NavLink to="/explore/ " tag={Link}>
                   Explore
                   </NavLink>
               </NavItem>
-              <NavItem>
+              <NavItem onClick={this.toggleCollapse}>
                 {this.props.location.pathname === "/" ? <a href="#contact"><NavLink
                 >Contact
               </NavLink></a> :
@@ -254,9 +264,12 @@ class ComponentsNavbar extends React.Component {
 
                 // console.log(e.key)
                 // console.log(this.state.key)
-
-                this.props.history.push(`/explore/${this.state.key}`);
                 e.preventDefault()
+
+                if (this.state.key != '') {
+                  this.props.history.push(`/explore/${this.state.key}`);
+
+                }
 
               }}>
                 <FormGroup className="no-border">
@@ -295,6 +308,7 @@ class ComponentsNavbar extends React.Component {
                     <PopoverBody>
                       <NavLink to="/" tag={Link}>
                         <Button onClick={e => {
+                          this.toggleCollapse()
                           localStorage.removeItem("token");
                         }}>Logout</Button>
                       </NavLink>
@@ -302,19 +316,21 @@ class ComponentsNavbar extends React.Component {
                   </UncontrolledPopover>
 
                 </NavItem>
-                : <NavItem><NavLink to="/login" tag={Link}>
-                  <Button onClick={e => {
-                    localStorage.removeItem("token");
-                  }}>Login</Button>
-                </NavLink></NavItem>
+                : <NavItem onClick={this.toggleCollapse}>
+
+                  <NavLink to="/login" tag={Link}>
+                    <Button onClick={e => {
+                      localStorage.removeItem("token");
+                    }}>Login</Button>
+                  </NavLink></NavItem>
 
             }
 
             </Nav>
-
+{/* 
             <Nav>
 
-            </Nav>
+            </Nav> */}
 
           </Collapse>
 

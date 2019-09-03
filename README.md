@@ -113,4 +113,4 @@ At present, we officially aim to support the last two versions of the following 
 
 ### Social Media
 
-Facebook: <https://www.facebook.com/jigsaw.io>
+Telegram: <https://t.me/projectJigsaw>

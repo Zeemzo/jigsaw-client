@@ -78,7 +78,7 @@ class Footer extends React.Component {
                   <i className="fab fa-facebook-square" />
                 </Button>
                 <UncontrolledTooltip delay={0} target="tooltip230450801">
-                  Like us
+                  Join us
                 </UncontrolledTooltip>
               </div>
             </Col>

@@ -78,7 +78,7 @@ class Contact extends React.Component {
                         e.preventDefault()
                     }} >Submit</Button>
                     <div className="space-50" />
-                    <Row>
+                    {/* <Row>
                         <Col lg='12' md='12' className='text-center'>
                             <ContactButton icon="twitter" url="https://www.facebook.com/jigsaw.io" />
                             <ContactButton icon="facebook" url="https://www.facebook.com/jigsaw.io" />
@@ -89,7 +89,7 @@ class Contact extends React.Component {
                             <ContactButton icon="reddit" url="https://www.facebook.com/jigsaw.io" />
                             <ContactButton icon="github" url="https://www.facebook.com/jigsaw.io" />
                         </Col>
-                    </Row>
+                    </Row> */}
                 </Container>
             </div>
         );

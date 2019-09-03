@@ -18,7 +18,7 @@
 Within the download you'll find the following directories and files:
 
 ```
-Blk• Design System React
+JIGSAW • Blockchain Based Decentralised Knowledge Sharing and Organising Platform
 .
 ├── README.md
 ├── LICENSE.md

@@ -65,10 +65,9 @@ class Transfer extends React.Component {
                     <Label sm="3">Pay to</Label>
                     <Col >
 
-                        <SelectSearch sm="6" options={this.state.options} value={this.state.destinationKey} name="alias" placeholder="Choose a User"
+                        <SelectSearch sm="6" options={this.state.options} value={this.state.destinationKey} name="alias" placeholder="Search an alias"
                             onChange={(value, state, props) => {
                                 this.setState({ destinationKey: value.value })
-
                             }}
                         />
 
@@ -78,7 +77,7 @@ class Transfer extends React.Component {
                     <Label sm="3">Amount</Label>
                     <Col sm="9">
                         <FormGroup>
-                            <Input placeholder="100" type="text" onChange={e => {
+                            <Input placeholder="XXXXX" type="text" onChange={e => {
                                 this.setState({ amount: e.target.value })
                             }} />
                             <FormText color="default" tag="span">

@@ -18,7 +18,8 @@ import Crop from "views/contribution/Crop.jsx";
 import ScrollableAnchor, { goToTop } from 'react-scrollable-anchor'
 import { Link, withRouter } from "react-router-dom";
 
-import {Row,Col,
+import {
+  Row, Col,
   Modal,
   Button,
   FormGroup,
@@ -62,7 +63,7 @@ class Contribution extends React.Component {
       knowledgList: [],
       titleErrorMessage: '',
       titleOk: true,
-      takenId:''
+      takenId: ''
     }
     this.handleLoadChange = this.handleLoadChange.bind(this)
     this.getChange = this.getChange.bind(this)
@@ -134,7 +135,7 @@ class Contribution extends React.Component {
   }
   render() {
     const isInvalid =
-      this.state.txtTitle === "" || this.state.editorHtml === ""||!this.state.titleOk;
+      this.state.txtTitle === "" || this.state.editorHtml === "" || !this.state.titleOk;
     return (
       <>
         <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
@@ -166,13 +167,13 @@ class Contribution extends React.Component {
                     <h4 className="title title-up">Confirm Action</h4>
                   </div>
                   <Row>
-                        <Col className="text-center" md="12">
-                        <hr className="line-info" />
+                    <Col className="text-center" md="12">
+                      <hr className="line-info" />
 
-                            <h4>Warning!</h4>
-                            <p>You will spend 5 JIGXU for this action</p>
-                        </Col>
-                    </Row>
+                      <h4>Warning!</h4>
+                      <p>You will spend 5 JIGXU for this action</p>
+                    </Col>
+                  </Row>
                   <Form className="form">
 
                     <FormGroup
@@ -205,11 +206,11 @@ class Contribution extends React.Component {
 
                   </Form>
                   <div className="modal-footer">  <Button
-                      color="danger"
-                      type="button"
-                      onClick={() => this.toggleModal("demoModal")}
-                    >
-                      Close
+                    color="danger"
+                    type="button"
+                    onClick={() => this.toggleModal("demoModal")}
+                  >
+                    Close
                 </Button>
                     <Button color="default" type="button" onClick={async (e) => {
                       e.preventDefault()
@@ -240,7 +241,7 @@ class Contribution extends React.Component {
                       }
                     }} >Proceed
                     </Button>
-                  
+
                   </div>
                 </Modal>
                 <Form className="form">
@@ -264,12 +265,15 @@ class Contribution extends React.Component {
                         type="text"
                         onFocus={e => {
                           this.setState({ titleFocus: true })
-                          this.state.knowledgList.forEach(element => {
-                            if (this.state.txtTitle == element.title) {
-                              this.setState({ titleOk: false, titleErrorMessage: 'title already taken' })
-                              return
-                            }
-                          })
+                          if (e.target.value != "") {
+                            this.state.knowledgList.forEach(element => {
+                              if (element.title.includes(e.target.value)) {
+                                this.setState({ titleOk: false, titleErrorMessage: 'title is already taken', takenId: element.id })
+                                return
+                              }
+                            })
+                          }
+
                         }}
                         onBlur={e => {
                           this.setState({ titleFocus: false })
@@ -279,12 +283,14 @@ class Contribution extends React.Component {
                             this.setState({ noTitle: false })
                           }
 
-                          this.state.knowledgList.forEach(element => {
-                            if (e.target.value == element.title) {
-                              this.setState({ titleOk: false, titleErrorMessage: 'title is already taken',takenId:element.id })
-                              return
-                            }
-                          })
+                          if (e.target.value != "") {
+                            this.state.knowledgList.forEach(element => {
+                              if (element.title.includes(e.target.value)) {
+                                this.setState({ titleOk: false, titleErrorMessage: 'title is already taken', takenId: element.id })
+                                return
+                              }
+                            })
+                          }
 
                         }}
                         onChange={e => {
@@ -298,12 +304,14 @@ class Contribution extends React.Component {
                           }
 
 
-                          this.state.knowledgList.forEach(element => {
-                            if (e.target.value == element.title) {
-                              this.setState({ titleOk: false, titleErrorMessage: 'title is already taken',takenId:element.id })
-                              return
-                            }
-                          })
+                          if (e.target.value != "") {
+                            this.state.knowledgList.forEach(element => {
+                              if (element.title.includes(e.target.value)) {
+                                this.setState({ titleOk: false, titleErrorMessage: 'title is already taken', takenId: element.id })
+                                return
+                              }
+                            })
+                          }
 
                         }}
                       />
@@ -322,7 +330,7 @@ class Contribution extends React.Component {
                       /> */}
                     </InputGroup>
                     {!this.state.titleOk ? <><p style={{ color: "red" }}>{this.state.titleErrorMessage}</p><Link to={`/knowledge/${this.state.takenId}`} tag={Link}>
-                          Click to view and contribute to existing Knowledge
+                      Click to view and contribute to existing Knowledge
                   </Link></> : null}
                   </FormGroup>
 

@@ -23,6 +23,8 @@ class WhyBlockEvent extends React.Component {
                                 <h1>Why JIGSAW?</h1>
                                 <hr className="line-success" />
                             </div>
+
+
                             <div className='list-why'>
                                 <ul>
                                     <li>Decentralised Knowledge sharing platform</li>

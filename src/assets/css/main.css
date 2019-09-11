@@ -35,9 +35,9 @@
   }
 
   .articleCard{
-    height: 300px;
+    height: 350px;
     overflow: hidden;
-    max-height: 200px;
+    max-height: 230px;
   }
 
   .expandButton{
@@ -110,7 +110,7 @@ ol {
   background-repeat:repeat;
   background-size: 80%;
   animation: animate2 2s linear infinite;
-  height: 300px;
+  height: 350px;
   overflow: hidden;
   max-height: 200px;
 }
@@ -139,6 +139,9 @@ ol {
   color: red;
 }
 
+.iconHeartClicked {
+  color: red;
+}
 
 .select-search-box {
     width: 300px;
@@ -254,7 +257,7 @@ ol {
     .select-search-box__select {
         display: none;
         position: absolute;
-        top: 60px;
+        /* top: 60px; */
         left: 0;
         right: 0;
         background: #fff;

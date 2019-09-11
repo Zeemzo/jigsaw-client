@@ -61,6 +61,7 @@
     "react-select-search": "^0.9.6",
     "react-toast-notifications": "^1.4.0",
     "react-toasts": "^2.0.14",
+    "react-user-avatar": "^1.10.0",
     "react-vertical-timeline-component": "^2.4.0",
     "reactstrap": "7.1.0",
     "redux": "^4.0.4",

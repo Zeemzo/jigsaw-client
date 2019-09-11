@@ -3,6 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 // import { Route } from 'react-router';
 import classnames from "classnames";
 import { getUserSession } from "services/UserManagement";
+import UserAvatar from "react-user-avatar";
 
 // reactstrap components
 import {
@@ -26,7 +27,7 @@ class ComponentsNavbar extends React.Component {
       // options: options,
       key: "",
       isPublicNetwork: false,
-      alias: ""
+      alias: 'Not Available'
 
     };
     //console.log(this.props.location.pathname)
@@ -297,12 +298,16 @@ class ComponentsNavbar extends React.Component {
                 // </NavLink></NavItem>
 
                 <NavItem>
-                  <img id="userImage"
+                  {/* <img
                     width="50px"
-                    alt="..."
+                    alt={this.state.alias.toUpperCase()}
                     className="img-center img-fluid rounded-circle"
                     src={require("assets/img/nightking.jpeg")}
-                  />
+                  /> */}
+                  <div id="userImage">
+                    <UserAvatar size="48" name={this.state.alias}/>
+                  </div>
+
                   <UncontrolledPopover placement="bottom" target="userImage">
                     <PopoverHeader>{this.state.alias.toUpperCase()}</PopoverHeader>
                     <PopoverBody>
@@ -327,7 +332,7 @@ class ComponentsNavbar extends React.Component {
             }
 
             </Nav>
-{/* 
+            {/* 
             <Nav>
 
             </Nav> */}

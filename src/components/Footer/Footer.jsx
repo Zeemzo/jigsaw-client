@@ -64,7 +64,7 @@ class Footer extends React.Component {
                 </NavItem>
               </Nav>
             </Col>
-            <Col md="3">
+            {/* <Col md="3">
               <h3 className="title">Follow us:</h3>
               <div className="btn-wrapper profile">
             
@@ -81,7 +81,7 @@ class Footer extends React.Component {
                   Join us
                 </UncontrolledTooltip>
               </div>
-            </Col>
+            </Col> */}
           </Row>
         </Container>
       </footer>

@@ -40,7 +40,18 @@ function prettyHtml(diffs, alias) {
                 html[x] = '<del id="' + alias + '" style="background:transparent;">' + data + '</del>';
                 break;
             case 0:
-                html[x] = '<span style="background:transparent;">' + data + '</span>';
+
+                // html[x] = '<span style="background:transparent;">' + data + '</span>';
+
+                let val = '';
+                if (data.length > 300) {
+                    val = data.substring(0, 100) + '.....' + data.substring(data.length - 200);
+
+                }
+                else {
+                    val = data;
+                }
+                html[x] = '<span style="background:transparent;">' + val + '</span>';
                 break;
         }
     }
@@ -149,7 +160,7 @@ class View extends React.Component {
 
                 <TextBlock rows={1} color='grey' />
                 <hr className="line-primary" />
-                <RectShape color='grey' style={{height:"200px",width:"100%"}}/>
+                <RectShape color='grey' style={{ height: "200px", width: "100%" }} />
                 <TextBlock rows={5} color='grey' />
 
 
@@ -160,11 +171,11 @@ class View extends React.Component {
             <div>
                 <ToastContainer className="toastColor" position={ToastContainer.POSITION.BOTTOM_RIGHT} store={ToastStore} />
                 <div hidden={!this.state.showSpinner} id="myModal" className="modalLoad">
-                        <div className="modalLoad-content" >
-                          <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
-                        </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
+                    <div className="modalLoad-content" >
+                        <ReactLoading className="modalLoad-content" type={"spinningBubbles"} color="#fff" />
+                    </div> <h3 className="loadingMessage" style={{ "textAlign": "center" }}>{this.state.loadingMessage}</h3>
 
-                      </div>
+                </div>
                 {/* <meta name="description" content={this.state.title} />
                 <meta property="og:title" content={this.state.title} />
                 <meta property="og:url" content={"https://jigsaw.cf/knowledge/"+this.props.match.params.id} />

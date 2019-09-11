@@ -7,6 +7,7 @@ import {
   Button, Card, CardHeader, CardBody, Label, FormGroup, Input, FormText, NavItem, NavLink,
   Nav, Table, TabContent, TabPane, Container, Row, Col, UncontrolledTooltip
 } from "reactstrap";
+import UserAvatar from "react-user-avatar";
 
 // core components
 import Footer from "components/Footer/Footer.jsx";
@@ -32,7 +33,7 @@ class Profile extends React.Component {
     this.state = {
       tabs: 1,
       balance: [],
-      userName: user != null ? user.alias : "",
+      userName: user != null ? user.alias : "Not Available",
       publicKey: user != null ? user.publicKey : "",
       showSpinner: false,
       loadingMessage: 'something is happenning...'
@@ -151,11 +152,15 @@ class Profile extends React.Component {
                   <Card className="card-coin card-plain">
 
                     <CardHeader>
-                      <img
+                      {/* <img
                         alt="..."
                         className="img-center img-fluid rounded-circle"
                         src={require("assets/img/nightking.jpeg")}
-                      />
+                      /> */}
+                      <UserAvatar style={{ "margin": "25%" ,"font-size":"30px"}} colors={['#3498db']}
+                        size="100" name={this.state.userName} />
+
+
                       <h4 className="title">{this.state.userName}</h4>
                       <Button onClick={e => {
                         this.copyMessage(this.state.publicKey)
@@ -231,7 +236,7 @@ class Profile extends React.Component {
                           <Transfer alias={this.state.userName} updateWallet={this.updateWallet} afterTransfer={this.afterTransfer}></Transfer>
                         </TabPane>
                         <TabPane tabId="tab3">
-                          <Convert updateWallet={this.updateWallet} balance={this.state.balance}  afterTransfer={this.afterTransfer}></Convert>
+                          <Convert updateWallet={this.updateWallet} balance={this.state.balance} afterTransfer={this.afterTransfer}></Convert>
                         </TabPane>
                       </TabContent>
                     </CardBody>

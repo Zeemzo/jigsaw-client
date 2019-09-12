@@ -417,7 +417,13 @@ export async function TransferJIGXUAsset(DestinationPublicKey, emailHash, Amount
         const res = await axios
             .post(jigsawBackend + "/api/user/sendMessage/", {
                 publicKey: DestinationPublicKey,
-                emailHash: emailHash
+                emailHash: emailHash,
+                senderPublicKey: user.publicKey,
+                senderAlias: user.alias,
+                senderEmailHash: user.emailHash,
+                amount:Amount,
+                type:"JIGXU",
+                read:false
             },
                 {
                     headers: {

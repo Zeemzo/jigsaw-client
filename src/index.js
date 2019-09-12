@@ -5,9 +5,12 @@ import {
   // , Redirect
 } from "react-router-dom";
 // import registerServiceWorker from './registerServiceWorker';
-
+import {
+  Alert, UncontrolledAlert, Container
+} from "reactstrap";
 import CookieConsent from "react-cookie-consent";
 import { UpdatePushToken, getUserSession } from 'services/UserManagement';
+import { notificationStore,showNotification } from "variables/redux";
 
 import "assets/css/nucleo-icons.css";
 import "assets/scss/blk-design-system-react.scss?v=1.0.0";
@@ -30,6 +33,15 @@ import "firebase/messaging";
 
 ReactDOM.render(
   <div>
+    {/* <div className="section section-notifications" id="notifications">
+      <Container>        
+        <div className="space" /> */}
+
+        {/* <h3>Notifications</h3> */}
+
+      {/* </Container> */}
+    {/* </div> */}
+
     <CookieConsent
       disableStyles={false}
       location={"bottom"}
@@ -140,27 +152,14 @@ messaging.onTokenRefresh(() => {
 
 messaging.onMessage((payload) => {
   console.log('[index.js] Received message ', payload);
-
-  // // Notification.requestPermission(function (result) {
-  // //   if (result == 'granted') {
-  //     navigator.serviceWorker.ready.then(function (registration) {
-  //       registration.showNotification('JIGSAW', {
-  //         body: 'You have received assets',
-  //         icon: './favicon.ico',
-  //         vibrate: [200, 100, 200, 100, 200, 100, 200],
-  //         tag: 'assets'
-  //       });
-  //     });
-  //   // }
-  // // });
-  const notificationTitle = 'Background JIGSAW';
-  const notificationOptions = {
-    body: 'You have received assets',
-    icon: '/favicon.ico'
-  };
-
-  return ServiceWorkerRegistration.showNotification(notificationTitle,
-    notificationOptions);
+  showNotification.dispatch({
+    type: 'ACTIVATE',
+    text: true
+  })
+  notificationStore.dispatch({
+    type: 'ADD_NOTIFICATION',
+    text: "You have received assets"
+  })
 })
 
 

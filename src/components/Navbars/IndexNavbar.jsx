@@ -4,10 +4,11 @@ import { Link, withRouter } from "react-router-dom";
 import classnames from "classnames";
 import { getUserSession } from "services/UserManagement";
 import UserAvatar from "react-user-avatar";
+import { notificationStore, showNotification } from "variables/redux";
 
 // reactstrap components
 import {
-  Button, UncontrolledPopover,
+  Button, UncontrolledPopover, UncontrolledAlert,
   PopoverBody,
   PopoverHeader, UncontrolledTooltip, Tooltip, Collapse, FormGroup, Input, Form,
   NavbarBrand, Navbar, NavItem, NavLink, Nav, Container, Row, Col, DropdownToggle,
@@ -27,9 +28,13 @@ class ComponentsNavbar extends React.Component {
       // options: options,
       key: "",
       isPublicNetwork: false,
-      alias: 'Not Available'
-
+      alias: 'Not Available',
+      showNotification: false,
+      NotificationMessage: ''
     };
+    this.handleChange = this.handleChange.bind(this)
+    this.handleChangeNotificationMessage = this.handleChangeNotificationMessage.bind(this)
+
     //console.log(this.props.location.pathname)
   }
   componentDidMount() {
@@ -39,9 +44,22 @@ class ComponentsNavbar extends React.Component {
     if (user != null) {
       this.setState({ alias: user.alias })
     }
+
+    showNotification.subscribe(this.handleChange)
+    notificationStore.subscribe(this.handleChangeNotificationMessage)
+
   }
   componentWillUnmount() {
     window.removeEventListener("scroll", this.changeColor);
+  }
+
+  handleChange() {
+    //console.log(store.getState())
+    this.setState({ showNotification: showNotification.getState() })
+  }
+  handleChangeNotificationMessage() {
+    //console.log(store.getState())
+    this.setState({ NotificationMessage: notificationStore.getState() })
   }
   changeColor = () => {
     if (
@@ -83,142 +101,154 @@ class ComponentsNavbar extends React.Component {
   };
   render() {
     return (
-      <Navbar
-        className={"fixed-top " + this.state.color}
-        color-on-scroll="100"
-        expand="lg"
-      >
-        <Container>
-          <div className="navbar-translate">
+      <>
 
-            <NavbarBrand
-              data-placement="bottom"
-              to="/"
-              title="Blockchain Based Blogging"
-              tag={Link}
-            >
-              {/* <div className="logo">
+        <Navbar
+          className={"fixed-top " + this.state.color}
+          color-on-scroll="100"
+          expand="lg"
+        >
+          {this.state.showNotification ? <Link to="/wallet" tag={Link}>
+            <UncontrolledAlert className="alert-with-icon " color="success">
+              <span data-notify="icon" className="tim-icons icon-coins" />
+              <span>
+                <b>Congrats! -</b>
+                {this.state.NotificationMessage}
+              </span>
+            </UncontrolledAlert>
+          </Link>
+            : null}
+          <Container>
+            <div className="navbar-translate">
+
+              <NavbarBrand
+                data-placement="bottom"
+                to="/"
+                title="Blockchain Based Blogging"
+                tag={Link}
+              >
+                {/* <div className="logo">
 
                 <img src={require("assets/img/favicon.ico")} alt="logo" height={50} />
                 <h3 style={{ marginTop: 10, marginLeft: 5, marginBottom: 0 }}>JIGSAW</h3>
               </div> */}
-              <span>JIGSAW</span>
+                <span>JIGSAW</span>
 
-            </NavbarBrand><div id="network">
-              <Switch width="150px" onChange={e => {
-                // alert(e.state.value)
-              }} defaultValue={false} value={this.state.isPublicNetwork} offColor="" onColor="" onText="Public" offText="Test" >net</Switch>
+              </NavbarBrand><div id="network">
+                <Switch width="150px" onChange={e => {
+                  // alert(e.state.value)
+                }} defaultValue={false} value={this.state.isPublicNetwork} offColor="" onColor="" onText="Public" offText="Test" >net</Switch>
+              </div>
+              <UncontrolledTooltip placement="bottom" target="network" delay={0}>
+                PublicNet is Coming Soon</UncontrolledTooltip>
+              {/* <span>JIGSAW</span> */}
+
+
+              <button
+                aria-expanded={this.state.collapseOpen}
+                className="navbar-toggler navbar-toggler"
+                onClick={this.toggleCollapse}
+              >
+                <span className="navbar-toggler-bar bar1" />
+                <span className="navbar-toggler-bar bar2" />
+                <span className="navbar-toggler-bar bar3" />
+              </button>
             </div>
-            <UncontrolledTooltip placement="bottom" target="network" delay={0}>
-              PublicNet is Coming Soon</UncontrolledTooltip>
-            {/* <span>JIGSAW</span> */}
-
-
-            <button
-              aria-expanded={this.state.collapseOpen}
-              className="navbar-toggler navbar-toggler"
-              onClick={this.toggleCollapse}
+            <Collapse
+              className={"justify-content-end " + this.state.collapseOut}
+              navbar
+              isOpen={this.state.collapseOpen}
+              onExiting={this.onCollapseExiting}
+              onExited={this.onCollapseExited}
             >
-              <span className="navbar-toggler-bar bar1" />
-              <span className="navbar-toggler-bar bar2" />
-              <span className="navbar-toggler-bar bar3" />
-            </button>
-          </div>
-          <Collapse
-            className={"justify-content-end " + this.state.collapseOut}
-            navbar
-            isOpen={this.state.collapseOpen}
-            onExiting={this.onCollapseExiting}
-            onExited={this.onCollapseExited}
-          >
-            <div className="navbar-collapse-header">
-              <Row>
-                <Col className="collapse-brand" xs="6">
-                  <Link to="/" tag={Link}>
-                    JIGSAW
+              <div className="navbar-collapse-header">
+                <Row>
+                  <Col className="collapse-brand" xs="6">
+                    <Link to="/" tag={Link}>
+                      JIGSAW
                   </Link>
-                </Col>
-                <Col className="collapse-close text-right" xs="6">
-                  <button
-                    aria-expanded={this.state.collapseOpen}
-                    className="navbar-toggler"
-                    onClick={this.toggleCollapse}
-                  >
-                    <i className="tim-icons icon-simple-remove" />
-                  </button>
-                </Col>
-              </Row>
-            </div>
-            <Nav navbar className="justify-content-left">
-              <NavItem onClick={this.toggleCollapse}>
-                {this.props.location.pathname === "/" ? <a href="#Home"><NavLink
+                  </Col>
+                  <Col className="collapse-close text-right" xs="6">
+                    <button
+                      aria-expanded={this.state.collapseOpen}
+                      className="navbar-toggler"
+                      onClick={this.toggleCollapse}
+                    >
+                      <i className="tim-icons icon-simple-remove" />
+                    </button>
+                  </Col>
+                </Row>
+              </div>
+              <Nav navbar className="justify-content-left">
+                <NavItem onClick={this.toggleCollapse}>
+                  {this.props.location.pathname === "/" ? <a href="#Home"><NavLink
 
-                >Home
-              </NavLink></a> :
-                  <NavLink
-                    to="/#Home" tag={Link}
                   >Home
-              </NavLink>}
-              </NavItem>
-              <NavItem onClick={this.toggleCollapse}>
-                {this.props.location.pathname === "/" ? <a href="#why"><NavLink
-                >Why
               </NavLink></a> :
-                  <NavLink
-                    to="/#why" tag={Link}
+                    <NavLink
+                      to="/#Home" tag={Link}
+                    >Home
+              </NavLink>}
+                </NavItem>
+                <NavItem onClick={this.toggleCollapse}>
+                  {this.props.location.pathname === "/" ? <a href="#why"><NavLink
                   >Why
-              </NavLink>}
-              </NavItem>
-              <NavItem onClick={this.toggleCollapse}>
-                {this.props.location.pathname === "/" ? <a href="#how"><NavLink
-                >How
               </NavLink></a> :
-                  <NavLink
-                    to="/#how" tag={Link}
+                    <NavLink
+                      to="/#why" tag={Link}
+                    >Why
+              </NavLink>}
+                </NavItem>
+                <NavItem onClick={this.toggleCollapse}>
+                  {this.props.location.pathname === "/" ? <a href="#how"><NavLink
                   >How
-              </NavLink>}
-              </NavItem>
-              <NavItem onClick={this.toggleCollapse}>
-                {this.props.location.pathname === "/" ? <a href="#roadmap"><NavLink
-                >Roadmap
               </NavLink></a> :
-                  <NavLink
-                    to="/#roadmap" tag={Link}
+                    <NavLink
+                      to="/#how" tag={Link}
+                    >How
+              </NavLink>}
+                </NavItem>
+                <NavItem onClick={this.toggleCollapse}>
+                  {this.props.location.pathname === "/" ? <a href="#roadmap"><NavLink
                   >Roadmap
-              </NavLink>}
-              </NavItem>
-              <NavItem onClick={this.toggleCollapse}>
-                <NavLink to="/wallet" tag={Link}>
-                  Wallet
-                  </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/create/#Editor" tag={Link}>
-                  Create
-                  </NavLink>
-              </NavItem>
-              <NavItem onClick={this.toggleCollapse}>
-                <NavLink to="/explore/ " tag={Link}>
-                  Explore
-                  </NavLink>
-              </NavItem>
-              <NavItem onClick={this.toggleCollapse}>
-                {this.props.location.pathname === "/" ? <a href="#contact"><NavLink
-                >Contact
               </NavLink></a> :
-                  <NavLink
-                    to="/#contact" tag={Link}
-                  >Contact
+                    <NavLink
+                      to="/#roadmap" tag={Link}
+                    >Roadmap
               </NavLink>}
-              </NavItem>
-              {/* <NavItem>{this.props.location.pathname === "/" ? <a href="#findKnowledge"><NavLink>Find Knowledge
+                </NavItem>
+                <NavItem onClick={this.toggleCollapse}>
+                  <NavLink to="/wallet" tag={Link}>
+                    Wallet
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink to="/create/#Editor" tag={Link}>
+                    Create
+                  </NavLink>
+                </NavItem>
+                <NavItem onClick={this.toggleCollapse}>
+                  <NavLink to="/explore/ " tag={Link}>
+                    Explore
+                  </NavLink>
+                </NavItem>
+                <NavItem onClick={this.toggleCollapse}>
+                  {this.props.location.pathname === "/" ? <a href="#contact"><NavLink
+                  >Contact
+              </NavLink></a> :
+                    <NavLink
+                      to="/#contact" tag={Link}
+                    >Contact
+              </NavLink>}
+                </NavItem>
+                {/* <NavItem>{this.props.location.pathname === "/" ? <a href="#findKnowledge"><NavLink>Find Knowledge
                    </NavLink> </a> : <NavLink
                   to="/#findKnowledge" tag={Link}
                 >Find Knowledge
               </NavLink>}
               </NavItem> */}
 
-              {/* <UncontrolledDropdown nav>
+                {/* <UncontrolledDropdown nav>
                 <DropdownToggle
                   aria-expanded={false}
                   aria-haspopup={true}
@@ -245,9 +275,9 @@ class ComponentsNavbar extends React.Component {
                 </DropdownMenu>
               </UncontrolledDropdown> */}
 
-            </Nav>
+              </Nav>
 
-            {/* <SelectSearch sm="6" 
+              {/* <SelectSearch sm="6" 
             options={this.state.options} 
             value={this.state.destinationKey} 
             name="key" 
@@ -258,90 +288,90 @@ class ComponentsNavbar extends React.Component {
               }}
               
             />  */}
-            {this.props.location.pathname ? ((this.props.location.pathname.split("/"))[1] != "explore" ?
+              {this.props.location.pathname ? ((this.props.location.pathname.split("/"))[1] != "explore" ?
 
 
-              <Form className="form-inline ml-auto" onSubmit={(e) => {
+                <Form className="form-inline ml-auto" onSubmit={(e) => {
 
-                // console.log(e.key)
-                // console.log(this.state.key)
-                e.preventDefault()
+                  // console.log(e.key)
+                  // console.log(this.state.key)
+                  e.preventDefault()
 
-                if (this.state.key != '') {
-                  this.props.history.push(`/explore/${this.state.key}`);
+                  if (this.state.key != '') {
+                    this.props.history.push(`/explore/${this.state.key}`);
 
-                }
+                  }
 
-              }}>
-                <FormGroup className="no-border">
-                  <Input placeholder="Search Knowledge" type="text"
+                }}>
+                  <FormGroup className="no-border">
+                    <Input placeholder="Search Knowledge" type="text"
 
-                    onChange={(e) => {
-                      // console.log(e.target.value)
-                      this.setState({ key: e.target.value })
-                    }}
+                      onChange={(e) => {
+                        // console.log(e.target.value)
+                        this.setState({ key: e.target.value })
+                      }}
 
-                  />
-                </FormGroup>
-              </Form>
+                    />
+                  </FormGroup>
+                </Form>
 
 
-              : null) : null}
+                : null) : null}
 
-            <Nav>{
-              localStorage.getItem("token") != null ?
+              <Nav>{
+                localStorage.getItem("token") != null ?
 
-                // <NavItem><NavLink to="/" tag={Link}>
-                //   <Button onClick={e => {
-                //     localStorage.removeItem("token");
-                //   }}>Logout</Button>
-                // </NavLink></NavItem>
+                  // <NavItem><NavLink to="/" tag={Link}>
+                  //   <Button onClick={e => {
+                  //     localStorage.removeItem("token");
+                  //   }}>Logout</Button>
+                  // </NavLink></NavItem>
 
-                <NavItem>
-                  {/* <img
+                  <NavItem>
+                    {/* <img
                     width="50px"
                     alt={this.state.alias.toUpperCase()}
                     className="img-center img-fluid rounded-circle"
                     src={require("assets/img/nightking.jpeg")}
                   /> */}
-                  <div id="userImage">
-                    <UserAvatar size="48" name={this.state.alias}/>
-                  </div>
+                    <div id="userImage">
+                      <UserAvatar size="48" name={this.state.alias} />
+                    </div>
 
-                  <UncontrolledPopover placement="bottom" target="userImage">
-                    <PopoverHeader>{this.state.alias.toUpperCase()}</PopoverHeader>
-                    <PopoverBody>
-                      <NavLink to="/" tag={Link}>
-                        <Button onClick={e => {
-                          this.toggleCollapse()
-                          localStorage.removeItem("token");
-                        }}>Logout</Button>
-                      </NavLink>
-                    </PopoverBody>
-                  </UncontrolledPopover>
+                    <UncontrolledPopover placement="bottom" target="userImage">
+                      <PopoverHeader>{this.state.alias.toUpperCase()}</PopoverHeader>
+                      <PopoverBody>
+                        <NavLink to="/" tag={Link}>
+                          <Button onClick={e => {
+                            this.toggleCollapse()
+                            localStorage.removeItem("token");
+                          }}>Logout</Button>
+                        </NavLink>
+                      </PopoverBody>
+                    </UncontrolledPopover>
 
-                </NavItem>
-                : <NavItem onClick={this.toggleCollapse}>
+                  </NavItem>
+                  : <NavItem onClick={this.toggleCollapse}>
 
-                  <NavLink to="/login" tag={Link}>
-                    <Button onClick={e => {
-                      localStorage.removeItem("token");
-                    }}>Login</Button>
-                  </NavLink></NavItem>
+                    <NavLink to="/login" tag={Link}>
+                      <Button onClick={e => {
+                        localStorage.removeItem("token");
+                      }}>Login</Button>
+                    </NavLink></NavItem>
 
-            }
+              }
 
-            </Nav>
-            {/* 
+              </Nav>
+              {/* 
             <Nav>
 
             </Nav> */}
 
-          </Collapse>
+            </Collapse>
 
-        </Container>
+          </Container>
 
-      </Navbar >
+        </Navbar ></>
     );
   }
 }
